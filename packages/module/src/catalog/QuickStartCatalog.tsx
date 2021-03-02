@@ -34,6 +34,7 @@ import QuickStartTile from "./QuickStartTile";
 import QuickStartCatalogFilter from "./QuickStartCatalogFilter";
 
 import "./QuickStartCatalog.scss";
+import QuickStartEdit from "./QuickStartEdit";
 
 type QuickStartCatalogProps = {
   quickStarts: QuickStart[];
@@ -146,27 +147,34 @@ const QuickStartCatalog: React.FC<QuickStartCatalogProps> = ({
       {filteredQuickStarts.length === 0 ? (
         emptyState
       ) : (
-        <div className="ocs-page-layout__content is-dark">
-          <Gallery className="co-quick-start-catalog__gallery" hasGutter>
-            {filteredQuickStarts.map((quickStart) => {
-              const {
-                metadata: { name: id },
-                spec: { tasks },
-              } = quickStart;
+        <React.Fragment>
+          <div className="ocs-page-layout__content is-dark">
+            <Gallery className="co-quick-start-catalog__gallery" hasGutter>
+              {filteredQuickStarts.map((quickStart) => {
+                const {
+                  metadata: { name: id },
+                  spec: { tasks },
+                } = quickStart;
 
-              return (
-                <GalleryItem key={id}>
-                  <QuickStartTile
-                    quickStart={quickStart}
-                    isActive={id === activeQuickStartID}
-                    status={getQuickStartStatus(allQuickStartStates, id)}
-                    onClick={() => setActiveQuickStart(id, tasks?.length)}
-                  />
-                </GalleryItem>
-              );
-            })}
-          </Gallery>
-        </div>
+                return (
+                  <GalleryItem key={id}>
+                    <QuickStartTile
+                      quickStart={quickStart}
+                      isActive={id === activeQuickStartID}
+                      status={getQuickStartStatus(allQuickStartStates, id)}
+                      onClick={() => setActiveQuickStart(id, tasks?.length)}
+                    />
+                  </GalleryItem>
+                );
+              })}
+            </Gallery>
+          </div>
+
+          <QuickStartEdit
+            quickStarts={quickStarts}
+            quickStartId={`add-healthchecks`}
+          />
+        </React.Fragment>
       )}
     </>
   );

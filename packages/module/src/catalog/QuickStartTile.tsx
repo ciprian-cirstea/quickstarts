@@ -11,7 +11,7 @@ import "./QuickStartTile.scss";
 
 type QuickStartTileProps = {
   quickStart: QuickStart;
-  status: QuickStartStatus;
+  status?: QuickStartStatus;
   isActive: boolean;
   onClick: () => void;
 };

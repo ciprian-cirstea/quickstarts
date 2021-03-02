@@ -48,7 +48,7 @@ export const Home: React.FunctionComponent = () => {
               variant="secondary"
               onClick={() => i18n.changeLanguage("de")}
             >
-              Change lng - DE
+              Change lng - DEE
             </Button>
           </StackItem>
           <StackItem>

@@ -1,19 +1,19 @@
 {
-  "name": "@cloudmosaic/quickstarts-root",
-  "private": true,
-  "version": "0.0.0",
-  "description": "This library provides the quickstarts module",
-  "license": "MIT",
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "yarn workspace @cloudmosaic/quickstarts build",
-    "start": "yarn workspace @cloudmosaic/quickstarts-dev start",
-    "watch": "yarn build && concurrently --kill-others \"yarn workspace @cloudmosaic/quickstarts watch\" \"yarn start\"",
-    "build:dev": "yarn workspace @cloudmosaic/quickstarts-dev build"
-  },
-  "devDependencies": {
-    "concurrently": "^5.3.0"
-  }
+    "name": "@cloudmosaic/quickstarts-root",
+    "private": true,
+    "version": "0.0.0",
+    "description": "This library provides the quickstarts module",
+    "license": "MIT",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "yarn workspace @cloudmosaic/quickstarts build",
+        "start": "yarn workspace @cloudmosaic/quickstarts-dev start",
+        "watch": "yarn build && concurrently --kill-others \"yarn workspace @cloudmosaic/quickstarts watch\" \"yarn start\"",
+        "build:dev": "yarn workspace @cloudmosaic/quickstarts-dev build"
+    },
+    "devDependencies": {
+        "concurrently": "^5.3.0"
+    }
 }
