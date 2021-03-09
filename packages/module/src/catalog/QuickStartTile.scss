@@ -7,5 +7,13 @@
 
   & .catalog-tile-pf-icon {
     display: flex;
+    width: 100%;
+    justify-content: space-between;
+    max-width: initial;
+
+    .pf-c-button {
+      --pf-c-button--after--BorderColor: transparent;
+      color: var(--pf-global--Color--200);
+    }
   }
 }

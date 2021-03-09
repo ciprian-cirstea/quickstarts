@@ -53,8 +53,20 @@ const App: React.FunctionComponent = ({ children }) => {
     setAllQuickStartStates,
     footer: {
       showAllLink: currentPath !== quickStartPath,
-      onShowAllLinkClick: () => history.push(quickStartPath),
+      onShowAllLinkClick: () => {
+        history.push(quickStartPath)
+      },
     },
+    global: {
+      onEditLinkClick: (id: any) => {
+        history.push(`/quickstarts/edit/${id}`)
+        console.log(" --- onEditLinkClick")
+      },
+      onAddLinkClick: () => {
+        history.push("/quickstarts/add")
+        console.log(" --------- onAddLinkClick")
+      }
+    }
   });
 
   if (!initialized) return <div>Loading</div>;

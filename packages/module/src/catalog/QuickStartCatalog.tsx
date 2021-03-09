@@ -34,7 +34,6 @@ import QuickStartTile from "./QuickStartTile";
 import QuickStartCatalogFilter from "./QuickStartCatalogFilter";
 
 import "./QuickStartCatalog.scss";
-import QuickStartEdit from "./QuickStartEdit";
 
 type QuickStartCatalogProps = {
   quickStarts: QuickStart[];
@@ -148,11 +147,6 @@ const QuickStartCatalog: React.FC<QuickStartCatalogProps> = ({
         emptyState
       ) : (
         <React.Fragment>
-          <QuickStartEdit
-            quickStarts={quickStarts}
-            quickStartId={`explore-pipelines`}
-            allQuickStartStates={allQuickStartStates}
-          />
           <div className="ocs-page-layout__content is-dark">
             <Gallery className="co-quick-start-catalog__gallery" hasGutter>
               {filteredQuickStarts.map((quickStart) => {

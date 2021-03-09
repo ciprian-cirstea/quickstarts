@@ -4,6 +4,7 @@ import { StatusIcon } from '@console/shared';
 import { Label, Title } from '@patternfly/react-core';
 import { OutlinedClockIcon } from '@patternfly/react-icons';
 import { QuickStartStatus } from '../utils/quick-start-types';
+import { Button } from '@patternfly/react-core';
 import './QuickStartTileHeader.scss';
 
 type QuickStartTileHeaderProps = {
@@ -44,6 +45,9 @@ const QuickStartTileHeader: React.FC<QuickStartTileHeaderProps> = ({ status, dur
         <Label variant="outline" icon={<OutlinedClockIcon />}>
           {t('quickstart~{{duration, number}} minutes', { duration })}
         </Label>
+        {/* <Button variant="primary">
+          Edit
+        </Button> */}
       </div>
     </div>
   );

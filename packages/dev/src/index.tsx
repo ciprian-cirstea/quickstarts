@@ -7,23 +7,23 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import App from "./App";
-import { QuickStartCatalogPage } from "@cloudmosaic/quickstarts";
+import { QuickStartCatalogPage, QuickStartEditPage } from "@cloudmosaic/quickstarts";
 import { Home } from "./Home";
 
 ReactDOM.render(
   <Router>
+    <App>
     <Switch>
       <Route exact path="/">
-        <App>
           <Home />
-        </App>
       </Route>
       <Route exact path="/quickstarts">
-        <App>
           <QuickStartCatalogPage showFilter />
-        </App>
       </Route>
+      <Route exact path="/quickstarts/edit/:quickstartsId" component={QuickStartEditPage}/>
+      <Route exact path="/quickstarts/add" component={QuickStartEditPage}/>
     </Switch>
+    </App>
   </Router>,
   document.getElementById("root")
 );

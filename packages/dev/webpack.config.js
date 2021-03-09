@@ -21,7 +21,7 @@ module.exports = (_env, argv) => {
       path: path.resolve("public"),
       filename: "[name].[fullhash].bundle.js",
       pathinfo: false, // https://webpack.js.org/guides/build-performance/#output-without-path-info
-      publicPath: "",
+      publicPath: "/",
     },
     devServer: {
       hot: true,

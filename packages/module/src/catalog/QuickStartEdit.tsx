@@ -43,7 +43,7 @@ import {
 } from "@quickstarts/utils/quick-start-context";
 
 type QuickStartEditProps = {
-  quickStartId: string;
+  quickStartId?: string;
   quickStarts: QuickStart[];
   allQuickStartStates;
 };
