@@ -76,6 +76,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
 
   const handleTabClick = (event, tabIndex: number) => setTabIndex(tabIndex);
 
+  const handleMenuClick = (event, itemId: number) => {
     setActiveMenuItem(itemId);
   };
 
