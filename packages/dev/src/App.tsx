@@ -25,7 +25,6 @@ import { allQuickStarts } from "./quickstarts-data/quick-start-test-data";
 
 const App: React.FunctionComponent = ({ children }) => {
   const history = useHistory();
-  console.log(children);
   const [initialized, setInitialized] = React.useState(true);
 
   const [activeQuickStartID, setActiveQuickStartID] = useLocalStorage(
@@ -41,7 +40,6 @@ const App: React.FunctionComponent = ({ children }) => {
   React.useEffect(() => console.log(activeQuickStartID), [activeQuickStartID]);
   React.useEffect(() => {
     // callback on state change
-    console.log("allQuickStartStates", allQuickStartStates);
   }, [allQuickStartStates]);
 
   const { pathname: currentPath } = window.location;
@@ -58,7 +56,6 @@ const App: React.FunctionComponent = ({ children }) => {
       onShowAllLinkClick: () => history.push(quickStartPath),
     },
   });
-  console.log("valuesForQuickstartContextCip", valuesForQuickstartContext);
 
   if (!initialized) return <div>Loading</div>;
 

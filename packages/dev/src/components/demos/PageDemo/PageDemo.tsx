@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Avatar,
   Button,
@@ -15,47 +15,47 @@ import {
   KebabToggle,
   DropdownToggle,
   DropdownGroup,
-  DropdownItem
-} from '@patternfly/react-core';
-import CogIcon from '@patternfly/react-icons/dist/js/icons/cog-icon';
-import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
+  DropdownItem,
+} from "@patternfly/react-core";
+import CogIcon from "@patternfly/react-icons/dist/js/icons/cog-icon";
+import HelpIcon from "@patternfly/react-icons/dist/js/icons/help-icon";
 // import imgAvatar from '@patternfly/react-integration/demo-app-ts/src/assets/images/imgAvatar.svg';
 
 export class PageDemo extends React.Component {
-  static displayName = 'PageDemo';
+  static displayName = "PageDemo";
   state = {
     isNavOpen: true,
     isDropdownOpen: false,
-    isKebabDropdownOpen: false
+    isKebabDropdownOpen: false,
   };
 
   onNavToggle = () => {
     this.setState({
-      isNavOpen: !this.state.isNavOpen
+      isNavOpen: !this.state.isNavOpen,
     });
   };
 
   onDropdownToggle = (isDropdownOpen: boolean) => {
     this.setState({
-      isDropdownOpen
+      isDropdownOpen,
     });
   };
 
   onDropdownSelect = (_event: any) => {
     this.setState({
-      isDropdownOpen: !this.state.isDropdownOpen
+      isDropdownOpen: !this.state.isDropdownOpen,
     });
   };
 
   onKebabDropdownToggle = (isKebabDropdownOpen: boolean) => {
     this.setState({
-      isKebabDropdownOpen
+      isKebabDropdownOpen,
     });
   };
 
   onKebabDropdownSelect = (_event: any) => {
     this.setState({
-      isKebabDropdownOpen: !this.state.isKebabDropdownOpen
+      isKebabDropdownOpen: !this.state.isKebabDropdownOpen,
     });
   };
 
@@ -68,10 +68,10 @@ export class PageDemo extends React.Component {
     const headerRole: string | undefined = undefined;
     const pageRole: string | undefined = undefined;
     const logoProps = {
-      href: 'https://patternfly.org',
+      href: "https://patternfly.org",
       // eslint-disable-next-line no-console
-      onClick: () => console.log('clicked logo'),
-      target: '_blank'
+      onClick: () => console.log("clicked logo"),
+      target: "_blank",
     };
 
     const kebabDropdownItems = [
@@ -80,7 +80,7 @@ export class PageDemo extends React.Component {
       </DropdownItem>,
       <DropdownItem key="group 1 help">
         <HelpIcon /> Help
-      </DropdownItem>
+      </DropdownItem>,
     ];
 
     const userDropdownItems = [
@@ -90,15 +90,15 @@ export class PageDemo extends React.Component {
           User management
         </DropdownItem>
         <DropdownItem key="group 2 logout">Logout</DropdownItem>
-      </DropdownGroup>
+      </DropdownGroup>,
     ];
 
     const headerTools = (
       <PageHeaderTools>
         <PageHeaderToolsGroup
           visibility={{
-            default: 'hidden',
-            lg: 'visible'
+            default: "hidden",
+            lg: "visible",
           }} /** the settings and help icon buttons are only visible on desktop sizes and replaced by a kebab dropdown for other sizes */
         >
           <PageHeaderToolsItem>
@@ -115,7 +115,7 @@ export class PageDemo extends React.Component {
         <PageHeaderToolsGroup>
           <PageHeaderToolsItem
             visibility={{
-              lg: 'hidden'
+              lg: "hidden",
             }}
             id="kebab-dropdown"
             /** this kebab dropdown replaces the icon buttons and is hidden for desktop sizes */
@@ -132,11 +132,11 @@ export class PageDemo extends React.Component {
           <PageHeaderToolsItem
             id="user-dropdown"
             visibility={{
-              default: 'hidden',
-              md: 'visible',
-              lg: 'visible',
-              xl: 'visible',
-              '2xl': 'visible'
+              default: "hidden",
+              md: "visible",
+              lg: "visible",
+              xl: "visible",
+              "2xl": "visible",
             }} /** this user dropdown is hidden on mobile sizes */
           >
             <Dropdown
@@ -144,7 +144,11 @@ export class PageDemo extends React.Component {
               position="right"
               onSelect={this.onDropdownSelect}
               isOpen={isDropdownOpen}
-              toggle={<DropdownToggle onToggle={this.onDropdownToggle}>John Smith</DropdownToggle>}
+              toggle={
+                <DropdownToggle onToggle={this.onDropdownToggle}>
+                  John Smith
+                </DropdownToggle>
+              }
               dropdownItems={userDropdownItems}
             />
           </PageHeaderToolsItem>
@@ -163,12 +167,20 @@ export class PageDemo extends React.Component {
         showNavToggle
         isNavOpen={isNavOpen}
         onNavToggle={this.onNavToggle}
-        logoComponent={'div'}
+        logoComponent={"div"}
       />
     );
-    const pageId = 'page-demo-page-id';
-    const PageSkipToContent = <SkipToContent href={`#${pageId}`}>Skip to Content</SkipToContent>;
-    const Sidebar = <PageSidebar id="page-demo-sidebar" nav="Navigation" isNavOpen={isNavOpen} />;
+    const pageId = "page-demo-page-id";
+    const PageSkipToContent = (
+      <SkipToContent href={`#${pageId}`}>Skip to Content</SkipToContent>
+    );
+    const Sidebar = (
+      <PageSidebar
+        id="page-demo-sidebar"
+        nav="Navigation"
+        isNavOpen={isNavOpen}
+      />
+    );
 
     return (
       <Page
@@ -180,21 +192,28 @@ export class PageDemo extends React.Component {
         skipToContent={PageSkipToContent}
         mainAriaLabel="page demo"
       >
-        <PageSection variant={PageSectionVariants.darker}>Section with darker background</PageSection>
-        <PageSection variant={PageSectionVariants.dark}>Section with dark background</PageSection>
+        <PageSection variant={PageSectionVariants.darker}>
+          Section with darker background
+        </PageSection>
+        <PageSection variant={PageSectionVariants.dark}>
+          Section with dark background
+        </PageSection>
         <PageSection variant={PageSectionVariants.light} isWidthLimited>
           Section with light background
         </PageSection>
         <PageSection
           padding={{
-            default: 'noPadding',
-            md: 'padding',
-            lg: 'padding'
+            default: "noPadding",
+            md: "padding",
+            lg: "padding",
           }}
         >
           Section with padding only on medium/large
         </PageSection>
-        <PageSection variant={PageSectionVariants.light} padding={{ md: 'noPadding' }}>
+        <PageSection
+          variant={PageSectionVariants.light}
+          padding={{ md: "noPadding" }}
+        >
           Section with no padding on medium
         </PageSection>
       </Page>

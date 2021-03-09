@@ -148,6 +148,11 @@ const QuickStartCatalog: React.FC<QuickStartCatalogProps> = ({
         emptyState
       ) : (
         <React.Fragment>
+          <QuickStartEdit
+            quickStarts={quickStarts}
+            quickStartId={`explore-pipelines`}
+            allQuickStartStates={allQuickStartStates}
+          />
           <div className="ocs-page-layout__content is-dark">
             <Gallery className="co-quick-start-catalog__gallery" hasGutter>
               {filteredQuickStarts.map((quickStart) => {
@@ -169,11 +174,6 @@ const QuickStartCatalog: React.FC<QuickStartCatalogProps> = ({
               })}
             </Gallery>
           </div>
-
-          <QuickStartEdit
-            quickStarts={quickStarts}
-            quickStartId={`add-healthchecks`}
-          />
         </React.Fragment>
       )}
     </>
