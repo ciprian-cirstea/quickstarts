@@ -1,56 +1,54 @@
 import React, { useState } from "react";
 import {
-  Tabs,
-  Tab,
-  TabTitleText,
   Grid,
   GridItem,
   Menu,
   MenuList,
   MenuItem,
-  Checkbox,
-  TextInput,
-  Popover,
-  Split,
-  SplitItem,
 } from "@patternfly/react-core";
-import {
-  Form,
-  FormGroup,
-  TextArea,
-  ActionGroup,
-  Button,
-} from "@patternfly/react-core";
+// import {
+//   Form,
+//   FormGroup,
+//   TextArea,
+//   ActionGroup,
+//   Button,
+// } from "@patternfly/react-core";
 import "./QuickStartTile.scss";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 import QuickStartTile from "./QuickStartTile";
-import YAML from "json-to-pretty-yaml";
-import * as YAML2JSON from "yamljs";
-import DownloadIcon from "@patternfly/react-icons/dist/js/icons/download-icon";
+// import YAML from "json-to-pretty-yaml";
+// import * as YAML2JSON from "yamljs";
+// import DownloadIcon from "@patternfly/react-icons/dist/js/icons/download-icon";
 
 import {
   getQuickStartStatus,
-  getQuickStartStatusCount,
-  filterQuickStarts,
+  //   getQuickStartStatusCount,
+  //   filterQuickStarts,
 } from "../utils/quick-start-utils";
 
 import "./QuickStartEdit.scss";
-import ContributionDetailsForm from "./Forms/ContributionDetailsForm";
+import ContributionDetailsForm from "./Forms/QuickStartTileForm";
 import TaskDetailsForm from "./Forms/TaskDetailsForm";
 import {
   QuickStartContext,
   QuickStartContextValues,
 } from "@quickstarts/utils/quick-start-context";
+import QuickStartTourForm from "./Forms/QuickStartTileForm copy";
+import QuickStartControllerEdit from "@quickstarts/QuickStartControllerEdit";
+// import QuickStartController from "@quickstarts/QuickStartController";
 
 type QuickStartEditProps = {
   quickStartId?: string;
-  quickStarts: QuickStart[];
-  allQuickStartStates;
+  //   quickStarts: QuickStart[];
+  //   allQuickStartStates;
+  quickStart: QuickStart;
+  setQuickStart: Function;
 };
 
 const QuickStartEdit: React.FC<QuickStartEditProps> = ({
   quickStartId,
-  quickStarts,
+  quickStart,
+  setQuickStart,
   //   allQuickStartStates,
 }) => {
   const {
@@ -59,24 +57,24 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
     setActiveQuickStart,
   } = React.useContext<QuickStartContextValues>(QuickStartContext);
   const [tabIndex, setTabIndex] = useState(0);
-  const [quickStart, setQuickStart] = useState(undefined);
-  const [quickYaml, setQuickYaml] = useState(undefined);
-  const [activeMenuItem, setActiveMenuItem] = useState(0);
+  //   const [quickStart, setQuickStart] = useState(undefined);
+  //   const [quickYaml, setQuickYaml] = useState(undefined);
+  const [activeMenuItem, setActiveMenuItem] = useState(100);
 
   React.useEffect(() => {
-    const quickEdit = quickStarts.find((data) => {
-      return data.metadata.name === quickStartId;
-    });
-
-    if (quickEdit) {
-      setQuickStart(quickEdit);
-      setQuickYaml(YAML.stringify(quickEdit));
-    }
+    // const quickEdit = quickStarts.find((data) => {
+    //   return data.metadata.name === quickStartId;
+    // });
+    // if (quickEdit) {
+    //   setQuickStart(quickEdit);
+    //   setQuickYaml(YAML.stringify(quickEdit));
+    // }
   }, []);
 
-  const handleTabClick = (event, tabIndex: number) => setTabIndex(tabIndex);
+  //   const handleTabClick = (event, tabIndex: number) => setTabIndex(tabIndex);
 
   const handleMenuClick = (event, itemId: number) => {
+    console.log(itemId);
     setActiveMenuItem(itemId);
   };
 
@@ -84,39 +82,25 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
     setQuickStart(newQuickStart);
   };
 
-  const handleQuickStartChange = (value: string) => {
-    setQuickStart(YAML2JSON.parse(value));
-    setQuickYaml(value);
-  };
-
   const formGenerator = () => {
-    console.log("activeMenuItem---------------------", activeMenuItem);
     switch (activeMenuItem) {
-      case 11:
+      case 100:
         return <div className="pf-u-font-size-2xl">IBM Quick Starts Help</div>;
-      case 22:
+      case 101:
         return (
           <ContributionDetailsForm
             quickstart={quickStart}
             updateQuickStart={updateQuickStart}
           />
         );
-      case 33:
+      case 99:
         return (
-          <Form>
-            <FormGroup fieldId="horizontal-form-exp">
-              <TextArea
-                rows={40}
-                value={quickYaml}
-                onChange={handleQuickStartChange}
-                name="horizontal-form-exp"
-                id="horizontal-form-exp"
-              />
-            </FormGroup>
-          </Form>
+          <QuickStartTourForm
+            quickstart={quickStart}
+            updateQuickStart={updateQuickStart}
+          />
         );
-
-      case 44:
+      case 102:
         return (
           <TaskDetailsForm
             key="new"
@@ -124,101 +108,85 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
             updateQuickStart={updateQuickStart}
           />
         );
-
       default:
         return (
           <TaskDetailsForm
-            key="edit"
+            key={`edit-${activeMenuItem}`}
             quickstart={quickStart}
             updateQuickStart={updateQuickStart}
             task={quickStart.spec.tasks[activeMenuItem]}
+            index={activeMenuItem}
           />
         );
     }
   };
 
+  const previews = () => {
+    console.log("previewssssss==============>", activeMenuItem);
+
+    // if (activeMenuItem === 102) {
+    //   console.log("new task");
+    //   return <div>New task</div>;
+    // }
+
+    if (activeMenuItem < 100) {
+      return (
+        <QuickStartControllerEdit
+          key={`controller-${activeMenuItem}`}
+          quickStart={quickStart}
+        />
+      );
+    }
+
+    if (activeMenuItem > 100) {
+      return (
+        <QuickStartTile
+          quickStart={quickStart}
+          isActive={quickStartId === activeQuickStartID}
+          status={getQuickStartStatus(allQuickStartStates, quickStartId)}
+          onClick={() => {}}
+        />
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="tabs-container">
+      {console.log("quickStart -----", quickStart)}
       {quickStart ? (
         <React.Fragment>
-          <Button className="float-right" variant="primary">
-            Save
-          </Button>
-          <Button
-            className="float-right"
-            variant="link"
-            icon={<DownloadIcon />}
-          >
-            Download YAML
-          </Button>
-          <Tabs activeKey={tabIndex} onSelect={handleTabClick} isBox={true}>
-            <Tab
-              eventKey={0}
-              title={<TabTitleText>Quick Start Editor</TabTitleText>}
-            >
-              <Grid hasGutter>
-                <GridItem span={2}>
-                  <Menu
-                    activeItemId={activeMenuItem}
-                    onSelect={handleMenuClick}
-                  >
-                    <MenuList>
-                      <MenuItem itemId={11}>Read Me First</MenuItem>
-                      <MenuItem itemId={22}>Quick Start Editor</MenuItem>
-                      <MenuItem itemId={33}>YAML</MenuItem>
+          <Grid hasGutter>
+            <GridItem span={12}></GridItem>
+            <GridItem span={2}>
+              <Menu activeItemId={activeMenuItem} onSelect={handleMenuClick}>
+                <MenuList>
+                  <MenuItem itemId={100}>Read Me First</MenuItem>
+                  <MenuItem itemId={101}>Quick Start Tile Editor</MenuItem>
+                  <MenuItem itemId={99}>Quick Start Tour Intro</MenuItem>
 
-                      {quickStart
-                        ? quickStart.spec.tasks.map((task, index) => {
-                            return (
-                              <MenuItem key={index} itemId={`${index}`}>
-                                {task.title}
-                              </MenuItem>
-                            );
-                          })
-                        : null}
+                  {quickStart
+                    ? quickStart.spec.tasks.map((task, index) => {
+                        return (
+                          <MenuItem key={index} itemId={index}>
+                            {task.title}
+                          </MenuItem>
+                        );
+                      })
+                    : null}
 
-                      <MenuItem itemId={44}>Add Task+</MenuItem>
-                    </MenuList>
-                  </Menu>
-                </GridItem>
-                <GridItem span={6}>{formGenerator()}</GridItem>
-                <GridItem span={2}>
-                  {quickStart !== undefined ? (
-                    <QuickStartTile
-                      quickStart={quickStart}
-                      isActive={quickStartId === activeQuickStartID}
-                      status={getQuickStartStatus(
-                        allQuickStartStates,
-                        quickStartId
-                      )}
-                      onClick={() => {}}
-                    />
-                  ) : null}
-                </GridItem>
-
-                {/* Quick start content */}
-                <GridItem span={2}>4</GridItem>
-              </Grid>
-            </Tab>
-            <Tab
-              eventKey={1}
-              title={<TabTitleText>Preview Demo </TabTitleText>}
-            >
+                  <MenuItem itemId={102}>Add Task+</MenuItem>
+                </MenuList>
+              </Menu>
+            </GridItem>
+            <GridItem span={6}>{formGenerator()}</GridItem>
+            <GridItem span={4}>
               {quickStart !== undefined ? (
-                <div>
-                  <QuickStartTile
-                    quickStart={quickStart}
-                    isActive={false}
-                    status={getQuickStartStatus(
-                      allQuickStartStates,
-                      quickStartId
-                    )}
-                    onClick={() => {}}
-                  />
-                </div>
+                <React.Fragment>{previews()}</React.Fragment>
               ) : null}
-            </Tab>
-          </Tabs>
+            </GridItem>
+          </Grid>
         </React.Fragment>
       ) : (
         ""

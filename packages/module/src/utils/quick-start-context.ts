@@ -9,13 +9,13 @@ import {
 
 type FooterProps = {
   showAllLink?: boolean;
-  onShowAllLinkClick?: () => void | null
+  onShowAllLinkClick?: () => void | null;
 };
 
 type GlobalProps = {
   onEditLinkClick: (id) => void | null;
-  onAddLinkClick: () => void | null
-}
+  onAddLinkClick: () => void | null;
+};
 
 export type QuickStartContextValues = {
   allQuickStarts?: QuickStart[];
@@ -41,7 +41,7 @@ export const QuickStartContext = createContext<QuickStartContextValues>({
   activeQuickStartState: {},
   setActiveQuickStart: () => {},
   startQuickStart: () => {},
-  restartQuickStart: () => {}
+  restartQuickStart: () => {},
 });
 
 const getDefaultQuickStartState = (
@@ -61,13 +61,13 @@ const getDefaultQuickStartState = (
 };
 
 export type useValuesForQuickStartContextType = {
-  allQuickStarts?: QuickStart[],
-  activeQuickStartID?: string,
-  setActiveQuickStartID?: React.Dispatch<React.SetStateAction<string>>,
-  allQuickStartStates?: AllQuickStartStates,
+  allQuickStarts?: QuickStart[];
+  activeQuickStartID?: string;
+  setActiveQuickStartID?: React.Dispatch<React.SetStateAction<string>>;
+  allQuickStartStates?: AllQuickStartStates;
   setAllQuickStartStates?: React.Dispatch<
     React.SetStateAction<AllQuickStartStates>
-  >,
+  >;
   footer?: FooterProps;
   global?: GlobalProps;
 };
@@ -79,7 +79,7 @@ export const useValuesForQuickStartContext = ({
   allQuickStartStates,
   setAllQuickStartStates,
   footer,
-  global
+  global,
 }: useValuesForQuickStartContextType): QuickStartContextValues => {
   const setActiveQuickStart = useCallback(
     (quickStartId: string, totalTasks?: number) => {
@@ -264,6 +264,6 @@ export const useValuesForQuickStartContext = ({
     setQuickStartTaskStatus,
     getQuickStartForId,
     footer,
-    global
+    global,
   };
 };

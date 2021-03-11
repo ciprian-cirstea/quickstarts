@@ -2,41 +2,41 @@ import React, { useState } from "react";
 import { Split, SplitItem } from "@patternfly/react-core";
 import { Form } from "@patternfly/react-core";
 
-import "./ContributionDetailsForm.scss";
+import "./TaskDetailsForm.scss";
 import ContributionInput from "./ContributionInput";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
-type TaskProps = {
-  title: string;
-  description: string;
-  review: object;
-  summary: object;
-  conclusion: string;
-};
+// type TaskProps = {
+//   title: string;
+//   description: string;
+//   review: object;
+//   summary: object;
+//   //   conclusion: string;
+// };
 
 type TaskDetailsFormProps = {
-  task?: TaskProps;
+  task?;
   quickstart: QuickStart;
   updateQuickStart: Function;
+  index?: number;
 };
 
 const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
   task,
   quickstart,
   updateQuickStart,
+  index,
 }) => {
-  console.log("task==============================+++++++++++++++++++", task);
-
   const quickUpdate = (value, e) => {
-    // const newQuick = { ...quickstart };
-    // newQuick.spec[value] = e;
-    // updateQuickStart(newQuick);
+    const newQuick = { ...quickstart };
+    const newTasks = [...newQuick.spec.tasks];
+    newTasks[index][value] = e;
+    newQuick.spec.tasks = newTasks;
+    updateQuickStart(newQuick);
   };
 
   return (
     <Form>
-      <div className="pf-u-font-size-lg">Task</div>
-
       <ContributionInput
         key="title"
         initialValue={task ? task.title : ""}
@@ -115,16 +115,16 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         </SplitItem>
       </Split>
 
-      <ContributionInput
+      {/* <ContributionInput
         key="conclusion"
-        initialValue={task ? task.conclusion : ""}
+        initialValue={task ? task.summary : ""}
         label="Conclusion"
         id="conclusion"
         value="conclusion"
         textarea={true}
         type="text"
         updateValue={quickUpdate}
-      />
+      /> */}
     </Form>
   );
 };

@@ -9,7 +9,7 @@ import {
 import { Form, FormGroup, TextArea, Button } from "@patternfly/react-core";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
-import "./ContributionDetailsForm.scss";
+import "./QuickStartTileForm.scss";
 import ContributionInput from "./ContributionInput";
 import PrerequisitesComponent from "./PrerequisitesComponent";
 
@@ -22,7 +22,6 @@ const ContributionDetailsForm: React.FC<ContributionDetailsFormProps> = ({
   quickstart,
   updateQuickStart,
 }) => {
-  //   const [prerequisites, setPrereqiusites] = useState([]);
   const [quickStartFormData, setQuickStartFormData] = useState<QuickStart>(
     null
   );
@@ -30,9 +29,7 @@ const ContributionDetailsForm: React.FC<ContributionDetailsFormProps> = ({
   React.useEffect(() => {
     if (quickstart.hasOwnProperty("spec")) {
       setQuickStartFormData(quickstart);
-      //   setPrereqiusites(quickstart.spec.prerequisites);
     }
-    // generatePrerequisite();
   }, []);
 
   const handleSubmit = () => {
@@ -103,27 +100,6 @@ const ContributionDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             prerequisites={quickstart.spec.prerequisites}
             updateValue={quickUpdate}
             value="prerequisites"
-          />
-
-          <ContributionInput
-            key="intro"
-            initialValue={quickStartFormData.spec["introduction"]}
-            label="Introduction"
-            id="introduction"
-            value="introduction"
-            textarea={true}
-            type="text"
-            updateValue={quickUpdate}
-          />
-          <ContributionInput
-            key="conclusion"
-            initialValue={quickStartFormData.spec["conclusion"]}
-            label="Conclusion"
-            id="conclusion"
-            value="conclusion"
-            textarea={false}
-            type="text"
-            updateValue={quickUpdate}
           />
         </Form>
       ) : (

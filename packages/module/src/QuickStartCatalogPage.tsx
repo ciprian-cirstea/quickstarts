@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LoadingBox } from "@console/internal/components/utils";
 import { Text, Button } from "@patternfly/react-core";
@@ -18,9 +18,9 @@ export const QuickStartCatalogPage: React.FC<QuickStartCatalogPageProps> = ({
   showFilter,
 }) => {
   const { t } = useTranslation();
-  const {
-    global
-  } = React.useContext<QuickStartContextValues>(QuickStartContext);
+  const { global } = React.useContext<QuickStartContextValues>(
+    QuickStartContext
+  );
 
   const onAddLinkClick = global?.onAddLinkClick;
 
@@ -29,13 +29,16 @@ export const QuickStartCatalogPage: React.FC<QuickStartCatalogPageProps> = ({
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
           {t("quickstart~Quick Starts")}
-          {
-            onAddLinkClick && (
-              <Button onClick={onAddLinkClick} variant="secondary" className='add-new-button'>
-                Add New
-              </Button>
-            )
-          }
+          {console.log("onAddLinkClick----------------", onAddLinkClick)}
+          {onAddLinkClick && (
+            <Button
+              onClick={onAddLinkClick}
+              variant="secondary"
+              className="add-new-button"
+            >
+              Add New
+            </Button>
+          )}
         </Text>
         {/* <div className="ocs-page-layout__hint">
           {t(

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
+import * as React from "react";
+import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 import {
   DrawerPanelContent,
   DrawerPanelBody,
@@ -8,13 +8,13 @@ import {
   DrawerActions,
   DrawerCloseButton,
   Title,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 // import { AsyncComponent } from '@console/internal/components/utils';
-import { useScrollDirection, ScrollDirection } from '@console/shared';
-import { QuickStart } from './utils/quick-start-types';
-import './QuickStartPanelContent.scss';
+import { useScrollDirection, ScrollDirection } from "@console/shared";
+import { QuickStart } from "./utils/quick-start-types";
+import "./QuickStartPanelContent.scss";
 // js: Remove AsyncComponent and import QuickStartController directly
-import QuickStartController from './QuickStartController';
+import QuickStartController from "./QuickStartController";
 
 type HandleClose = () => void;
 
@@ -31,26 +31,32 @@ const QuickStartPanelContent: React.FC<QuickStartPanelContentProps> = ({
 }) => {
   const [scrollDirection, handleScrollCallback] = useScrollDirection();
   const { t } = useTranslation();
-  const quickStart = quickStarts.find((qs) => qs.metadata.name === activeQuickStartID);
+  const quickStart = quickStarts.find(
+    (qs) => qs.metadata.name === activeQuickStartID
+  );
 
-  const headerClasses = classNames('co-quick-start-panel-content-head', {
-    'pf-u-box-shadow-sm-bottom':
+  const headerClasses = classNames("co-quick-start-panel-content-head", {
+    "pf-u-box-shadow-sm-bottom":
       scrollDirection && scrollDirection !== ScrollDirection.scrolledToTop,
   });
+  const show = false;
 
-  return quickStart ? (
-    <DrawerPanelContent className="co-quick-start-panel-content" onScroll={handleScrollCallback}>
+  return quickStart && show ? (
+    <DrawerPanelContent
+      className="co-quick-start-panel-content"
+      onScroll={handleScrollCallback}
+    >
       <div className={headerClasses}>
         <DrawerHead>
           <div className="co-quick-start-panel-content__title">
             <Title
               headingLevel="h1"
               size="xl"
-              style={{ marginRight: 'var(--pf-global--spacer--md)' }}
+              style={{ marginRight: "var(--pf-global--spacer--md)" }}
             >
-              {quickStart?.spec.displayName}{' '}
+              {quickStart?.spec.displayName}{" "}
               <small className="co-quick-start-panel-content__duration text-secondary">
-                {t('quickstart~{{duration, number}} minutes', {
+                {t("quickstart~{{duration, number}} minutes", {
                   duration: quickStart?.spec.durationMinutes,
                 })}
               </small>
