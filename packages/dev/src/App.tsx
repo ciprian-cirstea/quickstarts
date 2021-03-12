@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Page,
   Nav,
@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import imgBrand from "./assets/images/imgBrand.svg";
 import imgAvatar from "./assets/images/imgAvatar.svg";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, withRouter } from "react-router-dom";
 import Demos from "./Demos";
 import "./App.css";
 import {
@@ -37,10 +37,22 @@ const App: React.FunctionComponent = ({ children }) => {
     {}
   );
 
+  const isOnEditPage = () => {
+    return location.pathname.indexOf('quickstarts/edit/') !== -1
+          || location.pathname.indexOf('quickstarts/add') !== -1
+  }
+
+  const [isEditPage, setIsEditPage] = useState(isOnEditPage())
+  const [isNavOpen, setIsNavOpen] = useState(false)
+
   React.useEffect(() => console.log(activeQuickStartID), [activeQuickStartID]);
   React.useEffect(() => {
     // callback on state change
   }, [allQuickStartStates]);
+
+  React.useEffect(() => {
+    setIsEditPage(isOnEditPage())
+  }, [location.pathname]);
 
   const { pathname: currentPath } = window.location;
   const quickStartPath = "/quickstarts";
@@ -60,15 +72,23 @@ const App: React.FunctionComponent = ({ children }) => {
 
     global: {
       onEditLinkClick: (id: any) => {
-        history.push(`/quickstarts/edit/${id}`);
+        history.push(`/quickstarts/edit/${id}`)
+        setIsEditPage(true)
+        setIsNavOpen(false)
       },
       onAddLinkClick: () => {
-        history.push("/quickstarts/add");
-      },
-    },
+        history.push("/quickstarts/add")
+        setIsEditPage(true)
+        setIsNavOpen(false)
+      }
+    }
   });
 
   if (!initialized) return <div>Loading</div>;
+
+  const onNavToggle = () => {
+    setIsNavOpen(!isNavOpen)
+  };
 
   const AppToolbar = (
     <PageHeaderTools>
@@ -81,6 +101,7 @@ const App: React.FunctionComponent = ({ children }) => {
       logo={<Brand src={imgBrand} alt="Patternfly Logo" />}
       headerTools={AppToolbar}
       showNavToggle
+      onNavToggle={onNavToggle}
       isNavOpen
     />
   );
@@ -102,13 +123,13 @@ const App: React.FunctionComponent = ({ children }) => {
     </Nav>
   );
 
-  const AppSidebar = <PageSidebar isNavOpen nav={AppNav} />;
+  const AppSidebar = <PageSidebar isNavOpen={isNavOpen} nav={AppNav} />;
 
   return (
     <React.Suspense fallback={<div>Loading</div>}>
       <QuickStartContext.Provider value={valuesForQuickstartContext}>
         <QuickStartDrawer>
-          <Page header={AppHeader} sidebar={AppSidebar} isManagedSidebar>
+          <Page header={AppHeader} sidebar={AppSidebar} isManagedSidebar={!isEditPage}>
             {children}
           </Page>
         </QuickStartDrawer>
@@ -116,4 +137,4 @@ const App: React.FunctionComponent = ({ children }) => {
     </React.Suspense>
   );
 };
-export default App;
+export default withRouter(App);

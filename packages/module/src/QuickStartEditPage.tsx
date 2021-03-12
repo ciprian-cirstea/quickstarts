@@ -32,6 +32,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
   const [quickYaml, setQuickYaml] = React.useState(undefined);
   const [quickStart, setQuickStart] = React.useState(undefined);
+  const [pageType, setPageType] = React.useState('Edit')
 
   React.useEffect(() => {
     console.log(" -------- props.match.params.id", params.quickstartsId);
@@ -44,6 +45,10 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       setQuickYaml(YAML.stringify(quickEdit));
     }
   }, []);
+
+  React.useEffect(() => {
+    setPageType(location.pathname === '/quickstarts/add' ? 'Add' : 'Edit')
+  }, [location.pathname]);
 
   const downloadYAML = () => {
     // var decodedString = atob(quickYaml);
@@ -70,7 +75,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     <>
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
-          Edit quickstart
+          {pageType} quickstart
           <Button className="float-right add-new-button" variant="secondary">
             Close
           </Button>
