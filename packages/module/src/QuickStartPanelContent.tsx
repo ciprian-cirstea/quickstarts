@@ -15,6 +15,10 @@ import { QuickStart } from "./utils/quick-start-types";
 import "./QuickStartPanelContent.scss";
 // js: Remove AsyncComponent and import QuickStartController directly
 import QuickStartController from "./QuickStartController";
+import {
+  QuickStartContext,
+  QuickStartContextValues,
+} from "./utils/quick-start-context";
 
 type HandleClose = () => void;
 
@@ -39,9 +43,25 @@ const QuickStartPanelContent: React.FC<QuickStartPanelContentProps> = ({
     "pf-u-box-shadow-sm-bottom":
       scrollDirection && scrollDirection !== ScrollDirection.scrolledToTop,
   });
-  const show = false;
 
-  return quickStart && show ? (
+  const { setActiveQuickStart } = React.useContext<QuickStartContextValues>(QuickStartContext);
+  const [show, setShow] = React.useState(true)
+
+  const isOnEditPage = () => {
+    return location.pathname.indexOf('quickstarts/edit/') !== -1
+          || location.pathname.indexOf('quickstarts/add') !== -1
+  }
+
+  React.useEffect(() => {
+    setShow(isOnEditPage())
+
+    if(!isOnEditPage()) {
+      console.log(" --------- RESET")
+      setActiveQuickStart("");
+    }
+  }, [location.pathname]);
+
+  return quickStart && !show ? (
     <DrawerPanelContent
       className="co-quick-start-panel-content"
       onScroll={handleScrollCallback}
