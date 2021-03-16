@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { QuickStartTaskStatus, QuickStart } from '../utils/quick-start-types';
-import QuickStartIntroduction from './QuickStartIntroduction';
-import QuickStartTasks from './QuickStartTasks';
-import QuickStartConclusion from './QuickStartConclusion';
+import * as React from "react";
+import { QuickStartTaskStatus, QuickStart } from "../utils/quick-start-types";
+import QuickStartIntroduction from "./QuickStartIntroduction";
+import QuickStartTasks from "./QuickStartTasks";
+import QuickStartConclusion from "./QuickStartConclusion";
 
-import './QuickStartContent.scss';
+import "./QuickStartContent.scss";
 
 type QuickStartContentProps = {
   quickStart: QuickStart;

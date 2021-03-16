@@ -10,11 +10,17 @@
 
 .co-quick-start-panel-content,
 .ocs-page-layout__content {
-  --pf-global--FontSize--md: 14px;
-  --pf-global--FontSize--sm: 13px;
+    --pf-global--FontSize--md: 14px;
+    --pf-global--FontSize--sm: 13px;
 }
 
 .ocs-page-layout__header .add-new-button {
-  float: right;
-  top: -0.5rem;
+    float: right;
+    top: -0.5rem;
+}
+
+.ocs-page-layout__header .close-button {
+    float: right;
+    top: -0.5rem;
+    left: 0.5rem;
 }

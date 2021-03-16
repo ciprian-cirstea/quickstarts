@@ -15,6 +15,7 @@ type FooterProps = {
 type GlobalProps = {
   onEditLinkClick: (id) => void | null;
   onAddLinkClick: () => void | null;
+  //   onCloseLinkClick: () => void | null;
 };
 
 export type QuickStartContextValues = {

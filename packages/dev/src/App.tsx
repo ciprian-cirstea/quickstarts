@@ -22,41 +22,34 @@ import {
   useLocalStorage,
 } from "@cloudmosaic/quickstarts";
 import { allQuickStarts } from "./quickstarts-data/quick-start-test-data";
-
 const App: React.FunctionComponent = ({ children }) => {
   const history = useHistory();
   const [initialized, setInitialized] = React.useState(true);
-
   const [activeQuickStartID, setActiveQuickStartID] = useLocalStorage(
     "quickstartId",
     ""
   );
-
   const [allQuickStartStates, setAllQuickStartStates] = useLocalStorage(
     "quickstarts",
     {}
   );
-
   const isOnEditPage = () => {
-    return location.pathname.indexOf('quickstarts/edit/') !== -1
-          || location.pathname.indexOf('quickstarts/add') !== -1
-  }
-
-  const [isEditPage, setIsEditPage] = useState(isOnEditPage())
-  const [isNavOpen, setIsNavOpen] = useState(false)
-
+    return (
+      location.pathname.indexOf("quickstarts/edit/") !== -1 ||
+      location.pathname.indexOf("quickstarts/add") !== -1
+    );
+  };
+  const [isEditPage, setIsEditPage] = useState(isOnEditPage());
+  const [isNavOpen, setIsNavOpen] = useState(false);
   React.useEffect(() => console.log(activeQuickStartID), [activeQuickStartID]);
   React.useEffect(() => {
     // callback on state change
   }, [allQuickStartStates]);
-
   React.useEffect(() => {
-    setIsEditPage(isOnEditPage())
+    setIsEditPage(isOnEditPage());
   }, [location.pathname]);
-
   const { pathname: currentPath } = window.location;
   const quickStartPath = "/quickstarts";
-
   const valuesForQuickstartContext = useValuesForQuickStartContext({
     allQuickStarts,
     activeQuickStartID,
@@ -69,33 +62,31 @@ const App: React.FunctionComponent = ({ children }) => {
         history.push(quickStartPath);
       },
     },
-
     global: {
       onEditLinkClick: (id: any) => {
-        history.push(`/quickstarts/edit/${id}`)
-        setIsEditPage(true)
-        setIsNavOpen(false)
+        history.push(`/quickstarts/edit/${id}`);
+        setIsEditPage(true);
+        setIsNavOpen(false);
       },
       onAddLinkClick: () => {
-        history.push("/quickstarts/add")
-        setIsEditPage(true)
-        setIsNavOpen(false)
-      }
-    }
+        history.push("/quickstarts/add");
+        setIsEditPage(true);
+        setIsNavOpen(false);
+      },
+      //   onCloseLinkClick: () => {
+      //     history.push("/quickstarts");
+      //   },
+    },
   });
-
   if (!initialized) return <div>Loading</div>;
-
   const onNavToggle = () => {
-    setIsNavOpen(!isNavOpen)
+    setIsNavOpen(!isNavOpen);
   };
-
   const AppToolbar = (
     <PageHeaderTools>
       <Avatar src={imgAvatar} alt="Avatar image" />
     </PageHeaderTools>
   );
-
   const AppHeader = (
     <PageHeader
       logo={<Brand src={imgBrand} alt="Patternfly Logo" />}
@@ -105,7 +96,6 @@ const App: React.FunctionComponent = ({ children }) => {
       isNavOpen
     />
   );
-
   const AppNav = (
     <Nav aria-label="Nav">
       <NavList>
@@ -122,14 +112,16 @@ const App: React.FunctionComponent = ({ children }) => {
       </NavList>
     </Nav>
   );
-
   const AppSidebar = <PageSidebar isNavOpen={isNavOpen} nav={AppNav} />;
-
   return (
     <React.Suspense fallback={<div>Loading</div>}>
       <QuickStartContext.Provider value={valuesForQuickstartContext}>
         <QuickStartDrawer>
-          <Page header={AppHeader} sidebar={AppSidebar} isManagedSidebar={!isEditPage}>
+          <Page
+            header={AppHeader}
+            sidebar={AppSidebar}
+            isManagedSidebar={!isEditPage}
+          >
             {children}
           </Page>
         </QuickStartDrawer>

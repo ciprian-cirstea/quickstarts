@@ -1,10 +1,6 @@
 import * as React from "react";
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LoadingBox } from "@console/internal/components/utils";
 import { Button, Text } from "@patternfly/react-core";
-import QuickStartCatalog from "./catalog/QuickStartCatalog";
-import QuickStartsLoader from "./loader/QuickStartsLoader";
 import QuickStartEdit from "./catalog/QuickStartEdit";
 import DownloadIcon from "@patternfly/react-icons/dist/js/icons/download-icon";
 import YAML from "json-to-pretty-yaml";
@@ -32,10 +28,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
   const [quickYaml, setQuickYaml] = React.useState(undefined);
   const [quickStart, setQuickStart] = React.useState(undefined);
-  const [pageType, setPageType] = React.useState('Edit')
+  const [pageType, setPageType] = React.useState("Edit");
 
   React.useEffect(() => {
-    console.log(" -------- props.match.params.id", params.quickstartsId);
     const quickEdit = allQuickStarts.find((data) => {
       return data.metadata.name === params.quickstartsId;
     });
@@ -47,7 +42,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   }, []);
 
   React.useEffect(() => {
-    setPageType(location.pathname === '/quickstarts/add' ? 'Add' : 'Edit')
+    setPageType(location.pathname === "/quickstarts/add" ? "Add" : "Edit");
   }, [location.pathname]);
 
   const downloadYAML = () => {
@@ -71,14 +66,36 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     }, 1500);
   };
 
+  const { global } = React.useContext<QuickStartContextValues>(
+    QuickStartContext
+  );
+
+  //   const onCloseLinkClick = global?.onCloseLinkClick;
+
   return (
     <>
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
           {pageType} quickstart
-          <Button className="float-right add-new-button" variant="secondary">
+          {/* <Text component="h1" className="ocs-page-layout__title">
+            {t("quickstart~Close")} */}
+          {/* {onCloseLinkClick && (
+            <Button
+              onClick={onCloseLinkClick}
+              variant="secondary"
+              className="float-right close-button" //TODO use float right class from patternfly
+            >
+              Close
+            </Button>
+          )} */}
+          {/* </Text> */}
+          {/* <Button
+            onClick={() => (document.location.href = "/quickstarts")}
+            className="float-right close-button"
+            variant="secondary"
+          >
             Close
-          </Button>
+          </Button> */}
           <Button className="float-right add-new-button" variant="primary">
             Save
           </Button>

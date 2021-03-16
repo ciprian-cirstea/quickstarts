@@ -13,10 +13,12 @@ import {
 
 type QuickStartControllerProps = {
   quickStart: QuickStart;
+  taskNumber: number;
 };
 
 const QuickStartControllerEdit: React.FC<QuickStartControllerProps> = ({
   quickStart,
+  taskNumber,
 }) => {
   const {
     metadata: { name },
@@ -32,17 +34,11 @@ const QuickStartControllerEdit: React.FC<QuickStartControllerProps> = ({
     previousStep,
   } = React.useContext<QuickStartContextValues>(QuickStartContext);
   const status = activeQuickStartState?.status as QuickStartStatus;
-  const taskNumber = activeQuickStartState?.taskNumber as number;
+  //   const taskNumber = activeQuickStartState?.taskNumber as number;
+
   const allTaskStatuses = tasks.map(
     (task, index) => activeQuickStartState[`taskStatus${index}`]
   ) as QuickStartTaskStatus[];
-  const [editName, setEditName] = React.useState(null);
-
-  React.useEffect(() => {
-    // if(editName)
-    setActiveQuickStart(quickStart.metadata.name);
-    // setEditName(quickStart.metadata.name);
-  }, []);
 
   const handleQuickStartChange = React.useCallback(
     (quickStartId: string) => setActiveQuickStart(quickStartId),

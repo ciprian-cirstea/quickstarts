@@ -6,25 +6,11 @@ import {
   MenuList,
   MenuItem,
 } from "@patternfly/react-core";
-// import {
-//   Form,
-//   FormGroup,
-//   TextArea,
-//   ActionGroup,
-//   Button,
-// } from "@patternfly/react-core";
 import "./QuickStartTile.scss";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 import QuickStartTile from "./QuickStartTile";
-// import YAML from "json-to-pretty-yaml";
-// import * as YAML2JSON from "yamljs";
-// import DownloadIcon from "@patternfly/react-icons/dist/js/icons/download-icon";
 
-import {
-  getQuickStartStatus,
-  //   getQuickStartStatusCount,
-  //   filterQuickStarts,
-} from "../utils/quick-start-utils";
+import { getQuickStartStatus } from "../utils/quick-start-utils";
 
 import "./QuickStartEdit.scss";
 import ContributionDetailsForm from "./Forms/QuickStartTileForm";
@@ -35,12 +21,11 @@ import {
 } from "@quickstarts/utils/quick-start-context";
 import QuickStartTourForm from "./Forms/QuickStartTileForm copy";
 import QuickStartControllerEdit from "@quickstarts/QuickStartControllerEdit";
-// import QuickStartController from "@quickstarts/QuickStartController";
+import TrashIcon from "@patternfly/react-icons/dist/js/icons/trash-icon";
+import GripHorizontalIcon from "@patternfly/react-icons/dist/js/icons/grip-horizontal-icon";
 
 type QuickStartEditProps = {
   quickStartId?: string;
-  //   quickStarts: QuickStart[];
-  //   allQuickStartStates;
   quickStart: QuickStart;
   setQuickStart: Function;
 };
@@ -49,33 +34,20 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
   quickStartId,
   quickStart,
   setQuickStart,
-  //   allQuickStartStates,
 }) => {
   const {
     activeQuickStartID,
     allQuickStartStates,
-    setActiveQuickStart,
   } = React.useContext<QuickStartContextValues>(QuickStartContext);
-  const [tabIndex, setTabIndex] = useState(0);
-  //   const [quickStart, setQuickStart] = useState(undefined);
-  //   const [quickYaml, setQuickYaml] = useState(undefined);
+
   const [activeMenuItem, setActiveMenuItem] = useState(100);
-
-  React.useEffect(() => {
-    // const quickEdit = quickStarts.find((data) => {
-    //   return data.metadata.name === quickStartId;
-    // });
-    // if (quickEdit) {
-    //   setQuickStart(quickEdit);
-    //   setQuickYaml(YAML.stringify(quickEdit));
-    // }
-  }, []);
-
-  //   const handleTabClick = (event, tabIndex: number) => setTabIndex(tabIndex);
-
+  const [taskNumber, setTaskNumber] = useState(null);
   const handleMenuClick = (event, itemId: number) => {
-    console.log(itemId);
     setActiveMenuItem(itemId);
+    if (itemId < 100) {
+      const id = itemId === 99 ? -1 : itemId;
+      setTaskNumber(id);
+    }
   };
 
   const updateQuickStart = (newQuickStart: QuickStart) => {
@@ -122,8 +94,6 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
   };
 
   const previews = () => {
-    console.log("previewssssss==============>", activeMenuItem);
-
     // if (activeMenuItem === 102) {
     //   console.log("new task");
     //   return <div>New task</div>;
@@ -131,10 +101,13 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
 
     if (activeMenuItem < 100) {
       return (
-        <QuickStartControllerEdit
-          key={`controller-${activeMenuItem}`}
-          quickStart={quickStart}
-        />
+        <div className="previews">
+          <QuickStartControllerEdit
+            key={`controller-${activeMenuItem}`}
+            quickStart={quickStart}
+            taskNumber={taskNumber}
+          />
+        </div>
       );
     }
 
@@ -148,13 +121,11 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
         />
       );
     }
-
     return null;
   };
 
   return (
     <div className="tabs-container">
-      {console.log("quickStart -----", quickStart)}
       {quickStart ? (
         <React.Fragment>
           <Grid hasGutter>
@@ -165,11 +136,14 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
                   <MenuItem itemId={100}>Read Me First</MenuItem>
                   <MenuItem itemId={101}>Quick Start Tile Editor</MenuItem>
                   <MenuItem itemId={99}>Quick Start Tour Intro</MenuItem>
-
+                  <MenuItem className="separator" isDisabled={true}>
+                    {quickStart.spec.tasks.length} Tasks
+                  </MenuItem>
                   {quickStart
                     ? quickStart.spec.tasks.map((task, index) => {
                         return (
                           <MenuItem key={index} itemId={index}>
+                            <GripHorizontalIcon className="grip-icon" />
                             {task.title}
                           </MenuItem>
                         );
