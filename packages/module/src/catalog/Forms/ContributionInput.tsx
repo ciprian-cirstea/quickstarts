@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { TextInput, FormGroup, TextArea } from "@patternfly/react-core";
-// import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
 type ContributionInputProps = {
   initialValue;
@@ -21,13 +20,24 @@ const ContributionInput: React.FC<ContributionInputProps> = ({
   type,
   updateValue,
 }) => {
-  const [inputValue, setInputValue] = useState(initialValue);
+  const [inputValue, setInputValue] = useState("");
+
+  React.useEffect(() => {
+    setInputValue(initialValue);
+  }, []);
+
+  React.useEffect(() => {
+    setInputValue(initialValue);
+    console.log("input useEffect", inputValue);
+  }, [inputValue]);
 
   const handleChange = (e) => {
     setInputValue(e);
     updateValue(value, e);
   };
 
+  //   console.log("inputValue ::::::", inputValue);
+  //   console.log("initialValue ;;;;;;;;", initialValue);
   return (
     <FormGroup label={label} isRequired fieldId={id}>
       {textarea ? (

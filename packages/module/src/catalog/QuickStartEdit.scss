@@ -24,11 +24,17 @@
     border-top: 1px solid lightgray;
 }
 
-.grip-icon {
-    color: gray;
-    margin-right: 1rem;
+.task-trash-icon {
+    margin-right: 0.5rem;
+    float: right;
 }
 
-.grip-icon:hover {
+// .task-grip-icon {
+//     color: gray;
+//     margin-right: 0.5rem;
+//     float: right;
+// }
+
+.task-grip-icon:hover {
     cursor: grab;
 }

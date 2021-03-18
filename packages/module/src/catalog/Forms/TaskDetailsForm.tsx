@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Split, SplitItem } from "@patternfly/react-core";
 import { Form } from "@patternfly/react-core";
 
@@ -6,41 +6,35 @@ import "./TaskDetailsForm.scss";
 import ContributionInput from "./ContributionInput";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
-// type TaskProps = {
-//   title: string;
-//   description: string;
-//   review: object;
-//   summary: object;
-//   //   conclusion: string;
-// };
-
 type TaskDetailsFormProps = {
   task?;
-  quickstart: QuickStart;
+  quickStart: QuickStart;
   updateQuickStart: Function;
   index?: number;
 };
 
 const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
   task,
-  quickstart,
+  quickStart,
   updateQuickStart,
   index,
 }) => {
   const quickUpdate = (value, e) => {
-    const newQuick = { ...quickstart };
+    const newQuick = { ...quickStart };
     const newTasks = [...newQuick.spec.tasks];
     newTasks[index][value] = e;
     newQuick.spec.tasks = newTasks;
     updateQuickStart(newQuick);
   };
 
+  console.log("task --- ", task);
+
   return (
     <Form>
       <ContributionInput
-        key="title"
+        key={`title-${task.title}`}
         initialValue={task ? task.title : ""}
-        label="Task Title"
+        label={"Task Title Cip"}
         id="task-title"
         value="title"
         textarea={false}
@@ -49,7 +43,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
       />
 
       <ContributionInput
-        key="description"
+        key={`desc-${task.title}`}
         initialValue={task ? task.description : ""}
         label="Description"
         id="description"
@@ -63,7 +57,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
       <Split hasGutter>
         <SplitItem>
           <ContributionInput
-            key="instructions"
+            key={`inst-${task.title}`}
             initialValue={task ? task.review["instructions"] : ""}
             label="Instructions"
             id="instructions"
@@ -75,7 +69,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         </SplitItem>
         <SplitItem>
           <ContributionInput
-            key="failed-task"
+            key={`ft-${task.title}`}
             initialValue={task ? task.review["failedTaskHelp"] : ""}
             label="Failed Task"
             id="failed-task-help"
@@ -91,7 +85,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
       <Split hasGutter>
         <SplitItem>
           <ContributionInput
-            key="success"
+            key={`success-${task.title}`}
             initialValue={task ? task.summary["success"] : ""}
             label="Success"
             id="success"
@@ -103,7 +97,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         </SplitItem>
         <SplitItem>
           <ContributionInput
-            key="failed"
+            key={`failed-${task.title}`}
             initialValue={task ? task.summary["failed"] : ""}
             label="Failed"
             id="failed"

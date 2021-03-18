@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Grid,
-  GridItem,
-  Menu,
-  MenuList,
-  MenuItem,
-} from "@patternfly/react-core";
+import { Grid, GridItem } from "@patternfly/react-core";
 import "./QuickStartTile.scss";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 import QuickStartTile from "./QuickStartTile";
@@ -21,19 +15,21 @@ import {
 } from "@quickstarts/utils/quick-start-context";
 import QuickStartTourForm from "./Forms/QuickStartTileForm copy";
 import QuickStartControllerEdit from "@quickstarts/QuickStartControllerEdit";
-import TrashIcon from "@patternfly/react-icons/dist/js/icons/trash-icon";
-import GripHorizontalIcon from "@patternfly/react-icons/dist/js/icons/grip-horizontal-icon";
+import { QuickStartEditMenu } from "./Forms/QuickStartEditMenu";
+import YAML from "json-to-pretty-yaml";
 
 type QuickStartEditProps = {
   quickStartId?: string;
   quickStart: QuickStart;
   setQuickStart: Function;
+  setQuickYaml: Function;
 };
 
 const QuickStartEdit: React.FC<QuickStartEditProps> = ({
   quickStartId,
   quickStart,
   setQuickStart,
+  setQuickYaml,
 }) => {
   const {
     activeQuickStartID,
@@ -42,6 +38,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
 
   const [activeMenuItem, setActiveMenuItem] = useState(100);
   const [taskNumber, setTaskNumber] = useState(null);
+
   const handleMenuClick = (event, itemId: number) => {
     setActiveMenuItem(itemId);
     if (itemId < 100) {
@@ -52,6 +49,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
 
   const updateQuickStart = (newQuickStart: QuickStart) => {
     setQuickStart(newQuickStart);
+    setQuickYaml(YAML.stringify(newQuickStart));
   };
 
   const formGenerator = () => {
@@ -76,7 +74,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
         return (
           <TaskDetailsForm
             key="new"
-            quickstart={quickStart}
+            quickStart={quickStart}
             updateQuickStart={updateQuickStart}
           />
         );
@@ -84,7 +82,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
         return (
           <TaskDetailsForm
             key={`edit-${activeMenuItem}`}
-            quickstart={quickStart}
+            quickStart={quickStart}
             updateQuickStart={updateQuickStart}
             task={quickStart.spec.tasks[activeMenuItem]}
             index={activeMenuItem}
@@ -94,11 +92,6 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
   };
 
   const previews = () => {
-    // if (activeMenuItem === 102) {
-    //   console.log("new task");
-    //   return <div>New task</div>;
-    // }
-
     if (activeMenuItem < 100) {
       return (
         <div className="previews">
@@ -130,32 +123,16 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
         <React.Fragment>
           <Grid hasGutter>
             <GridItem span={12}></GridItem>
-            <GridItem span={2}>
-              <Menu activeItemId={activeMenuItem} onSelect={handleMenuClick}>
-                <MenuList>
-                  <MenuItem itemId={100}>Read Me First</MenuItem>
-                  <MenuItem itemId={101}>Quick Start Tile Editor</MenuItem>
-                  <MenuItem itemId={99}>Quick Start Tour Intro</MenuItem>
-                  <MenuItem className="separator" isDisabled={true}>
-                    {quickStart.spec.tasks.length} Tasks
-                  </MenuItem>
-                  {quickStart
-                    ? quickStart.spec.tasks.map((task, index) => {
-                        return (
-                          <MenuItem key={index} itemId={index}>
-                            <GripHorizontalIcon className="grip-icon" />
-                            {task.title}
-                          </MenuItem>
-                        );
-                      })
-                    : null}
-
-                  <MenuItem itemId={102}>Add Task+</MenuItem>
-                </MenuList>
-              </Menu>
+            <GridItem span={3}>
+              <QuickStartEditMenu
+                activeMenuItem={activeMenuItem}
+                handleMenuClick={handleMenuClick}
+                quickStart={quickStart}
+                updateQuickStart={updateQuickStart}
+              />
             </GridItem>
             <GridItem span={6}>{formGenerator()}</GridItem>
-            <GridItem span={4}>
+            <GridItem span={3}>
               {quickStart !== undefined ? (
                 <React.Fragment>{previews()}</React.Fragment>
               ) : null}

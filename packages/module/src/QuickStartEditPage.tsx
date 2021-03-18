@@ -45,6 +45,20 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     setPageType(location.pathname === "/quickstarts/add" ? "Add" : "Edit");
   }, [location.pathname]);
 
+  const saveQuickStart = () => {
+    const quickStartId = quickStart.metadata.name;
+
+    if (localStorage.getItem("newQuickStarts") === null) {
+      localStorage.setItem("newQuickStarts", JSON.stringify({}));
+    }
+
+    const lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
+
+    lSQuickstarts[quickStartId] = quickStart;
+
+    localStorage.setItem("newQuickStarts", JSON.stringify(lSQuickstarts));
+  };
+
   const downloadYAML = () => {
     // var decodedString = atob(quickYaml);
 
@@ -70,16 +84,14 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     QuickStartContext
   );
 
-  //   const onCloseLinkClick = global?.onCloseLinkClick;
+  const onCloseLinkClick = global?.onCloseLinkClick;
 
   return (
     <>
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
           {pageType} quickstart
-          {/* <Text component="h1" className="ocs-page-layout__title">
-            {t("quickstart~Close")} */}
-          {/* {onCloseLinkClick && (
+          {onCloseLinkClick && (
             <Button
               onClick={onCloseLinkClick}
               variant="secondary"
@@ -87,16 +99,12 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
             >
               Close
             </Button>
-          )} */}
-          {/* </Text> */}
-          {/* <Button
-            onClick={() => (document.location.href = "/quickstarts")}
-            className="float-right close-button"
-            variant="secondary"
+          )}
+          <Button
+            onClick={saveQuickStart}
+            className="float-right add-new-button"
+            variant="primary"
           >
-            Close
-          </Button> */}
-          <Button className="float-right add-new-button" variant="primary">
             Save
           </Button>
           <Button
@@ -115,19 +123,10 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           quickStart={quickStart}
           setQuickStart={setQuickStart}
           quickStartId={params.quickstartsId}
+          setQuickYaml={setQuickYaml}
           //   allQuickStartStates={allQuickStartStates}
         />
       )}
-
-      {/* <QuickStartsLoader>
-        {(quickStarts, loaded) =>
-          loaded ? (
-
-          ) : (
-            <LoadingBox />
-          )
-        }
-      </QuickStartsLoader> */}
     </>
   );
 };

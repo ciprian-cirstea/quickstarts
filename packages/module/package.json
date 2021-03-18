@@ -54,6 +54,7 @@
     "i18next-pseudo": "^2.2.0",
     "json-to-pretty-yaml": "^1.2.2",
     "lodash-es": "^4.17.20",
+    "react-beautiful-dnd": "^13.0.0",
     "react-i18next": "^11.7.3",
     "sass": "^1.30.0",
     "showdown": "^1.9.1",
