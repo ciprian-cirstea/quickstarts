@@ -14,6 +14,7 @@ const markdownConvert = (markdown, extensions?: string[]) => {
     strikethrough: true,
     emoji: true,
     extensions,
+    parseImgDimensions: true
   }).makeHtml(markdown);
 
   // add hook to transform anchor tags
@@ -24,6 +25,8 @@ const markdownConvert = (markdown, extensions?: string[]) => {
       return node;
     }
   });
+
+  return unsafeHtml
 
   return DOMPurify.sanitize(unsafeHtml, {
     ALLOWED_TAGS: [
@@ -48,9 +51,10 @@ const markdownConvert = (markdown, extensions?: string[]) => {
       "button",
       ...tableTags,
       "div",
+      "img"
     ],
-    ALLOWED_ATTR: ["href", "target", "rel", "class"],
-    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+    ALLOWED_ATTR: ["href", "target", "rel", "class", "src", "width", "height"],
+    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.\-]+Z(?:[^a-z+.\-:]|$))/i,
   });
 };
 

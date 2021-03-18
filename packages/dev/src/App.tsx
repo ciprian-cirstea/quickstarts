@@ -21,7 +21,7 @@ import {
   useValuesForQuickStartContext,
   useLocalStorage,
 } from "@cloudmosaic/quickstarts";
-import { allQuickStarts } from "./quickstarts-data/quick-start-test-data";
+import { allQuickStarts as quickstartsTestData} from "./quickstarts-data/quick-start-test-data";
 const App: React.FunctionComponent = ({ children }) => {
   const history = useHistory();
   const [initialized, setInitialized] = React.useState(true);
@@ -33,6 +33,13 @@ const App: React.FunctionComponent = ({ children }) => {
     "quickstarts",
     {}
   );
+
+  const [allQuickStarts, setAllQuickStarts] = useState(quickstartsTestData || [])
+  const [quickstartsLocal, setQuickstartsLocal] = useLocalStorage(
+    "newQuickStarts",
+    {}
+  );
+
   const isOnEditPage = () => {
     return (
       location.pathname.indexOf("quickstarts/edit/") !== -1 ||
@@ -41,6 +48,17 @@ const App: React.FunctionComponent = ({ children }) => {
   };
   const [isEditPage, setIsEditPage] = useState(isOnEditPage());
   const [isNavOpen, setIsNavOpen] = useState(false);
+
+  React.useEffect(() => {
+    var allQuickStartsTemp = allQuickStarts
+    allQuickStartsTemp.map((q, i) => {
+      if(Object.keys(quickstartsLocal).includes(q.metadata.name)) {
+        allQuickStartsTemp[i] = quickstartsLocal[q.metadata.name]
+      }
+    })
+    setAllQuickStarts(allQuickStartsTemp)
+  }, [quickstartsLocal])
+
   React.useEffect(() => console.log(activeQuickStartID), [activeQuickStartID]);
   React.useEffect(() => {
     // callback on state change
