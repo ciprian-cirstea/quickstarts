@@ -12,7 +12,7 @@ spec:
   prerequisites: [You completed the "Getting started with a sample" quick start.]
   introduction: |-
     ### This quick start shows you how to add health checks to your sample application.
-    You should ![foo](https://cdn.shopify.com/s/files/1/1490/5112/products/02710004_00_450x.jpg?v=1478044802 =400x400) have previously created the **sample-app** application and **nodejs-sample** deployment using the **Get started with a sample** quick start. If you haven't, you may be able to follow these tasks with any existing deployment without configured health checks.
+    You should have previously created the **sample-app** application and **nodejs-sample** deployment using the **Get started with a sample** quick start. If you haven't, you may be able to follow these tasks with any existing deployment without configured health checks.
   tasks:
     - title: Viewing the details of your sample application
       description: |-

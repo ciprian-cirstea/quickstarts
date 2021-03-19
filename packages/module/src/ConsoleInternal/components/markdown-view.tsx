@@ -26,8 +26,6 @@ const markdownConvert = (markdown, extensions?: string[]) => {
     }
   });
 
-  return unsafeHtml
-
   return DOMPurify.sanitize(unsafeHtml, {
     ALLOWED_TAGS: [
       "b",
