@@ -50,14 +50,27 @@ const App: React.FunctionComponent = ({ children }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   React.useEffect(() => {
-    var allQuickStartsTemp = allQuickStarts
-    allQuickStartsTemp.map((q, i) => {
-      if(Object.keys(quickstartsLocal).includes(q.metadata.name)) {
-        allQuickStartsTemp[i] = quickstartsLocal[q.metadata.name]
-      }
-    })
-    setAllQuickStarts(allQuickStartsTemp)
-  }, [quickstartsLocal])
+    setQuickstartsLocal(JSON.parse(window.localStorage.getItem('newQuickStarts') || '{}'))
+
+    if(location.pathname === '/quickstarts') {
+      // update existing quickstarts from localStorage
+      var allQuickStartsTemp = allQuickStarts
+      allQuickStartsTemp.map((q, i) => {
+        if(Object.keys(quickstartsLocal).includes(q.metadata.name)) {
+          allQuickStartsTemp[i] = quickstartsLocal[q.metadata.name]
+        }
+      })
+
+      // get new quickstarts from localStorage
+      Object.keys(quickstartsLocal).map(qLocal => {
+        if(!allQuickStarts.map(q => q.metadata.name).includes(qLocal)) {
+          allQuickStartsTemp.push(quickstartsLocal[qLocal])
+        }
+      })
+
+      setAllQuickStarts(allQuickStartsTemp)
+    }
+  }, [location.pathname])
 
   React.useEffect(() => console.log(activeQuickStartID), [activeQuickStartID]);
   React.useEffect(() => {

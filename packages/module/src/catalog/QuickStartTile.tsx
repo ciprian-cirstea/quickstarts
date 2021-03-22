@@ -53,9 +53,9 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
   ] // TODO monkey hardcoding yaml only 
 
 
-  useEffect(() => {
-    console.log(" -------- quickStart", quickStart)
-  }, [])
+  // useEffect(() => {
+  //   console.log(" -------- quickStart", quickStart)
+  // }, [])
 
   const edit = React.useCallback(
     (e: React.SyntheticEvent) => {
