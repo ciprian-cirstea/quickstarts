@@ -29,34 +29,81 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   const [quickYaml, setQuickYaml] = React.useState(undefined);
   const [quickStart, setQuickStart] = React.useState(undefined);
   const [pageType, setPageType] = React.useState("Edit");
+  const { global } = React.useContext<QuickStartContextValues>(
+    QuickStartContext
+  );
+  const onCloseLinkClick = global?.onCloseLinkClick;
+
+  React.useEffect(() => {
+    if (location.pathname === "/quickstarts/add") {
+      setPageType("Add");
+      const random = Math.floor(Math.random() * Math.floor(20)).toString();
+      createStorageQuickStarts(true, random, null);
+    }
+  }, [location.pathname]);
 
   React.useEffect(() => {
     const quickEdit = allQuickStarts.find((data) => {
       return data.metadata.name === params.quickstartsId;
     });
-
-    if (quickEdit) {
+    if (quickEdit && pageType === "Edit") {
       setQuickStart(quickEdit);
       setQuickYaml(YAML.stringify(quickEdit));
     }
   }, []);
 
-  React.useEffect(() => {
-    setPageType(location.pathname === "/quickstarts/add" ? "Add" : "Edit");
-  }, [location.pathname]);
+  const createStorageQuickStarts = (add: boolean, id: string, quickStart) => {
+    let quickStartId = id;
 
-  const saveQuickStart = () => {
-    const quickStartId = quickStart.metadata.name;
+    let quickStartObject = quickStart;
 
-    if (localStorage.getItem("newQuickStarts") === null) {
+    let lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
+    if (lSQuickstarts === null) {
       localStorage.setItem("newQuickStarts", JSON.stringify({}));
     }
 
-    const lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
+    lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
 
-    lSQuickstarts[quickStartId] = quickStart;
+    //empty quickstart template
+    const qs = {
+      apiVersion: "console.openshift.io/v1",
+      kind: "ConsoleQuickStart",
+      metadata: { name: quickStartId },
+      spec: {
+        conclusion: "",
+        description: "",
+        displayName: "",
+        durationMinutes: null,
+        icon: "",
+        introduction: "",
+        nextQuickStart: [],
+        prerequisites: [],
+        tasks: [],
+        version: 4.7,
+      },
+    };
+
+    if (add) {
+      quickStartObject = qs;
+    }
+
+    lSQuickstarts[quickStartId] = quickStartObject;
 
     localStorage.setItem("newQuickStarts", JSON.stringify(lSQuickstarts));
+
+    if (add) {
+      setQuickStart(qs);
+    }
+  };
+
+  const saveQuickStart = () => {
+    console.log("---------------------------------");
+    console.log("save stuff here");
+    const quickStartId = quickStart.metadata.name;
+    let add = false;
+    if (pageType === "Edit") {
+      createStorageQuickStarts(false, quickStartId, quickStart);
+    }
   };
 
   const downloadYAML = () => {
@@ -80,12 +127,6 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     }, 1500);
   };
 
-  const { global } = React.useContext<QuickStartContextValues>(
-    QuickStartContext
-  );
-
-  const onCloseLinkClick = global?.onCloseLinkClick;
-
   return (
     <>
       <div className="ocs-page-layout__header">
@@ -101,7 +142,11 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
             </Button>
           )}
           <Button
-            onClick={saveQuickStart}
+            onClick={() => {
+              saveQuickStart();
+              onCloseLinkClick();
+            }}
+            // onClick={saveQuickStart }
             className="float-right add-new-button"
             variant="primary"
           >
@@ -118,15 +163,15 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
         </Text>
       </div>
 
-      {quickStart && (
-        <QuickStartEdit
-          quickStart={quickStart}
-          setQuickStart={setQuickStart}
-          quickStartId={params.quickstartsId}
-          setQuickYaml={setQuickYaml}
-          //   allQuickStartStates={allQuickStartStates}
-        />
-      )}
+      {/* {quickStart && ( */}
+      <QuickStartEdit
+        quickStart={quickStart}
+        setQuickStart={setQuickStart}
+        quickStartId={params.quickstartsId}
+        setQuickYaml={setQuickYaml}
+        //   allQuickStartStates={allQuickStartStates}
+      />
+      {/* )} */}
     </>
   );
 };

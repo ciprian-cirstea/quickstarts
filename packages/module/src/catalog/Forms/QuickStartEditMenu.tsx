@@ -14,7 +14,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 type QuickStartEditPageProps = {
   activeMenuItem?: any;
   handleMenuClick: any;
-  quickStart: any;
+  quickStart?: any;
   updateQuickStart: Function;
 };
 
@@ -49,7 +49,6 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
             selectedTask = activeMenuItem;
           }
 
-          console.log("selectedTask", selectedTask);
           handleMenuClick(null, selectedTask);
         } else {
           handleMenuClick(null, 99);
@@ -57,8 +56,6 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
       } else {
         handleMenuClick(null, activeMenuItem);
       }
-      //   setTimeout(() => {
-      //   }, 200);
     } catch (error) {
       console.log(error);
     }
@@ -74,12 +71,15 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
           Tile Editor
         </MenuItem>
         <MenuItem isSelected={activeMenuItem === 99} itemId={99}>
-          Table of Contents
+          Introduction
+        </MenuItem>
+        <MenuItem isSelected={activeMenuItem === 98} itemId={98}>
+          Conclusion
         </MenuItem>
         <Divider />
 
         <MenuItem isDisabled={true}>
-          Tasks [{quickStart.spec.tasks.length}]
+          Tasks [{quickStart?.spec.tasks.length}]
         </MenuItem>
       </MenuList>
       <Divider />
@@ -151,7 +151,7 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
 
       <MenuList>
         {quickStart
-          ? quickStart.spec.tasks.map((task, index: number) => {
+          ? quickStart?.spec.tasks.map((task, index: number) => {
               return (
                 <MenuItem
                   isSelected={activeMenuItem === index}

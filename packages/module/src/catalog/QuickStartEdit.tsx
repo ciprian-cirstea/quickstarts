@@ -7,20 +7,23 @@ import QuickStartTile from "./QuickStartTile";
 import { getQuickStartStatus } from "../utils/quick-start-utils";
 
 import "./QuickStartEdit.scss";
-import ContributionDetailsForm from "./Forms/QuickStartTileForm";
+// import ContributionDetailsForm from "./Forms/QuickStartTileForm";
 import TaskDetailsForm from "./Forms/TaskDetailsForm";
 import {
   QuickStartContext,
   QuickStartContextValues,
 } from "@quickstarts/utils/quick-start-context";
-import QuickStartTourForm from "./Forms/QuickStartTileForm copy";
+// import QuickStartTourForm from "./Forms/QuickStartTileForm";
 import QuickStartControllerEdit from "@quickstarts/QuickStartControllerEdit";
 import { QuickStartEditMenu } from "./Forms/QuickStartEditMenu";
 import YAML from "json-to-pretty-yaml";
+import QuickStartIntroductionForm from "./Forms/QuickStartIntroductionForm";
+import QuickStartConclusionForm from "./Forms/QuickStartConclusionForm";
+import QuickStartDetailsForm from "./Forms/QuickStartDetailsForm";
 
 type QuickStartEditProps = {
   quickStartId?: string;
-  quickStart: QuickStart;
+  quickStart?: QuickStart;
   setQuickStart: Function;
   setQuickYaml: Function;
 };
@@ -48,6 +51,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
   };
 
   const updateQuickStart = (newQuickStart: QuickStart) => {
+    console.log("newQuickStart================>>>", newQuickStart);
     setQuickStart(newQuickStart);
     setQuickYaml(YAML.stringify(newQuickStart));
   };
@@ -58,14 +62,21 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
         return <div className="pf-u-font-size-2xl">IBM Quick Starts Help</div>;
       case 101:
         return (
-          <ContributionDetailsForm
+          <QuickStartDetailsForm
+            quickstart={quickStart}
+            updateQuickStart={updateQuickStart}
+          />
+        );
+      case 98:
+        return (
+          <QuickStartConclusionForm
             quickstart={quickStart}
             updateQuickStart={updateQuickStart}
           />
         );
       case 99:
         return (
-          <QuickStartTourForm
+          <QuickStartIntroductionForm
             quickstart={quickStart}
             updateQuickStart={updateQuickStart}
           />
@@ -92,7 +103,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
   };
 
   const previews = () => {
-    if (activeMenuItem < 100) {
+    if (activeMenuItem < 100 || activeMenuItem === 102) {
       return (
         <div className="previews">
           <QuickStartControllerEdit
@@ -102,9 +113,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
           />
         </div>
       );
-    }
-
-    if (activeMenuItem > 100) {
+    } else {
       return (
         <QuickStartTile
           quickStart={quickStart}
@@ -119,29 +128,29 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
 
   return (
     <div className="tabs-container">
-      {quickStart ? (
-        <React.Fragment>
-          <Grid hasGutter>
-            <GridItem span={12}></GridItem>
-            <GridItem span={3}>
-              <QuickStartEditMenu
-                activeMenuItem={activeMenuItem}
-                handleMenuClick={handleMenuClick}
-                quickStart={quickStart}
-                updateQuickStart={updateQuickStart}
-              />
-            </GridItem>
-            <GridItem span={6}>{formGenerator()}</GridItem>
-            <GridItem span={3}>
-              {quickStart !== undefined ? (
-                <React.Fragment>{previews()}</React.Fragment>
-              ) : null}
-            </GridItem>
-          </Grid>
-        </React.Fragment>
-      ) : (
+      {/* {quickStart ? ( */}
+      <React.Fragment>
+        <Grid hasGutter>
+          <GridItem span={12}></GridItem>
+          <GridItem span={3}>
+            <QuickStartEditMenu
+              activeMenuItem={activeMenuItem}
+              handleMenuClick={handleMenuClick}
+              quickStart={quickStart}
+              updateQuickStart={updateQuickStart}
+            />
+          </GridItem>
+          <GridItem span={6}>{formGenerator()}</GridItem>
+          <GridItem span={3}>
+            {quickStart !== undefined ? (
+              <React.Fragment>{previews()}</React.Fragment>
+            ) : null}
+          </GridItem>
+        </Grid>
+      </React.Fragment>
+      {/* ) : (
         ""
-      )}
+      )} */}
     </div>
   );
 };

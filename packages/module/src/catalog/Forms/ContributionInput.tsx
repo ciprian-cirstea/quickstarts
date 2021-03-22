@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextInput, FormGroup, TextArea } from "@patternfly/react-core";
 
 type ContributionInputProps = {
-  initialValue;
+  initialValue?: any;
   label: string;
   id: string;
   value: string;
@@ -20,24 +20,22 @@ const ContributionInput: React.FC<ContributionInputProps> = ({
   type,
   updateValue,
 }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(initialValue);
 
-  React.useEffect(() => {
-    setInputValue(initialValue);
-  }, []);
+  //   React.useEffect(() => {
+  //     setInputValue(initialValue);
+  //   }, []);
 
-  React.useEffect(() => {
-    setInputValue(initialValue);
-    console.log("input useEffect", inputValue);
-  }, [inputValue]);
+  //   React.useEffect(() => {
+  //     setInputValue(initialValue);
+  //     console.log("input useEffect", inputValue);
+  //   }, [inputValue]);
 
   const handleChange = (e) => {
     setInputValue(e);
     updateValue(value, e);
   };
 
-  //   console.log("inputValue ::::::", inputValue);
-  //   console.log("initialValue ;;;;;;;;", initialValue);
   return (
     <FormGroup label={label} isRequired fieldId={id}>
       {textarea ? (

@@ -9,16 +9,16 @@ import {
 import { Form, FormGroup, TextArea, Button } from "@patternfly/react-core";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
-import "./QuickStartTileForm.scss";
+import "./QuickStartIntroductionForm.scss";
 import ContributionInput from "./ContributionInput";
 import PrerequisitesComponent from "./PrerequisitesComponent";
 
 type ContributionDetailsFormProps = {
-  quickstart: QuickStart;
+  quickstart?: QuickStart;
   updateQuickStart: Function;
 };
 
-const QuickStartTourForm: React.FC<ContributionDetailsFormProps> = ({
+const QuickStartIntroductionForm: React.FC<ContributionDetailsFormProps> = ({
   quickstart,
   updateQuickStart,
 }) => {
@@ -27,7 +27,7 @@ const QuickStartTourForm: React.FC<ContributionDetailsFormProps> = ({
   );
 
   React.useEffect(() => {
-    if (quickstart.hasOwnProperty("spec")) {
+    if (quickstart?.hasOwnProperty("spec")) {
       setQuickStartFormData(quickstart);
     }
   }, []);
@@ -38,6 +38,9 @@ const QuickStartTourForm: React.FC<ContributionDetailsFormProps> = ({
 
   const quickUpdate = (value, e) => {
     const newQuick = { ...quickstart };
+    if (!newQuick.spec[value]) {
+      newQuick.spec[value] = "";
+    }
     newQuick.spec[value] = e;
     updateQuickStart(newQuick);
   };
@@ -56,16 +59,6 @@ const QuickStartTourForm: React.FC<ContributionDetailsFormProps> = ({
             type="text"
             updateValue={quickUpdate}
           />
-          <ContributionInput
-            key="conclusion"
-            initialValue={quickStartFormData.spec["conclusion"]}
-            label="Conclusion"
-            id="conclusion"
-            value="conclusion"
-            textarea={false}
-            type="text"
-            updateValue={quickUpdate}
-          />
         </Form>
       ) : (
         ""
@@ -74,4 +67,4 @@ const QuickStartTourForm: React.FC<ContributionDetailsFormProps> = ({
   );
 };
 
-export default QuickStartTourForm;
+export default QuickStartIntroductionForm;

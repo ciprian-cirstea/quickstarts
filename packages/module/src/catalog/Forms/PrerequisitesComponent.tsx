@@ -11,7 +11,7 @@ import {
 import PlusCircleIcon from "@patternfly/react-icons/dist/js/icons/plus-circle-icon";
 
 type PrerequisitesProps = {
-  prerequisites: Array<string>;
+  prerequisites?: Array<string>;
   updateValue: Function;
   value: string;
 };
@@ -51,7 +51,7 @@ const PrerequisitesComponent: React.FC<PrerequisitesProps> = ({
         isRequired
         fieldId="simple-form-name-01"
       >
-        {pre.map((p, index) => {
+        {pre?.map((p, index) => {
           return (
             <Grid key={`pre-${index}`} className="prereq">
               <GridItem className="pf-u-font-size-sm" span={10}>

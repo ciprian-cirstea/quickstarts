@@ -9,7 +9,7 @@ import {
 import { Form, FormGroup, TextArea, Button } from "@patternfly/react-core";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
-import "./QuickStartTileForm.scss";
+import "./QuickStartDetailsForm.scss";
 import ContributionInput from "./ContributionInput";
 import PrerequisitesComponent from "./PrerequisitesComponent";
 
@@ -18,7 +18,7 @@ type ContributionDetailsFormProps = {
   updateQuickStart: Function;
 };
 
-const ContributionDetailsForm: React.FC<ContributionDetailsFormProps> = ({
+const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
   quickstart,
   updateQuickStart,
 }) => {
@@ -109,4 +109,4 @@ const ContributionDetailsForm: React.FC<ContributionDetailsFormProps> = ({
   );
 };
 
-export default ContributionDetailsForm;
+export default QuickStartDetailsForm;
