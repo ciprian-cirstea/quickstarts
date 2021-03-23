@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { TextInput, FormGroup, TextArea } from "@patternfly/react-core";
+import { Checkbox } from "@patternfly/react-core/dist/js/components";
 
 type FormInputProps = {
   initialValue?: any;

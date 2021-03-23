@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import {
-  TextInput,
-  Split,
-  SplitItem,
-  Grid,
-  GridItem,
-} from "@patternfly/react-core";
-import { Form, FormGroup, TextArea, Button } from "@patternfly/react-core";
+// import {
+//   TextInput,
+//   Split,
+//   SplitItem,
+//   Grid,
+//   GridItem,
+// } from "@patternfly/react-core";
+// import { Form, FormGroup, TextArea, Button } from "@patternfly/react-core";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
 import "./QuickStartIntroductionForm.scss";
 import FormInput from "./FormInput";
-import PrerequisitesComponent from "./PrerequisitesComponent";
+// import PrerequisitesComponent from "./PrerequisitesComponent";
 
 type ConclusionFormProps = {
   quickstart?: QuickStart;
@@ -32,10 +32,6 @@ const QuickStartConclusionForm: React.FC<ConclusionFormProps> = ({
     }
   }, []);
 
-  const handleSubmit = () => {
-    console.log("submit");
-  };
-
   const quickUpdate = (value, e) => {
     const newQuick = { ...quickstart };
     if (!newQuick.spec[value]) {
@@ -48,18 +44,16 @@ const QuickStartConclusionForm: React.FC<ConclusionFormProps> = ({
   return (
     <React.Fragment>
       {quickStartFormData ? (
-        <Form onSubmit={handleSubmit}>
-          <FormInput
-            key="conclusion"
-            initialValue={quickStartFormData.spec["conclusion"]}
-            label="Conclusion"
-            id="conclusion"
-            value="conclusion"
-            textarea={false}
-            type="text"
-            updateValue={quickUpdate}
-          />
-        </Form>
+        <FormInput
+          key="conclusion"
+          initialValue={quickStartFormData.spec["conclusion"]}
+          label="Conclusion"
+          id="conclusion"
+          value="conclusion"
+          textarea={false}
+          type="text"
+          updateValue={quickUpdate}
+        />
       ) : (
         ""
       )}

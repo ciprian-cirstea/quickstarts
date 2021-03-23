@@ -32,10 +32,6 @@ const QuickStartIntroductionForm: React.FC<ContributionDetailsFormProps> = ({
     }
   }, []);
 
-  const handleSubmit = () => {
-    console.log("submit");
-  };
-
   const quickUpdate = (value, e) => {
     const newQuick = { ...quickstart };
     if (!newQuick.spec[value]) {
@@ -48,18 +44,16 @@ const QuickStartIntroductionForm: React.FC<ContributionDetailsFormProps> = ({
   return (
     <React.Fragment>
       {quickStartFormData ? (
-        <Form onSubmit={handleSubmit}>
-          <FormInput
-            key="intro"
-            initialValue={quickStartFormData.spec["introduction"]}
-            label="Introduction"
-            id="introduction"
-            value="introduction"
-            textarea={true}
-            type="text"
-            updateValue={quickUpdate}
-          />
-        </Form>
+        <FormInput
+          key="intro"
+          initialValue={quickStartFormData.spec["introduction"]}
+          label="Introduction"
+          id="introduction"
+          value="introduction"
+          textarea={true}
+          type="text"
+          updateValue={quickUpdate}
+        />
       ) : (
         ""
       )}

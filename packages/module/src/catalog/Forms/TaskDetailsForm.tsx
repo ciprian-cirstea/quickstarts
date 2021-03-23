@@ -1,5 +1,5 @@
 import React from "react";
-import { Split, SplitItem } from "@patternfly/react-core";
+import { Split, SplitItem, Checkbox } from "@patternfly/react-core";
 import { Form } from "@patternfly/react-core";
 
 import "./TaskDetailsForm.scss";
@@ -64,7 +64,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
   };
 
   return (
-    <Form>
+    <React.Fragment>
       <FormInput
         // key={`title-${task?.title}`}
         initialValue={task ? task.title : ""}
@@ -115,6 +115,12 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         </SplitItem>
       </Split>
 
+      <div className="pf-u-font-size-lg">Active</div>
+      <Checkbox
+        label="Uncontrolled CheckBox"
+        aria-label="uncontrolled checkbox example"
+        id="check-5"
+      />
       <div className="pf-u-font-size-lg">Summary</div>
       <Split hasGutter>
         <SplitItem>
@@ -142,7 +148,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
           />
         </SplitItem>
       </Split>
-    </Form>
+    </React.Fragment>
   );
 };
 

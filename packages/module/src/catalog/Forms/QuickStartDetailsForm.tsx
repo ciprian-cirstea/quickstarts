@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  TextInput,
-  Split,
-  SplitItem,
-  Grid,
-  GridItem,
-} from "@patternfly/react-core";
-import { Form, FormGroup, TextArea, Button } from "@patternfly/react-core";
+import { Split, SplitItem } from "@patternfly/react-core";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
 import "./QuickStartDetailsForm.scss";
@@ -17,11 +10,13 @@ import { Checkbox } from "@patternfly/react-core/dist/js/components";
 type ContributionDetailsFormProps = {
   quickstart: QuickStart;
   updateQuickStart: Function;
+  deactivateQuickstart;
 };
 
 const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
   quickstart,
   updateQuickStart,
+  deactivateQuickstart,
 }) => {
   const [quickStartFormData, setQuickStartFormData] = useState<QuickStart>(
     null
@@ -33,9 +28,9 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
     }
   }, []);
 
-  const handleSubmit = () => {
-    console.log("submit");
-  };
+  //   const handleSubmit = () => {
+  //     console.log("submit");
+  //   };
 
   const quickUpdate = (value, e) => {
     const newQuick = { ...quickstart };
@@ -45,17 +40,20 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
 
   const checkboxWithDescription = () => (
     <Checkbox
-      id="check-8"
-      label="CheckBox with description"
-      aria-label="Checkbox with description example"
-      description="Description"
+      label="Deactivate Quick Start"
+      isChecked={quickstart.hasOwnProperty("inactive")}
+      onChange={deactivateQuickstart}
+      aria-label="controlled checkbox example"
+      id="deactivate-quickstart"
+      name="deactivate-quickstart"
     />
   );
 
   return (
     <React.Fragment>
       {quickStartFormData ? (
-        <Form onSubmit={handleSubmit}>
+        // <Form onSubmit={handleSubmit}>
+        <React.Fragment>
           <FormInput
             key="title"
             initialValue={quickStartFormData.spec["displayName"]}
@@ -66,6 +64,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             type="text"
             updateValue={quickUpdate}
           />
+          <div className="deactivate-checkbox">{checkboxWithDescription()}</div>
 
           <FormInput
             key="icon"
@@ -78,7 +77,6 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             updateValue={quickUpdate}
           />
 
-          {checkboxWithDescription}
           <Split hasGutter>
             <SplitItem>
               <FormInput
@@ -123,8 +121,9 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             updateValue={quickUpdate}
             value="prerequisites"
           />
-        </Form>
+        </React.Fragment>
       ) : (
+        // </Form>
         ""
       )}
     </React.Fragment>

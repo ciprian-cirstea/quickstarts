@@ -7,19 +7,20 @@ import QuickStartTile from "./QuickStartTile";
 import { getQuickStartStatus } from "../utils/quick-start-utils";
 
 import "./QuickStartEditComponent.scss";
-// import ContributionDetailsForm from "./Forms/QuickStartTileForm";
+
 import TaskDetailsForm from "./Forms/TaskDetailsForm";
 import {
   QuickStartContext,
   QuickStartContextValues,
 } from "@quickstarts/utils/quick-start-context";
-// import QuickStartTourForm from "./Forms/QuickStartTileForm";
+
 import QuickStartControllerEdit from "@quickstarts/QuickStartControllerEdit";
 import { QuickStartEditMenu } from "./Forms/QuickStartEditMenu";
 import YAML from "json-to-pretty-yaml";
 import QuickStartIntroductionForm from "./Forms/QuickStartIntroductionForm";
 import QuickStartConclusionForm from "./Forms/QuickStartConclusionForm";
 import QuickStartDetailsForm from "./Forms/QuickStartDetailsForm";
+import { Form } from "@patternfly/react-core/dist/js/components";
 
 type QuickStartEditProps = {
   quickStartId?: string;
@@ -52,9 +53,18 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
   };
 
   const updateQuickStart = (newQuickStart: QuickStart) => {
-    // console.log("newQuickStart================>>>", newQuickStart);
     setQuickStart(newQuickStart);
     setQuickYaml(YAML.stringify(newQuickStart));
+  };
+
+  const deactivateQuickstart = () => {
+    const newQ = { ...quickStart };
+    if (newQ.hasOwnProperty("inactive")) {
+      delete newQ["inactive"];
+    } else {
+      newQ["inactive"] = true;
+    }
+    setQuickStart(newQ);
   };
 
   const formGenerator = () => {
@@ -66,6 +76,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
           <QuickStartDetailsForm
             quickstart={quickStart}
             updateQuickStart={updateQuickStart}
+            deactivateQuickstart={deactivateQuickstart}
           />
         );
       case 98:
@@ -144,7 +155,9 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
               updateQuickStart={updateQuickStart}
             />
           </GridItem>
-          <GridItem span={6}>{formGenerator()}</GridItem>
+          <GridItem span={6}>
+            <Form>{formGenerator()}</Form>
+          </GridItem>
           <GridItem span={3}>
             {quickStart !== undefined ? (
               <React.Fragment>{previews()}</React.Fragment>

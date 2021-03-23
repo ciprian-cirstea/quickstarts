@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import { Button, Text } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/js/icons/download-icon";
 import YAML from "json-to-pretty-yaml";
@@ -9,6 +9,7 @@ import {
   QuickStartContextValues,
 } from "./utils/quick-start-context";
 import QuickStartEditComponent from "./catalog/QuickStartEditComponent";
+import { QuickStart } from "./utils/quick-start-types";
 
 type QuickStartEditPageProps = {
   match?: any;
@@ -17,18 +18,19 @@ type QuickStartEditPageProps = {
 export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   props
 ) => {
-  const { t } = useTranslation();
+  //   const { t } = useTranslation();
   const {
     match: { params },
   } = props;
-  const {
-    allQuickStartStates,
-    allQuickStarts,
-  } = React.useContext<QuickStartContextValues>(QuickStartContext);
+
+  const { allQuickStarts } = React.useContext<QuickStartContextValues>(
+    QuickStartContext
+  );
 
   const [quickYaml, setQuickYaml] = React.useState(undefined);
   const [quickStart, setQuickStart] = React.useState(undefined);
   const [pageType, setPageType] = React.useState("Edit");
+  const [errors, setErrors] = React.useState({});
   const { global } = React.useContext<QuickStartContextValues>(
     QuickStartContext
   );
@@ -37,7 +39,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   React.useEffect(() => {
     if (location.pathname === "/quickstarts/add") {
       setPageType("Add");
-      const random = Math.floor(Math.random() * Math.floor(20)).toString();
+
       const id = Date.now();
       //   createStorageQuickStarts(true, random, null);
       const qs = {
@@ -63,16 +65,24 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   }, [location.pathname]);
 
   React.useEffect(() => {
+    console.log("params------------------", params);
+
     const quickEdit = allQuickStarts.find((data) => {
+      console.log(data.metadata.name);
       return data.metadata.name.toString() === params.quickstartsId;
     });
+
     if (quickEdit && pageType === "Edit") {
       setQuickStart(quickEdit);
       setQuickYaml(YAML.stringify(quickEdit));
     }
   }, []);
 
-  const createStorageQuickStarts = (add: boolean, id: string, quickStart) => {
+  const createStorageQuickStarts = (
+    add: boolean,
+    id: string,
+    quickStart: QuickStart
+  ) => {
     let quickStartId = id;
 
     let quickStartObject = quickStart;
@@ -84,46 +94,16 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
     lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
 
-    //empty quickstart template
-    // const qs = {
-    //   apiVersion: "console.openshift.io/v1",
-    //   kind: "ConsoleQuickStart",
-    //   metadata: { name: quickStartId },
-    //   spec: {
-    //     conclusion: "",
-    //     description: "",
-    //     displayName: "",
-    //     durationMinutes: null,
-    //     icon: "",
-    //     introduction: "",
-    //     nextQuickStart: [],
-    //     prerequisites: [],
-    //     tasks: [],
-    //     version: 4.7,
-    //   },
-    // };
-
-    // if (add) {
-    //   quickStartObject = qs;
-    // }
-
     lSQuickstarts[quickStartId] = quickStartObject;
 
-    // if (!add) {
     localStorage.setItem("newQuickStarts", JSON.stringify(lSQuickstarts));
-    // }
-
-    // if (add) {
-    //   setQuickStart(qs);
-    // }
   };
 
   const saveQuickStart = () => {
+    console.log(errors);
     const quickStartId = quickStart.metadata.name;
-    // let add = false;
-    // if (pageType === "Edit") {
+
     createStorageQuickStarts(false, quickStartId, quickStart);
-    // }
   };
 
   const downloadYAML = () => {
@@ -151,7 +131,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     <>
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
-          {pageType} quickstart
+          {pageType} Quick Start
           {onCloseLinkClick && (
             <Button
               onClick={onCloseLinkClick}
@@ -182,15 +162,12 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
         </Text>
       </div>
 
-      {/* {quickStart && ( */}
       <QuickStartEditComponent
         quickStart={quickStart}
         setQuickStart={setQuickStart}
         quickStartId={params.quickstartsId}
         setQuickYaml={setQuickYaml}
-        //   allQuickStartStates={allQuickStartStates}
       />
-      {/* )} */}
     </>
   );
 };
