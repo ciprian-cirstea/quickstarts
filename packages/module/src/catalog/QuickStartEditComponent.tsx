@@ -6,7 +6,7 @@ import QuickStartTile from "./QuickStartTile";
 
 import { getQuickStartStatus } from "../utils/quick-start-utils";
 
-import "./QuickStartEdit.scss";
+import "./QuickStartEditComponent.scss";
 // import ContributionDetailsForm from "./Forms/QuickStartTileForm";
 import TaskDetailsForm from "./Forms/TaskDetailsForm";
 import {
@@ -28,7 +28,7 @@ type QuickStartEditProps = {
   setQuickYaml: Function;
 };
 
-const QuickStartEdit: React.FC<QuickStartEditProps> = ({
+const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
   quickStartId,
   quickStart,
   setQuickStart,
@@ -44,6 +44,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
 
   const handleMenuClick = (event, itemId: number) => {
     setActiveMenuItem(itemId);
+    console.log("itemId", itemId);
     if (itemId < 100) {
       const id = itemId === 99 ? -1 : itemId;
       setTaskNumber(id);
@@ -51,7 +52,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
   };
 
   const updateQuickStart = (newQuickStart: QuickStart) => {
-    console.log("newQuickStart================>>>", newQuickStart);
+    // console.log("newQuickStart================>>>", newQuickStart);
     setQuickStart(newQuickStart);
     setQuickYaml(YAML.stringify(newQuickStart));
   };
@@ -86,7 +87,9 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
           <TaskDetailsForm
             key="new"
             quickStart={quickStart}
+            // task={quickStart.spec.tasks[activeMenuItem]}
             updateQuickStart={updateQuickStart}
+            handleMenuClick={handleMenuClick}
           />
         );
       default:
@@ -97,6 +100,7 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
             updateQuickStart={updateQuickStart}
             task={quickStart.spec.tasks[activeMenuItem]}
             index={activeMenuItem}
+            handleMenuClick={handleMenuClick}
           />
         );
     }
@@ -148,11 +152,8 @@ const QuickStartEdit: React.FC<QuickStartEditProps> = ({
           </GridItem>
         </Grid>
       </React.Fragment>
-      {/* ) : (
-        ""
-      )} */}
     </div>
   );
 };
 
-export default QuickStartEdit;
+export default QuickStartEditComponent;

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Text } from "@patternfly/react-core";
-import QuickStartEdit from "./catalog/QuickStartEdit";
 import DownloadIcon from "@patternfly/react-icons/dist/js/icons/download-icon";
 import YAML from "json-to-pretty-yaml";
 
@@ -9,6 +8,7 @@ import {
   QuickStartContext,
   QuickStartContextValues,
 } from "./utils/quick-start-context";
+import QuickStartEditComponent from "./catalog/QuickStartEditComponent";
 
 type QuickStartEditPageProps = {
   match?: any;
@@ -64,7 +64,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
   React.useEffect(() => {
     const quickEdit = allQuickStarts.find((data) => {
-      return data.metadata.name === params.quickstartsId;
+      return data.metadata.name.toString() === params.quickstartsId;
     });
     if (quickEdit && pageType === "Edit") {
       setQuickStart(quickEdit);
@@ -119,10 +119,8 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   };
 
   const saveQuickStart = () => {
-    console.log("---------------------------------");
-    console.log("save stuff here");
     const quickStartId = quickStart.metadata.name;
-    let add = false;
+    // let add = false;
     // if (pageType === "Edit") {
     createStorageQuickStarts(false, quickStartId, quickStart);
     // }
@@ -168,7 +166,6 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
               saveQuickStart();
               //   onCloseLinkClick();
             }}
-            // onClick={saveQuickStart }
             className="float-right add-new-button"
             variant="primary"
           >
@@ -186,7 +183,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       </div>
 
       {/* {quickStart && ( */}
-      <QuickStartEdit
+      <QuickStartEditComponent
         quickStart={quickStart}
         setQuickStart={setQuickStart}
         quickStartId={params.quickstartsId}

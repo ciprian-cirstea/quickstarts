@@ -11,6 +11,7 @@ type TaskDetailsFormProps = {
   quickStart: QuickStart;
   updateQuickStart: Function;
   index?: number;
+  handleMenuClick: Function;
 };
 
 const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
@@ -18,17 +19,17 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
   quickStart,
   updateQuickStart,
   index,
+  handleMenuClick,
 }) => {
-  console.log(quickStart);
-  console.log("task --- ", task);
-  console.log("index", index);
+  console.log("quickStart 102", quickStart);
+
   const [qs, setQs] = React.useState(quickStart);
   //   const [newTasks, setNewTasks] = React.useState([]);
   const [taskIndex, setTaskIndex] = React.useState(index ? index : 0);
 
   React.useEffect(() => {
     if (!task) {
-      console.log("NOT TASK !!!!!!!!!!!!!!!!!!!!!!!");
+      console.log("NO TASK !!!!!!!!!!!!!!!!!!!!!!!");
       const newQuick = { ...qs };
 
       const newTasksArray = [...newQuick.spec.tasks];
@@ -42,13 +43,14 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
 
       newQuick.spec.tasks = newTasksArray;
       setQs(newQuick);
+      handleMenuClick(null, 0);
     }
   }, []);
 
-  const quickUpdate = (value, e) => {
+  const quickUpdate = (value: string, e: string) => {
     const newTsk = [...qs.spec.tasks];
-    console.log("newTsk", newTsk);
-    console.log("indexxxxxxx", taskIndex);
+    // console.log("newTsk", newTsk);
+    // console.log("indexxxxxxx", taskIndex);
 
     if (value === "instructions" || value === "failedTaskHelp") {
       newTsk[taskIndex].review[value] = e;

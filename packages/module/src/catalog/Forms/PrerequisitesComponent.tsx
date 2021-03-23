@@ -9,7 +9,7 @@ import {
   Button,
 } from "@patternfly/react-core";
 import PlusCircleIcon from "@patternfly/react-icons/dist/js/icons/plus-circle-icon";
-
+import MinusCircleIcon from "@patternfly/react-icons/dist/js/icons/minus-circle-icon";
 type PrerequisitesProps = {
   prerequisites?: Array<string>;
   updateValue: Function;
@@ -24,7 +24,7 @@ const PrerequisitesComponent: React.FC<PrerequisitesProps> = ({
   const [pre, setPre] = useState(prerequisites);
 
   const removePre = (i: number) => {
-    if (i === 0) return;
+    // if (i === 0) return;
     const filtered = pre.filter((data, index) => index !== i);
     setPre(filtered);
     updateValue(value, filtered);
@@ -57,19 +57,16 @@ const PrerequisitesComponent: React.FC<PrerequisitesProps> = ({
               <GridItem className="pf-u-font-size-sm" span={10}>
                 Prerequisite {index + 1}
               </GridItem>
-              {index > 0 ? (
-                <GridItem className="remove-link" span={2} rowSpan={2}>
-                  <Button
-                    onClick={() => removePre(index)}
-                    variant="link"
-                    // icon={<PlusCircleIcon />}
-                  >
-                    Remove
-                  </Button>
-                </GridItem>
-              ) : (
-                ""
-              )}
+              <GridItem className="remove-link" span={2} rowSpan={2}>
+                <Button
+                  onClick={() => removePre(index)}
+                  variant="link"
+                  icon={<MinusCircleIcon />}
+                >
+                  Remove
+                </Button>
+              </GridItem>
+
               <GridItem span={12}>
                 <TextInput
                   isRequired

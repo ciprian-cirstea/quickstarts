@@ -12,6 +12,7 @@ import { QuickStart } from "@quickstarts/utils/quick-start-types";
 import "./QuickStartDetailsForm.scss";
 import ContributionInput from "./ContributionInput";
 import PrerequisitesComponent from "./PrerequisitesComponent";
+import { Checkbox } from "@patternfly/react-core/dist/js/components";
 
 type ContributionDetailsFormProps = {
   quickstart: QuickStart;
@@ -42,20 +43,19 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
     updateQuickStart(newQuick);
   };
 
+  const checkboxWithDescription = () => (
+    <Checkbox
+      id="check-8"
+      label="CheckBox with description"
+      aria-label="Checkbox with description example"
+      description="Description"
+    />
+  );
+
   return (
     <React.Fragment>
       {quickStartFormData ? (
         <Form onSubmit={handleSubmit}>
-          <ContributionInput
-            key="icon"
-            initialValue={quickStartFormData.spec["icon"]}
-            label="Quick Start Icon"
-            id="icon"
-            value="icon"
-            textarea={false}
-            type="text"
-            updateValue={quickUpdate}
-          />
           <ContributionInput
             key="title"
             initialValue={quickStartFormData.spec["displayName"]}
@@ -67,6 +67,18 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             updateValue={quickUpdate}
           />
 
+          <ContributionInput
+            key="icon"
+            initialValue={quickStartFormData.spec["icon"]}
+            label="Quick Start Icon"
+            id="icon"
+            value="icon"
+            textarea={false}
+            type="text"
+            updateValue={quickUpdate}
+          />
+
+          {checkboxWithDescription}
           <Split hasGutter>
             <SplitItem>
               <ContributionInput

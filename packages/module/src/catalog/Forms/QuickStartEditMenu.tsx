@@ -84,6 +84,46 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
       </MenuList>
       <Divider />
 
+      <MenuList>
+        {quickStart
+          ? quickStart?.spec.tasks.map((task, index: number) => {
+              console.log("task menu", task);
+              return (
+                <MenuItem
+                  isSelected={activeMenuItem === index}
+                  actions={
+                    <React.Fragment>
+                      <MenuItemAction
+                        icon={<TrashIcon aria-hidden />}
+                        actionId="code"
+                        onClick={() => deleteTask(index)}
+                        aria-label="Code"
+                      />
+                      <MenuItemAction
+                        className="task-grip-icon"
+                        icon={<GripHorizontalIcon aria-hidden />}
+                        actionId="code"
+                        onClick={() => console.log("clicked on code icon")}
+                        aria-label="Code"
+                      />
+                    </React.Fragment>
+                  }
+                  key={index}
+                  itemId={index}
+                >
+                  {`${task.title.substring(0, 35)}...`}
+                </MenuItem>
+              );
+            })
+          : null}
+      </MenuList>
+
+      <Divider />
+
+      <MenuItem isSelected={activeMenuItem === 102} itemId={102}>
+        Add Task+
+      </MenuItem>
+
       {/* <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
@@ -148,45 +188,6 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
           )}
         </Droppable>
       </DragDropContext> */}
-
-      <MenuList>
-        {quickStart
-          ? quickStart?.spec.tasks.map((task, index: number) => {
-              return (
-                <MenuItem
-                  isSelected={activeMenuItem === index}
-                  actions={
-                    <React.Fragment>
-                      <MenuItemAction
-                        icon={<TrashIcon aria-hidden />}
-                        actionId="code"
-                        onClick={() => deleteTask(index)}
-                        aria-label="Code"
-                      />
-                      <MenuItemAction
-                        className="task-grip-icon"
-                        icon={<GripHorizontalIcon aria-hidden />}
-                        actionId="code"
-                        onClick={() => console.log("clicked on code icon")}
-                        aria-label="Code"
-                      />
-                    </React.Fragment>
-                  }
-                  key={index}
-                  itemId={index}
-                >
-                  {`${task.title.substring(0, 35)}...`}
-                </MenuItem>
-              );
-            })
-          : null}
-      </MenuList>
-
-      <Divider />
-
-      <MenuItem isSelected={activeMenuItem === 102} itemId={102}>
-        Add Task+
-      </MenuItem>
     </Menu>
   );
 };
