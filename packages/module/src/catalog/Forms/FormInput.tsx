@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextInput, FormGroup, TextArea } from "@patternfly/react-core";
 
-type ContributionInputProps = {
+type FormInputProps = {
   initialValue?: any;
   label: string;
   id: string;
@@ -11,7 +11,7 @@ type ContributionInputProps = {
   updateValue?: Function;
 };
 
-const ContributionInput: React.FC<ContributionInputProps> = ({
+const FormInput: React.FC<FormInputProps> = ({
   initialValue,
   label,
   id,
@@ -60,4 +60,4 @@ const ContributionInput: React.FC<ContributionInputProps> = ({
   );
 };
 
-export default ContributionInput;
+export default FormInput;
