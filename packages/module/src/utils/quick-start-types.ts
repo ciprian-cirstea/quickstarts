@@ -2,6 +2,7 @@
 import { AccessReviewResourceAttributes } from '../ConsoleInternal/module/k8s/types';
 
 export type QuickStart = {
+  format?: string;
   apiVersion?: string;
   kind?: string;
   metadata: {

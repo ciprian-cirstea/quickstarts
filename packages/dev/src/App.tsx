@@ -35,10 +35,6 @@ const App: React.FunctionComponent = ({ children }) => {
   );
 
   const [allQuickStarts, setAllQuickStarts] = useState(quickstartsTestData || [])
-  const [quickstartsLocal, setQuickstartsLocal] = useLocalStorage(
-    "newQuickStarts",
-    {}
-  );
 
   const isOnEditPage = () => {
     return (
@@ -50,7 +46,7 @@ const App: React.FunctionComponent = ({ children }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   React.useEffect(() => {
-    setQuickstartsLocal(JSON.parse(window.localStorage.getItem('newQuickStarts') || '{}'))
+    let quickstartsLocal = JSON.parse(window.localStorage.getItem('newQuickStarts')) || {}
 
     if(location.pathname === '/quickstarts') {
       // update existing quickstarts from localStorage
@@ -63,8 +59,8 @@ const App: React.FunctionComponent = ({ children }) => {
 
       // get new quickstarts from localStorage
       Object.keys(quickstartsLocal).map(qLocal => {
-        if(!allQuickStarts.map(q => q.metadata.name).includes(qLocal)) {
-          allQuickStartsTemp.push(quickstartsLocal[qLocal])
+        if(!allQuickStartsTemp.map(q => String(q.metadata.name)).includes(qLocal)) {
+          allQuickStartsTemp.push({...quickstartsLocal[qLocal], format: 'yaml'})
         }
       })
 

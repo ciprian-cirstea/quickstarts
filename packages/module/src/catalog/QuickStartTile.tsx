@@ -27,6 +27,7 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
   onClick,
 }) => {
   const {
+    format,
     metadata: { name: id },
     spec: {
       icon,
@@ -75,7 +76,7 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
         fallback={<RocketIcon />}
       />
      {
-        yamls.includes(id) ?
+        yamls.includes(id) || format === 'yaml' ?
           onEditLinkClick &&
           path === '/quickstarts' && (
             <Tooltip content='Edit'>
