@@ -38,7 +38,27 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     if (location.pathname === "/quickstarts/add") {
       setPageType("Add");
       const random = Math.floor(Math.random() * Math.floor(20)).toString();
-      createStorageQuickStarts(true, random, null);
+      const id = Date.now();
+      //   createStorageQuickStarts(true, random, null);
+      const qs = {
+        apiVersion: "console.openshift.io/v1",
+        kind: "ConsoleQuickStart",
+        metadata: { name: id },
+        spec: {
+          conclusion: "",
+          description: "",
+          displayName: "",
+          durationMinutes: null,
+          icon: "",
+          introduction: "",
+          nextQuickStart: [],
+          prerequisites: [],
+          tasks: [],
+          version: 4.7,
+        },
+      };
+
+      setQuickStart(qs);
     }
   }, [location.pathname]);
 
@@ -65,35 +85,37 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
 
     //empty quickstart template
-    const qs = {
-      apiVersion: "console.openshift.io/v1",
-      kind: "ConsoleQuickStart",
-      metadata: { name: quickStartId },
-      spec: {
-        conclusion: "",
-        description: "",
-        displayName: "",
-        durationMinutes: null,
-        icon: "",
-        introduction: "",
-        nextQuickStart: [],
-        prerequisites: [],
-        tasks: [],
-        version: 4.7,
-      },
-    };
+    // const qs = {
+    //   apiVersion: "console.openshift.io/v1",
+    //   kind: "ConsoleQuickStart",
+    //   metadata: { name: quickStartId },
+    //   spec: {
+    //     conclusion: "",
+    //     description: "",
+    //     displayName: "",
+    //     durationMinutes: null,
+    //     icon: "",
+    //     introduction: "",
+    //     nextQuickStart: [],
+    //     prerequisites: [],
+    //     tasks: [],
+    //     version: 4.7,
+    //   },
+    // };
 
-    if (add) {
-      quickStartObject = qs;
-    }
+    // if (add) {
+    //   quickStartObject = qs;
+    // }
 
     lSQuickstarts[quickStartId] = quickStartObject;
 
+    // if (!add) {
     localStorage.setItem("newQuickStarts", JSON.stringify(lSQuickstarts));
+    // }
 
-    if (add) {
-      setQuickStart(qs);
-    }
+    // if (add) {
+    //   setQuickStart(qs);
+    // }
   };
 
   const saveQuickStart = () => {
@@ -101,9 +123,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     console.log("save stuff here");
     const quickStartId = quickStart.metadata.name;
     let add = false;
-    if (pageType === "Edit") {
-      createStorageQuickStarts(false, quickStartId, quickStart);
-    }
+    // if (pageType === "Edit") {
+    createStorageQuickStarts(false, quickStartId, quickStart);
+    // }
   };
 
   const downloadYAML = () => {
@@ -144,7 +166,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           <Button
             onClick={() => {
               saveQuickStart();
-              onCloseLinkClick();
+              //   onCloseLinkClick();
             }}
             // onClick={saveQuickStart }
             className="float-right add-new-button"

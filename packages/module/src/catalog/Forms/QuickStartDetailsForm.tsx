@@ -47,6 +47,16 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
       {quickStartFormData ? (
         <Form onSubmit={handleSubmit}>
           <ContributionInput
+            key="icon"
+            initialValue={quickStartFormData.spec["icon"]}
+            label="Quick Start Icon"
+            id="icon"
+            value="icon"
+            textarea={false}
+            type="text"
+            updateValue={quickUpdate}
+          />
+          <ContributionInput
             key="title"
             initialValue={quickStartFormData.spec["displayName"]}
             label="Quick Start Title"
