@@ -10,7 +10,7 @@ import { Form, FormGroup, TextArea, Button } from "@patternfly/react-core";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
 import "./QuickStartDetailsForm.scss";
-import ContributionInput from "./ContributionInput";
+import FormInput from "./FormInput";
 import PrerequisitesComponent from "./PrerequisitesComponent";
 import { Checkbox } from "@patternfly/react-core/dist/js/components";
 
@@ -56,7 +56,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
     <React.Fragment>
       {quickStartFormData ? (
         <Form onSubmit={handleSubmit}>
-          <ContributionInput
+          <FormInput
             key="title"
             initialValue={quickStartFormData.spec["displayName"]}
             label="Quick Start Title"
@@ -67,7 +67,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             updateValue={quickUpdate}
           />
 
-          <ContributionInput
+          <FormInput
             key="icon"
             initialValue={quickStartFormData.spec["icon"]}
             label="Quick Start Icon"
@@ -81,7 +81,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
           {checkboxWithDescription}
           <Split hasGutter>
             <SplitItem>
-              <ContributionInput
+              <FormInput
                 key="version"
                 initialValue={quickStartFormData.spec["version"]}
                 label="Version"
@@ -94,7 +94,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             </SplitItem>
 
             <SplitItem>
-              <ContributionInput
+              <FormInput
                 key="duration"
                 initialValue={quickStartFormData.spec["durationMinutes"]}
                 label="Duration"
@@ -107,7 +107,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             </SplitItem>
           </Split>
 
-          <ContributionInput
+          <FormInput
             key="description"
             initialValue={quickStartFormData.spec["description"]}
             label="Description"

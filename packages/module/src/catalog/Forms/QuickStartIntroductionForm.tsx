@@ -10,7 +10,7 @@ import { Form, FormGroup, TextArea, Button } from "@patternfly/react-core";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
 import "./QuickStartIntroductionForm.scss";
-import ContributionInput from "./ContributionInput";
+import FormInput from "./FormInput";
 import PrerequisitesComponent from "./PrerequisitesComponent";
 
 type ContributionDetailsFormProps = {
@@ -49,7 +49,7 @@ const QuickStartIntroductionForm: React.FC<ContributionDetailsFormProps> = ({
     <React.Fragment>
       {quickStartFormData ? (
         <Form onSubmit={handleSubmit}>
-          <ContributionInput
+          <FormInput
             key="intro"
             initialValue={quickStartFormData.spec["introduction"]}
             label="Introduction"
