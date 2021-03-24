@@ -4,6 +4,7 @@ import { QuickStart } from "@quickstarts/utils/quick-start-types";
 
 import "./QuickStartDetailsForm.scss";
 import FormInput from "./FormInput";
+import DescriptionComponent from "./DescriptionComponent";
 import PrerequisitesComponent from "./PrerequisitesComponent";
 import { Checkbox } from "@patternfly/react-core/dist/js/components";
 
@@ -105,7 +106,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             </SplitItem>
           </Split>
 
-          <FormInput
+          <DescriptionComponent
             key="description"
             initialValue={quickStartFormData.spec["description"]}
             label="Description"

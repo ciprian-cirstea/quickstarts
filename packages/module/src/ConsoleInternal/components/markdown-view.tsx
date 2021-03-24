@@ -6,6 +6,7 @@ import { Converter } from "showdown";
 import DOMPurify from "dompurify";
 
 const tableTags = ["table", "thead", "tbody", "tr", "th", "td"];
+const youTubeVideoAttr = ["title", "frameborder", "allow", "allowfullscreen"]
 
 const markdownConvert = (markdown, extensions?: string[]) => {
   const unsafeHtml = new Converter({
@@ -49,9 +50,12 @@ const markdownConvert = (markdown, extensions?: string[]) => {
       "button",
       ...tableTags,
       "div",
-      "img"
+      "img",
+      "video",
+      "source",
+      "iframe"
     ],
-    ALLOWED_ATTR: ["href", "target", "rel", "class", "src", "width", "height"],
+    ALLOWED_ATTR: ["href", "target", "rel", "class", "src", "width", "height", "controls", "type", ...youTubeVideoAttr],
     ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.\-]+Z(?:[^a-z+.\-:]|$))/i,
   });
 };

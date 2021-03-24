@@ -82,9 +82,7 @@ const App: React.FunctionComponent = ({ children }) => {
       },
     },
   });
-  React.useEffect(() => {
-    console.log(" -------- CONTEXT ", valuesForQuickstartContext)
-  }, [])
+
   if (!initialized) return <div>Loading</div>;
   const onNavToggle = () => {
     setIsNavOpen(!isNavOpen);
