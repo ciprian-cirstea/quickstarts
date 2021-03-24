@@ -21,7 +21,7 @@ import {
   useValuesForQuickStartContext,
   useLocalStorage,
 } from "@cloudmosaic/quickstarts";
-import { allQuickStarts as quickstartsTestData } from "./quickstarts-data/quick-start-test-data";
+import { allQuickStarts } from "./quickstarts-data/quick-start-test-data";
 const App: React.FunctionComponent = ({ children }) => {
   const history = useHistory();
   const [initialized, setInitialized] = React.useState(true);
@@ -34,9 +34,7 @@ const App: React.FunctionComponent = ({ children }) => {
     {}
   );
 
-  const [allQuickStarts, setAllQuickStarts] = useState(
-    quickstartsTestData || []
-  );
+  // const [allQuickStarts, setAllQuickStarts] = useState(allQuickStarts || [])
 
   const isOnEditPage = () => {
     return (
@@ -46,35 +44,6 @@ const App: React.FunctionComponent = ({ children }) => {
   };
   const [isEditPage, setIsEditPage] = useState(isOnEditPage());
   const [isNavOpen, setIsNavOpen] = useState(false);
-
-  React.useEffect(() => {
-    let quickstartsLocal =
-      JSON.parse(window.localStorage.getItem("newQuickStarts")) || {};
-
-    // if(location.pathname === '/quickstarts') {
-    // update existing quickstarts from localStorage
-    var allQuickStartsTemp = allQuickStarts;
-    allQuickStartsTemp.map((q, i) => {
-      if (Object.keys(quickstartsLocal).includes(q.metadata.name)) {
-        allQuickStartsTemp[i] = quickstartsLocal[q.metadata.name];
-      }
-    });
-
-    // get new quickstarts from localStorage
-    Object.keys(quickstartsLocal).map((qLocal) => {
-      if (
-        !allQuickStartsTemp.map((q) => String(q.metadata.name)).includes(qLocal)
-      ) {
-        allQuickStartsTemp.push({
-          ...quickstartsLocal[qLocal],
-          format: "yaml",
-        });
-      }
-    });
-
-    setAllQuickStarts(allQuickStartsTemp);
-    // }
-  }, [location.pathname]);
 
   React.useEffect(() => console.log(activeQuickStartID), [activeQuickStartID]);
   React.useEffect(() => {
@@ -113,6 +82,9 @@ const App: React.FunctionComponent = ({ children }) => {
       },
     },
   });
+  React.useEffect(() => {
+    console.log(" -------- CONTEXT ", valuesForQuickstartContext)
+  }, [])
   if (!initialized) return <div>Loading</div>;
   const onNavToggle = () => {
     setIsNavOpen(!isNavOpen);
