@@ -23,24 +23,27 @@ const FormInput: React.FC<FormInputProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState(initialValue);
 
-  //   React.useEffect(() => {
-  //     setInputValue(initialValue);
-  //   }, []);
-
-  //   React.useEffect(() => {
-  //     setInputValue(initialValue);
-  //     console.log("input useEffect", inputValue);
-  //   }, [inputValue]);
-
   const handleChange = (e) => {
     setInputValue(e);
     updateValue(value, e);
   };
 
+  React.useEffect(() => {
+    setInputValue(initialValue);
+  }, [ initialValue ])
+
+  // var myRef = React.createRef();
+  const myRef = React.useRef(null)
+
+  React.useEffect(() => {
+    console.log(" --- REFERENCE ", myRef)
+  }, [myRef])
+
   return (
     <FormGroup label={label} isRequired fieldId={id}>
       {textarea ? (
         <TextArea
+          innerRef={myRef}
           rows={10}
           value={inputValue}
           name={id}
