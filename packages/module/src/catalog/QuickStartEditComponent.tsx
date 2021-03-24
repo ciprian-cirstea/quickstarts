@@ -27,6 +27,9 @@ type QuickStartEditProps = {
   quickStart?: QuickStart;
   setQuickStart: Function;
   setQuickYaml: Function;
+  errors: object;
+  setErrors;
+  submitted: boolean;
 };
 
 const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
@@ -34,6 +37,9 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
   quickStart,
   setQuickStart,
   setQuickYaml,
+  errors,
+  submitted,
+  setErrors,
 }) => {
   const {
     activeQuickStartID,
@@ -53,21 +59,56 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
   };
 
   const updateQuickStart = (newQuickStart: QuickStart) => {
+    console.log("newQuickStart", newQuickStart);
+    const qSspecs = newQuickStart.spec;
+    const required = [
+      "conclusion",
+      "description",
+      "displayName",
+      "durationMinutes",
+      "icon",
+      "introduction",
+      "prerequisites",
+      "tasks",
+      "version",
+      "introduction",
+    ];
+    const err = { ...errors };
+
+    for (let k in qSspecs) {
+      if (qSspecs.hasOwnProperty(k)) {
+        const spec = qSspecs[k];
+
+        console.log(spec);
+
+        if (spec !== "" || spec.length > 0) {
+          console.log("kkk 0000000000000", k);
+          console.log("errors !!!!!!!!!!!!!!!!!!", errors);
+          //   console.log("spec 0000000000000", spec);
+          //   console.log("length 00000000000000", spec.length);
+          //   const err = { ...errors };
+          delete err[k];
+          //   setErrors(err);
+        } else {
+          //   console.log("spec 11111111111", spec);
+          //   console.log("kkk  11111111111", k);
+          //   console.log("length 1111111111", spec.length);
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [k]: true,
+          }));
+        }
+      }
+    }
+    console.log("err??????????????????????", err);
+
+    setErrors(err);
     setQuickStart(newQuickStart);
     setQuickYaml(YAML.stringify(newQuickStart));
   };
 
-  const deactivateQuickstart = () => {
-    const newQ = { ...quickStart };
-    if (newQ.hasOwnProperty("inactive")) {
-      delete newQ["inactive"];
-    } else {
-      newQ["inactive"] = true;
-    }
-    setQuickStart(newQ);
-  };
-
   const formGenerator = () => {
+    // console.log("FORM GEN ERRORS -------- ", errors);
     switch (activeMenuItem) {
       case 100:
         return <div className="pf-u-font-size-2xl">IBM Quick Starts Help</div>;
@@ -76,7 +117,8 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
           <QuickStartDetailsForm
             quickstart={quickStart}
             updateQuickStart={updateQuickStart}
-            deactivateQuickstart={deactivateQuickstart}
+            errors={errors}
+            submitted={submitted}
           />
         );
       case 98:
@@ -84,6 +126,8 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
           <QuickStartConclusionForm
             quickstart={quickStart}
             updateQuickStart={updateQuickStart}
+            errors={errors}
+            submitted={submitted}
           />
         );
       case 99:
@@ -91,6 +135,8 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
           <QuickStartIntroductionForm
             quickstart={quickStart}
             updateQuickStart={updateQuickStart}
+            errors={errors}
+            submitted={submitted}
           />
         );
       case 102:
@@ -98,7 +144,6 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
           <TaskDetailsForm
             key="new"
             quickStart={quickStart}
-            // task={quickStart.spec.tasks[activeMenuItem]}
             updateQuickStart={updateQuickStart}
             handleMenuClick={handleMenuClick}
           />

@@ -10,6 +10,10 @@ type FormInputProps = {
   textarea: boolean;
   type: "number" | "text";
   updateValue?: Function;
+  required?: boolean;
+  submitted?: boolean;
+  errors?: object;
+  rows?: number;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -20,8 +24,12 @@ const FormInput: React.FC<FormInputProps> = ({
   textarea,
   type,
   updateValue,
+  submitted,
+  errors,
+  rows,
 }) => {
   const [inputValue, setInputValue] = useState(initialValue);
+  console.log("form input errors", errors);
 
   const handleChange = (e) => {
     setInputValue(e);
@@ -30,25 +38,28 @@ const FormInput: React.FC<FormInputProps> = ({
 
   React.useEffect(() => {
     setInputValue(initialValue);
-  }, [ initialValue ])
+  }, [initialValue]);
 
   // var myRef = React.createRef();
-  const myRef = React.useRef(null)
+  const myRef = React.useRef(null);
 
   React.useEffect(() => {
-    console.log(" --- REFERENCE ", myRef)
-  }, [myRef])
+    console.log(" --- REFERENCE ", myRef);
+  }, [myRef]);
 
   return (
     <FormGroup label={label} isRequired fieldId={id}>
       {textarea ? (
         <TextArea
           innerRef={myRef}
-          rows={10}
+          rows={rows || 10}
           value={inputValue}
           name={id}
           id={id}
           onChange={handleChange}
+          validated={
+            submitted && errors.hasOwnProperty(value) ? "error" : "default"
+          }
         />
       ) : (
         <TextInput
@@ -58,6 +69,9 @@ const FormInput: React.FC<FormInputProps> = ({
           name={id}
           id={id}
           onChange={handleChange}
+          validated={
+            submitted && errors.hasOwnProperty(value) ? "error" : "default"
+          }
         />
       )}
     </FormGroup>

@@ -31,6 +31,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   const [quickStart, setQuickStart] = React.useState(undefined);
   const [pageType, setPageType] = React.useState("Edit");
   const [errors, setErrors] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
   const { global } = React.useContext<QuickStartContextValues>(
     QuickStartContext
   );
@@ -50,13 +51,13 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           conclusion: "",
           description: "",
           displayName: "",
-          durationMinutes: null,
+          durationMinutes: "",
           icon: "",
           introduction: "",
           nextQuickStart: [],
           prerequisites: [],
           tasks: [],
-          version: 4.7,
+          version: "",
         },
       };
 
@@ -100,21 +101,44 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   };
 
   const saveQuickStart = () => {
-    console.log(errors);
-    const quickStartId = quickStart.metadata.name;
+    console.log("<<<<<<<<<<<<<<<<SAVE QUICK START>>>>>>>>>>>>>>>>");
+    setSubmitted(true);
+    console.log(quickStart);
+    const qSspecs = quickStart.spec;
 
-    createStorageQuickStarts(false, quickStartId, quickStart);
+    const required = [
+      "conclusion",
+      "description",
+      "displayName",
+      "durationMinutes",
+      "icon",
+      "introduction",
+      "prerequisites",
+      "tasks",
+      "version",
+      "introduction",
+    ];
+
+    for (let k in qSspecs) {
+      const spec = qSspecs[k];
+      if (required.includes(k) && (spec.length === 0 || spec === "")) {
+        setErrors((prevErrors) => ({ ...prevErrors, [k]: true }));
+      }
+    }
+
+    if (Object.keys(errors).length) {
+      // const quickStartId = quickStart.metadata.name;
+      // createStorageQuickStarts(false, quickStartId, quickStart);
+    }
   };
 
   const downloadYAML = () => {
-    // var decodedString = atob(quickYaml);
+    const fileName = `${quickStart.metadata.name}.yaml`;
+    const fileType = "text/yaml";
 
-    var fileName = `${quickStart.metadata.name}.yaml`;
-    var fileType = "text/yaml";
+    const blob = new Blob([quickYaml], { type: fileType });
 
-    var blob = new Blob([quickYaml], { type: fileType });
-
-    var a = document.createElement("a");
+    const a = document.createElement("a");
     a.download = fileName;
     a.href = URL.createObjectURL(blob);
     a.dataset.downloadurl = [fileType, a.download, a.href].join(":");
@@ -128,7 +152,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   };
 
   return (
-    <>
+    <React.Fragment>
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
           {pageType} Quick Start
@@ -167,7 +191,10 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
         setQuickStart={setQuickStart}
         quickStartId={params.quickstartsId}
         setQuickYaml={setQuickYaml}
+        errors={errors}
+        setErrors={setErrors}
+        submitted={submitted}
       />
-    </>
+    </React.Fragment>
   );
 };

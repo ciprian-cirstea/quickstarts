@@ -11,13 +11,15 @@ import { Checkbox } from "@patternfly/react-core/dist/js/components";
 type ContributionDetailsFormProps = {
   quickstart: QuickStart;
   updateQuickStart: Function;
-  deactivateQuickstart;
+  submitted: boolean;
+  errors: object;
 };
 
 const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
   quickstart,
   updateQuickStart,
-  deactivateQuickstart,
+  submitted,
+  errors,
 }) => {
   const [quickStartFormData, setQuickStartFormData] = useState<QuickStart>(
     null
@@ -29,31 +31,15 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
     }
   }, []);
 
-  //   const handleSubmit = () => {
-  //     console.log("submit");
-  //   };
-
   const quickUpdate = (value, e) => {
     const newQuick = { ...quickstart };
     newQuick.spec[value] = e;
     updateQuickStart(newQuick);
   };
 
-  const checkboxWithDescription = () => (
-    <Checkbox
-      label="Deactivate Quick Start"
-      isChecked={quickstart.hasOwnProperty("inactive")}
-      onChange={deactivateQuickstart}
-      aria-label="controlled checkbox example"
-      id="deactivate-quickstart"
-      name="deactivate-quickstart"
-    />
-  );
-
   return (
     <React.Fragment>
       {quickStartFormData ? (
-        // <Form onSubmit={handleSubmit}>
         <React.Fragment>
           <FormInput
             key="title"
@@ -64,8 +50,9 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             textarea={false}
             type="text"
             updateValue={quickUpdate}
+            errors={errors}
+            submitted={submitted}
           />
-          <div className="deactivate-checkbox">{checkboxWithDescription()}</div>
 
           <FormInput
             key="icon"
@@ -76,6 +63,8 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             textarea={false}
             type="text"
             updateValue={quickUpdate}
+            errors={errors}
+            submitted={submitted}
           />
 
           <Split hasGutter>
@@ -89,6 +78,8 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
                 textarea={false}
                 type="number"
                 updateValue={quickUpdate}
+                errors={errors}
+                submitted={submitted}
               />
             </SplitItem>
 
@@ -102,6 +93,8 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
                 textarea={false}
                 type="number"
                 updateValue={quickUpdate}
+                errors={errors}
+                submitted={submitted}
               />
             </SplitItem>
           </Split>
@@ -115,6 +108,8 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             textarea={true}
             type="text"
             updateValue={quickUpdate}
+            errors={errors}
+            submitted={submitted}
           />
 
           <PrerequisitesComponent
@@ -124,7 +119,6 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
           />
         </React.Fragment>
       ) : (
-        // </Form>
         ""
       )}
     </React.Fragment>

@@ -16,11 +16,15 @@ import PrerequisitesComponent from "./PrerequisitesComponent";
 type ContributionDetailsFormProps = {
   quickstart?: QuickStart;
   updateQuickStart: Function;
+  submitted: boolean;
+  errors: object;
 };
 
 const QuickStartIntroductionForm: React.FC<ContributionDetailsFormProps> = ({
   quickstart,
   updateQuickStart,
+  submitted,
+  errors,
 }) => {
   const [quickStartFormData, setQuickStartFormData] = useState<QuickStart>(
     null
@@ -53,6 +57,8 @@ const QuickStartIntroductionForm: React.FC<ContributionDetailsFormProps> = ({
           textarea={true}
           type="text"
           updateValue={quickUpdate}
+          errors={errors}
+          submitted={submitted}
         />
       ) : (
         ""

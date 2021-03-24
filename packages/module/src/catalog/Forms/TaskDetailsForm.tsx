@@ -63,6 +63,28 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
     updateQuickStart(qs, true);
   };
 
+  const deactivateTask = () => {
+    const newQ = { ...task };
+
+    if (newQ.hasOwnProperty("inactive")) {
+      delete newQ["inactive"];
+    } else {
+      newQ["inactive"] = true;
+    }
+    // setQuickStart(newQ);
+  };
+
+  const checkboxWithDescription = () => (
+    <Checkbox
+      label="Active Task"
+      isChecked={true}
+      onChange={deactivateTask}
+      aria-label="controlled checkbox example"
+      id="deactivate-quickstart"
+      name="deactivate-quickstart"
+    />
+  );
+
   return (
     <React.Fragment>
       <FormInput
@@ -75,6 +97,8 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         type="text"
         updateValue={quickUpdate}
       />
+
+      <div className="deactivate-checkbox">{checkboxWithDescription()}</div>
 
       <FormInput
         // key={`desc-${task?.description}`}
