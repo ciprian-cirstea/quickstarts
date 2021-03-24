@@ -67,7 +67,7 @@ export const allAsciiDocImports = {
   }
 }
 
-export const allQuickStarts: QuickStart[] = [
+var quickstartsTestData: QuickStart[] = [
   explorePipelinesQuickStart,
   exploreServerlessQuickStart,
   monitorSampleAppQuickStart,
@@ -83,4 +83,26 @@ export const allQuickStarts: QuickStart[] = [
   ProcedureAdocHtmlParser(sampleD, "abc-123", {
     BOOTSTRAP_SERVER_HOST: "foo.kafka.devshift.net:443"
   })
-];
+]
+
+const quickstartsWithLocalStorage = (quickstarts: QuickStart[]) => {
+  let quickstartsLocal = JSON.parse(window.localStorage.getItem('newQuickStarts')) || {}
+
+  // update existing quickstarts from localStorage
+  quickstarts.map((q, i) => {
+    if(Object.keys(quickstartsLocal).includes(q.metadata.name)) {
+      quickstarts[i] = quickstartsLocal[q.metadata.name]
+    }
+  })
+
+  // get new quickstarts from localStorage
+  Object.keys(quickstartsLocal).map(qLocal => {
+    if(!quickstarts.map(q => String(q.metadata.name)).includes(qLocal)) {
+      quickstarts.push({...quickstartsLocal[qLocal], format: 'yaml'})
+    }
+  })
+
+  return quickstarts
+}
+
+export const allQuickStarts = quickstartsWithLocalStorage(quickstartsTestData)
