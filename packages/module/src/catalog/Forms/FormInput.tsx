@@ -14,6 +14,7 @@ type FormInputProps = {
   submitted?: boolean;
   errors?: object;
   rows?: number;
+  inputRef?: React.RefObject<any>;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -27,6 +28,7 @@ const FormInput: React.FC<FormInputProps> = ({
   submitted,
   errors,
   rows,
+  inputRef
 }) => {
   const [inputValue, setInputValue] = useState(initialValue);
   console.log("form input errors", errors);
@@ -40,18 +42,11 @@ const FormInput: React.FC<FormInputProps> = ({
     setInputValue(initialValue);
   }, [initialValue]);
 
-  // var myRef = React.createRef();
-  const myRef = React.useRef(null);
-
-  React.useEffect(() => {
-    console.log(" --- REFERENCE ", myRef);
-  }, [myRef]);
-
   return (
     <FormGroup label={label} isRequired fieldId={id}>
       {textarea ? (
         <TextArea
-          innerRef={myRef}
+          ref={inputRef}
           rows={rows || 10}
           value={inputValue}
           name={id}

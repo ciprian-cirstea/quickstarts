@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Split, SplitItem } from "@patternfly/react-core";
 import FormInput from "./FormInput";
 import { Button } from "@patternfly/react-core";
@@ -28,32 +28,27 @@ const DescriptionComponent: React.FC<DescriptionComponentProps> = ({
   const [inputValue, setInputValue] = useState(initialValue);
 
   const handleAddImage = () => {
-    let newInput =
-      inputValue +
-      `
-![IMAGE_ALT_TEXT_HERE](IMAGE_URL_HERE)`;
+    let newInput = inputValue.substr(0, myRef.current.selectionStart) + `
+![IMAGE_ALT_TEXT_HERE](IMAGE_URL_HERE)` + inputValue.substr(myRef.current.selectionEnd) 
 
     setInputValue(newInput);
     updateValue(value, newInput);
   };
 
   const handleAddVideo = () => {
-    let newInput =
-      inputValue +
-      `
+    let newInput = inputValue.substr(0, myRef.current.selectionStart) + `
 <video controls>
     <source src="VIDEO_URL_HERE" type="video/mp4">
     Your browser does not support HTML video.
-</video>`;
+</video>` + inputValue.substr(myRef.current.selectionEnd) 
+
 
     setInputValue(newInput);
     updateValue(value, newInput);
   };
 
   const handleAddYoutubeVideo = () => {
-    let newInput =
-      inputValue +
-      `
+    let newInput = inputValue.substr(0, myRef.current.selectionStart) + `
 <iframe
     width="560"
     height="315"
@@ -61,17 +56,22 @@ const DescriptionComponent: React.FC<DescriptionComponentProps> = ({
     title="YouTube video player"
     frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
     allowfullscreen>
-</iframe>`;
+</iframe>` + inputValue.substr(myRef.current.selectionEnd) 
 
     setInputValue(newInput);
     updateValue(value, newInput);
   };
 
   const handleUpdateValue = (key, val) => {
-    console.log(" --- handleUpdateValue", key, val);
     updateValue(key, val);
     setInputValue(val);
   };
+
+  const myRef = useRef(null);
+
+  React.useEffect(() => {
+    myRef.current.selectionStart = initialValue.length
+  }, [ myRef.current ])
 
   return (
     <React.Fragment>
@@ -87,6 +87,7 @@ const DescriptionComponent: React.FC<DescriptionComponentProps> = ({
         errors={errors}
         submitted={submitted}
         rows={15}
+        inputRef={myRef}
       />
       <Split hasGutter>
         <SplitItem>
