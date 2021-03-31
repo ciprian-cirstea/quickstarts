@@ -18,6 +18,7 @@ const QuickStartIntroduction: React.FC<QuickStartIntroductionProps> = ({
   onTaskSelect,
 }) => {
   const { t } = useTranslation();
+  tasks = tasks.filter(task => task.active)
   return (
     <>
       <QuickStartMarkdownView content={introduction} />
