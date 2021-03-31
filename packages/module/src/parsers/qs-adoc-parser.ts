@@ -53,6 +53,9 @@ export const QuickstartAsciiDocParser = (file: string, options: any = {}) => {
         case "qs-title":
           qsTask.title = getInnerText(content);
           break;
+        case "qs-active":
+          qsTask.active = content;
+          break;
         case "qs-description":
           qsTask.description = content;
           break;

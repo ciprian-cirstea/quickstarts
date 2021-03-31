@@ -45,15 +45,13 @@ const QuickStartConclusionForm: React.FC<ConclusionFormProps> = ({
           label="Conclusion"
           id="conclusion"
           value="conclusion"
-          textarea={false}
+          textarea={true}
           type="text"
           updateValue={quickUpdate}
           errors={errors}
           submitted={submitted}
         />
-      ) : (
-        ""
-      )}
+      ) : null}
     </React.Fragment>
   );
 };

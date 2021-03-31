@@ -28,12 +28,13 @@ const FormInput: React.FC<FormInputProps> = ({
   submitted,
   errors,
   rows,
-  inputRef
+  inputRef,
 }) => {
   const [inputValue, setInputValue] = useState(initialValue);
-  console.log("form input errors", errors);
+  //   console.log("form input errors", errors);
 
   const handleChange = (e) => {
+    // console.log("eeeeeee", e);
     setInputValue(e);
     updateValue(value, e);
   };

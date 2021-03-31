@@ -1,10 +1,10 @@
 import React from "react";
 import { Split, SplitItem, Checkbox } from "@patternfly/react-core";
-import { Form } from "@patternfly/react-core";
 
 import "./TaskDetailsForm.scss";
 import FormInput from "./FormInput";
 import { QuickStart } from "@quickstarts/utils/quick-start-types";
+import DescriptionComponent from "./DescriptionComponent";
 
 type TaskDetailsFormProps = {
   task?;
@@ -12,6 +12,8 @@ type TaskDetailsFormProps = {
   updateQuickStart: Function;
   index?: number;
   handleMenuClick: Function;
+  submitted: boolean;
+  errors: object;
 };
 
 const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
@@ -20,16 +22,14 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
   updateQuickStart,
   index,
   handleMenuClick,
+  submitted,
+  errors,
 }) => {
-  console.log("quickStart 102", quickStart);
-
   const [qs, setQs] = React.useState(quickStart);
-  //   const [newTasks, setNewTasks] = React.useState([]);
   const [taskIndex, setTaskIndex] = React.useState(index ? index : 0);
 
   React.useEffect(() => {
     if (!task) {
-      console.log("NO TASK !!!!!!!!!!!!!!!!!!!!!!!");
       const newQuick = { ...qs };
 
       const newTasksArray = [...newQuick.spec.tasks];
@@ -38,6 +38,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         title: "",
         summary: { failed: "", success: "" },
         description: "",
+        active: true,
         review: { instructions: "", failedTaskHelp: "" },
       });
 
@@ -47,11 +48,8 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
     }
   }, []);
 
-  const quickUpdate = (value: string, e: string) => {
+  const quickUpdate = (value: string, e: any) => {
     const newTsk = [...qs.spec.tasks];
-    // console.log("newTsk", newTsk);
-    // console.log("indexxxxxxx", taskIndex);
-
     if (value === "instructions" || value === "failedTaskHelp") {
       newTsk[taskIndex].review[value] = e;
     } else if (value === "success" || value === "failed") {
@@ -59,29 +57,24 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
     } else {
       newTsk[taskIndex][value] = e;
     }
+
     qs.spec.tasks = newTsk;
-    updateQuickStart(qs, true);
+    updateQuickStart(qs, taskIndex);
   };
 
   const deactivateTask = () => {
-    const newQ = { ...task };
-
-    if (newQ.hasOwnProperty("inactive")) {
-      delete newQ["inactive"];
-    } else {
-      newQ["inactive"] = true;
-    }
-    // setQuickStart(newQ);
+    const status = !task.active;
+    quickUpdate("active", status);
   };
 
   const checkboxWithDescription = () => (
     <Checkbox
-      label="Active Task"
-      isChecked={true}
+      label="Active"
+      isChecked={task?.active}
       onChange={deactivateTask}
       aria-label="controlled checkbox example"
-      id="deactivate-quickstart"
-      name="deactivate-quickstart"
+      id="deactivate-task"
+      name="deactivate-task"
     />
   );
 
@@ -89,86 +82,91 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
     <React.Fragment>
       <FormInput
         // key={`title-${task?.title}`}
-        initialValue={task ? task.title : ""}
+        initialValue={task?.title}
         label={"Task Title"}
         id="task-title"
         value="title"
         textarea={false}
         type="text"
         updateValue={quickUpdate}
+        submitted={submitted}
+        errors={errors[taskIndex]}
       />
 
       <div className="deactivate-checkbox">{checkboxWithDescription()}</div>
 
-      <FormInput
-        // key={`desc-${task?.description}`}
-        initialValue={task ? task.description : ""}
+      <DescriptionComponent
+        key="description"
+        initialValue={task?.description}
         label="Description"
         id="description"
         value="description"
         textarea={true}
         type="text"
         updateValue={quickUpdate}
+        submitted={submitted}
+        errors={errors[taskIndex]}
       />
 
       <div className="pf-u-font-size-lg">Review</div>
       <Split hasGutter>
         <SplitItem>
           <FormInput
-            // key={`inst-${task?.review["instructions"]}`}
-            initialValue={task ? task.review["instructions"] : ""}
+            initialValue={task?.review["instructions"]}
             label="Instructions"
             id="instructions"
             value="instructions"
             textarea={false}
             type="text"
             updateValue={quickUpdate}
+            submitted={submitted}
+            errors={errors[taskIndex]}
           />
         </SplitItem>
+
         <SplitItem>
           <FormInput
             // key={`ft-${task?.review["failedTaskHelp"]}`}
-            initialValue={task ? task.review["failedTaskHelp"] : ""}
+            initialValue={task?.review["failedTaskHelp"]}
             label="Failed Task"
             id="failed-task-help"
             value="failedTaskHelp"
             textarea={false}
             type="text"
             updateValue={quickUpdate}
+            submitted={submitted}
+            errors={errors[taskIndex]}
           />
         </SplitItem>
       </Split>
 
-      <div className="pf-u-font-size-lg">Active</div>
-      <Checkbox
-        label="Uncontrolled CheckBox"
-        aria-label="uncontrolled checkbox example"
-        id="check-5"
-      />
       <div className="pf-u-font-size-lg">Summary</div>
       <Split hasGutter>
         <SplitItem>
           <FormInput
-            // key={`success-${task?.summary["success"]}`}
-            initialValue={task ? task.summary["success"] : ""}
+            initialValue={task?.summary["success"]}
             label="Success"
             id="success"
             value="success"
             textarea={false}
             type="text"
             updateValue={quickUpdate}
+            submitted={submitted}
+            errors={errors[taskIndex]}
           />
         </SplitItem>
         <SplitItem>
           <FormInput
             // key={`failed-${task?.summary["failed"]}`}
-            initialValue={task ? task.summary["failed"] : ""}
+            initialValue={task?.summary["failed"]}
             label="Failed"
             id="failed"
             value="failed"
             textarea={false}
             type="text"
             updateValue={quickUpdate}
+            submitted={submitted}
+            errors={errors[taskIndex]}
           />
         </SplitItem>
       </Split>

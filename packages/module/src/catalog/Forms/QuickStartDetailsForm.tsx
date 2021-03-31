@@ -52,6 +52,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             updateValue={quickUpdate}
             errors={errors}
             submitted={submitted}
+            // type={'paternfly'}
           />
 
           <FormInput
@@ -116,6 +117,8 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             prerequisites={quickstart.spec.prerequisites}
             updateValue={quickUpdate}
             value="prerequisites"
+            quickStart={quickstart}
+            submitted={submitted}
           />
         </React.Fragment>
       ) : (

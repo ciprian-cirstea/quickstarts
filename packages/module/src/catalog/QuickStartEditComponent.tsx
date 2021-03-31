@@ -28,7 +28,9 @@ type QuickStartEditProps = {
   setQuickStart: Function;
   setQuickYaml: Function;
   errors: object;
-  setErrors;
+  setErrors: Function;
+  taskErrors: object;
+  setTaskErrors: Function;
   submitted: boolean;
 };
 
@@ -38,8 +40,10 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
   setQuickStart,
   setQuickYaml,
   errors,
-  submitted,
   setErrors,
+  taskErrors,
+  setTaskErrors,
+  submitted,
 }) => {
   const {
     activeQuickStartID,
@@ -51,64 +55,67 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
 
   const handleMenuClick = (event, itemId: number) => {
     setActiveMenuItem(itemId);
-    console.log("itemId", itemId);
     if (itemId < 100) {
       const id = itemId === 99 ? -1 : itemId;
       setTaskNumber(id);
     }
   };
 
-  const updateQuickStart = (newQuickStart: QuickStart) => {
-    console.log("newQuickStart", newQuickStart);
+  // Used to delete or add errors when typing
+  const updateQuickStart = (newQuickStart: QuickStart, index: number) => {
     const qSspecs = newQuickStart.spec;
-    const required = [
-      "conclusion",
-      "description",
-      "displayName",
-      "durationMinutes",
-      "icon",
-      "introduction",
-      "prerequisites",
-      "tasks",
-      "version",
-      "introduction",
-    ];
-    const err = { ...errors };
+    const qSTasks = newQuickStart.spec.tasks[index];
+
+    let err = { ...errors };
 
     for (let k in qSspecs) {
-      if (qSspecs.hasOwnProperty(k)) {
-        const spec = qSspecs[k];
-
-        console.log(spec);
-
-        if (spec !== "" || spec.length > 0) {
-          console.log("kkk 0000000000000", k);
-          console.log("errors !!!!!!!!!!!!!!!!!!", errors);
-          //   console.log("spec 0000000000000", spec);
-          //   console.log("length 00000000000000", spec.length);
-          //   const err = { ...errors };
+      if (qSspecs?.hasOwnProperty(k)) {
+        const spec = qSspecs[k].toString();
+        if (spec !== "" && spec.length > 0) {
           delete err[k];
-          //   setErrors(err);
         } else {
-          //   console.log("spec 11111111111", spec);
-          //   console.log("kkk  11111111111", k);
-          //   console.log("length 1111111111", spec.length);
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            [k]: true,
-          }));
+          err = { ...err, [k]: true };
         }
       }
     }
-    console.log("err??????????????????????", err);
+
+    let taskErr = { ...taskErrors };
+
+    for (let k in qSTasks) {
+      if (qSTasks?.hasOwnProperty(k)) {
+        const taskValue = qSTasks[k];
+
+        if (typeof taskValue === "object" && taskValue !== null) {
+          for (let key in taskValue) {
+            const value = taskValue[key];
+            if (
+              value != "" &&
+              value.length > 0 &&
+              taskErr[index]?.hasOwnProperty(key)
+            ) {
+              delete taskErr[index][key];
+            }
+          }
+        } else if (submitted) {
+          if (
+            taskValue != "" ||
+            (taskValue.length > 0 && taskErr[index]?.hasOwnProperty(k))
+          ) {
+            delete taskErr[index][k];
+          } else {
+            taskErr[index][k] = true;
+          }
+        }
+      }
+    }
 
     setErrors(err);
+    setTaskErrors(taskErr);
     setQuickStart(newQuickStart);
     setQuickYaml(YAML.stringify(newQuickStart));
   };
 
   const formGenerator = () => {
-    // console.log("FORM GEN ERRORS -------- ", errors);
     switch (activeMenuItem) {
       case 100:
         return <div className="pf-u-font-size-2xl">IBM Quick Starts Help</div>;
@@ -146,6 +153,8 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             quickStart={quickStart}
             updateQuickStart={updateQuickStart}
             handleMenuClick={handleMenuClick}
+            submitted={submitted}
+            errors={taskErrors}
           />
         );
       default:
@@ -157,13 +166,47 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             task={quickStart.spec.tasks[activeMenuItem]}
             index={activeMenuItem}
             handleMenuClick={handleMenuClick}
+            submitted={submitted}
+            errors={taskErrors}
           />
         );
     }
   };
 
   const previews = () => {
-    if (activeMenuItem < 100 || activeMenuItem === 102) {
+    if (activeMenuItem === 98) {
+      return (
+        <div className="previews">
+          <div className="co-quick-start-content">
+            {quickStart.spec.conclusion}
+          </div>
+          <div className="co-quick-start-footer">
+            <button
+              aria-disabled="false"
+              className="pf-c-button pf-m-primary"
+              type="submit"
+              data-ouia-component-type="PF4/Button"
+              data-ouia-safe="true"
+              data-ouia-component-id="OUIA-Generated-Button-primary-3"
+              // style="margin-right: var(--pf-global--spacer--md);"
+            >
+              Start tour
+            </button>
+            <button
+              aria-disabled="false"
+              className="pf-c-button pf-m-secondary"
+              type="submit"
+              data-ouia-component-type="PF4/Button"
+              data-ouia-safe="true"
+              data-ouia-component-id="OUIA-Generated-Button-secondary-2"
+              // style="margin-right: var(--pf-global--spacer--md);"
+            >
+              Back
+            </button>
+          </div>
+        </div>
+      );
+    } else if (activeMenuItem < 100 || activeMenuItem === 102) {
       return (
         <div className="previews">
           <QuickStartControllerEdit
@@ -183,21 +226,24 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
         />
       );
     }
-    return null;
   };
 
   return (
     <div className="tabs-container">
-      {/* {quickStart ? ( */}
       <React.Fragment>
         <Grid hasGutter>
           <GridItem span={12}></GridItem>
           <GridItem span={3}>
             <QuickStartEditMenu
               activeMenuItem={activeMenuItem}
+              setActiveMenuItem={setActiveMenuItem}
               handleMenuClick={handleMenuClick}
               quickStart={quickStart}
               updateQuickStart={updateQuickStart}
+              errors={errors}
+              taskErrors={taskErrors}
+              setTaskErrors={setTaskErrors}
+              submitted={submitted}
             />
           </GridItem>
           <GridItem span={6}>

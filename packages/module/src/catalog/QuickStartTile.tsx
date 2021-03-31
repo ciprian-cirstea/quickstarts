@@ -1,15 +1,18 @@
 import * as React from "react";
-import { useEffect } from "react"
-import { BrowserRouter as Router } from 'react-router-dom'
+import { useEffect } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import { CatalogTile } from "@patternfly/react-catalog-view-extension";
 import { RocketIcon, EditAltIcon } from "@patternfly/react-icons";
-import { Button, Tooltip } from '@patternfly/react-core';
+import { Button, Tooltip } from "@patternfly/react-core";
 import { FallbackImg } from "@console/shared";
 import { QuickStartStatus, QuickStart } from "../utils/quick-start-types";
 import QuickStartTileHeader from "./QuickStartTileHeader";
 import QuickStartTileDescription from "./QuickStartTileDescription";
 import QuickStartTileFooter from "./QuickStartTileFooter";
-import { QuickStartContext, QuickStartContextValues } from '../utils/quick-start-context';
+import {
+  QuickStartContext,
+  QuickStartContextValues,
+} from "../utils/quick-start-context";
 
 import "./QuickStartTile.scss";
 
@@ -39,20 +42,19 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
     },
   } = quickStart;
 
-  const {
-    global
-  } = React.useContext<QuickStartContextValues>(QuickStartContext);
+  const { global } = React.useContext<QuickStartContextValues>(
+    QuickStartContext
+  );
 
   const onEditLinkClick = global?.onEditLinkClick;
-  const path = window.location.pathname
+  const path = window.location.pathname;
 
   const yamls = [
-    'add-healthchecks',
-    'install-app-and-associate-pipeline',
-    'sample-application',
-    'serverless-application'
-  ] // TODO monkey hardcoding yaml only 
-
+    "add-healthchecks",
+    "install-app-and-associate-pipeline",
+    "sample-application",
+    "serverless-application",
+  ]; // TODO monkey hardcoding yaml only
 
   // useEffect(() => {
   //   console.log(" -------- quickStart", quickStart)
@@ -62,10 +64,9 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
     (e: React.SyntheticEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log(" --- edit --- ")
-      onEditLinkClick(id)
+      onEditLinkClick(id);
     },
-    [id],
+    [id]
   );
 
   const quickStartIcon = (
@@ -75,18 +76,18 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
         src={icon}
         fallback={<RocketIcon />}
       />
-     {
-        yamls.includes(id) || format === 'yaml' ?
-          onEditLinkClick &&
-          path === '/quickstarts' && (
-            <Tooltip content='Edit'>
+      {yamls.includes(id) || format === "yaml"
+        ? onEditLinkClick &&
+          path === "/quickstarts" && (
+            <Tooltip content="Edit">
               <Button
                 onClick={edit}
                 variant="tertiary"
-                icon={<EditAltIcon />}/>
+                icon={<EditAltIcon />}
+              />
             </Tooltip>
-          ) : null
-      }
+          )
+        : null}
     </React.Fragment>
   );
 
@@ -99,7 +100,8 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
         <QuickStartTileHeader
           name={displayName}
           status={status}
-          duration={durationMinutes} />
+          duration={durationMinutes}
+        />
       }
       onClick={onClick}
       description={

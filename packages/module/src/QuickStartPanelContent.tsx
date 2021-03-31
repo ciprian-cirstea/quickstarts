@@ -44,19 +44,22 @@ const QuickStartPanelContent: React.FC<QuickStartPanelContentProps> = ({
       scrollDirection && scrollDirection !== ScrollDirection.scrolledToTop,
   });
 
-  const { setActiveQuickStart } = React.useContext<QuickStartContextValues>(QuickStartContext);
-  const [show, setShow] = React.useState(true)
+  const { setActiveQuickStart } = React.useContext<QuickStartContextValues>(
+    QuickStartContext
+  );
+  const [show, setShow] = React.useState(true);
 
   const isOnEditPage = () => {
-    return location.pathname.indexOf('quickstarts/edit/') !== -1
-          || location.pathname.indexOf('quickstarts/add') !== -1
-  }
+    return (
+      location.pathname.indexOf("quickstarts/edit/") !== -1 ||
+      location.pathname.indexOf("quickstarts/add") !== -1
+    );
+  };
 
   React.useEffect(() => {
-    setShow(isOnEditPage())
+    setShow(isOnEditPage());
 
-    if(!isOnEditPage()) {
-      console.log(" --------- RESET")
+    if (!isOnEditPage()) {
       setActiveQuickStart("");
     }
   }, [location.pathname]);

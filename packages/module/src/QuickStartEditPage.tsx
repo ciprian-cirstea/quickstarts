@@ -31,6 +31,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   const [quickStart, setQuickStart] = React.useState(undefined);
   const [pageType, setPageType] = React.useState("Edit");
   const [errors, setErrors] = React.useState({});
+  const [taskErrors, setTaskErrors] = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
   const { global } = React.useContext<QuickStartContextValues>(
     QuickStartContext
@@ -66,10 +67,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   }, [location.pathname]);
 
   React.useEffect(() => {
-    console.log("params------------------", params);
-
     const quickEdit = allQuickStarts.find((data) => {
-      console.log(data.metadata.name);
       return data.metadata.name.toString() === params.quickstartsId;
     });
 
@@ -101,10 +99,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   };
 
   const saveQuickStart = () => {
-    console.log("<<<<<<<<<<<<<<<<SAVE QUICK START>>>>>>>>>>>>>>>>");
     setSubmitted(true);
-    console.log(quickStart);
     const qSspecs = quickStart.spec;
+    const qSTasks = quickStart.spec.tasks;
 
     const required = [
       "conclusion",
@@ -119,16 +116,59 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       "introduction",
     ];
 
+    const requiredTasks = [
+      "title",
+      "description",
+      "instructions",
+      "failedTaskHelp",
+      "success",
+      "failed",
+    ];
+
     for (let k in qSspecs) {
-      const spec = qSspecs[k];
-      if (required.includes(k) && (spec.length === 0 || spec === "")) {
+      const spec = qSspecs[k].toString();
+      if (required.includes(k) && spec.length === 0 && spec === "") {
         setErrors((prevErrors) => ({ ...prevErrors, [k]: true }));
       }
     }
 
-    if (Object.keys(errors).length) {
-      // const quickStartId = quickStart.metadata.name;
-      // createStorageQuickStarts(false, quickStartId, quickStart);
+    let newTaskErrors = {};
+
+    for (let index = 0; index < qSTasks.length; index++) {
+      const task = qSTasks[index];
+      newTaskErrors[index] = {};
+
+      for (let k in task) {
+        if (typeof task[k] === "object" && task[k] !== null) {
+          const taskObject = task[k];
+
+          for (let key in taskObject) {
+            const taskVal = taskObject[key];
+            if (
+              requiredTasks.includes(key) &&
+              (taskVal.length === 0 || taskVal === "")
+            ) {
+              newTaskErrors[index][key] = true;
+            }
+          }
+        } else {
+          if (
+            requiredTasks.includes(k) &&
+            (task[k].length === 0 || task[k] === "")
+          ) {
+            newTaskErrors[index][k] = true;
+          }
+        }
+      }
+    }
+
+    setTaskErrors(newTaskErrors);
+
+    if (Object.keys(errors).length === 0) {
+      const quickStartId = quickStart.metadata.name;
+      createStorageQuickStarts(false, quickStartId, quickStart);
+    } else {
+      console.log("Fix errors!");
     }
   };
 
@@ -193,6 +233,8 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
         setQuickYaml={setQuickYaml}
         errors={errors}
         setErrors={setErrors}
+        taskErrors={taskErrors}
+        setTaskErrors={setTaskErrors}
         submitted={submitted}
       />
     </React.Fragment>

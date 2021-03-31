@@ -28,27 +28,34 @@ const DescriptionComponent: React.FC<DescriptionComponentProps> = ({
   const [inputValue, setInputValue] = useState(initialValue);
 
   const handleAddImage = () => {
-    let newInput = inputValue.substr(0, myRef.current.selectionStart) + `
-![IMAGE_ALT_TEXT_HERE](IMAGE_URL_HERE)` + inputValue.substr(myRef.current.selectionEnd) 
+    let newInput =
+      inputValue.substr(0, myRef.current.selectionStart) +
+      `
+![IMAGE_ALT_TEXT_HERE](IMAGE_URL_HERE)` +
+      inputValue.substr(myRef.current.selectionEnd);
 
     setInputValue(newInput);
     updateValue(value, newInput);
   };
 
   const handleAddVideo = () => {
-    let newInput = inputValue.substr(0, myRef.current.selectionStart) + `
+    let newInput =
+      inputValue.substr(0, myRef.current.selectionStart) +
+      `
 <video controls>
     <source src="VIDEO_URL_HERE" type="video/mp4">
     Your browser does not support HTML video.
-</video>` + inputValue.substr(myRef.current.selectionEnd) 
-
+</video>` +
+      inputValue.substr(myRef.current.selectionEnd);
 
     setInputValue(newInput);
     updateValue(value, newInput);
   };
 
   const handleAddYoutubeVideo = () => {
-    let newInput = inputValue.substr(0, myRef.current.selectionStart) + `
+    let newInput =
+      inputValue.substr(0, myRef.current.selectionStart) +
+      `
 <iframe
     width="560"
     height="315"
@@ -56,7 +63,8 @@ const DescriptionComponent: React.FC<DescriptionComponentProps> = ({
     title="YouTube video player"
     frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
     allowfullscreen>
-</iframe>` + inputValue.substr(myRef.current.selectionEnd) 
+</iframe>` +
+      inputValue.substr(myRef.current.selectionEnd);
 
     setInputValue(newInput);
     updateValue(value, newInput);
@@ -70,8 +78,8 @@ const DescriptionComponent: React.FC<DescriptionComponentProps> = ({
   const myRef = useRef(null);
 
   React.useEffect(() => {
-    myRef.current.selectionStart = initialValue.length
-  }, [ myRef.current ])
+    myRef.current.selectionStart = initialValue?.length;
+  }, [myRef.current]);
 
   return (
     <React.Fragment>

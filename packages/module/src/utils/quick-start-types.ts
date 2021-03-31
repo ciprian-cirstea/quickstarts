@@ -1,5 +1,5 @@
 // import { AccessReviewResourceAttributes } from '@console/internal/module/k8s/types';
-import { AccessReviewResourceAttributes } from '../ConsoleInternal/module/k8s/types';
+import { AccessReviewResourceAttributes } from "../ConsoleInternal/module/k8s/types";
 
 export type QuickStart = {
   format?: string;
@@ -30,6 +30,7 @@ export type QuickStartTask = {
   description?: string;
   review?: QuickStartTaskReview;
   summary?: QuickStartTaskSummary;
+  active?: boolean;
 };
 
 export type QuickStartTaskReview = {
@@ -44,17 +45,20 @@ export type QuickStartTaskSummary = {
 
 export type AllQuickStartStates = Record<string, QuickStartState>;
 
-export type QuickStartState = Record<string, string | number | QuickStartStatus>;
+export type QuickStartState = Record<
+  string,
+  string | number | QuickStartStatus
+>;
 
 export enum QuickStartStatus {
-  COMPLETE = 'Complete',
-  IN_PROGRESS = 'In Progress',
-  NOT_STARTED = 'Not started',
+  COMPLETE = "Complete",
+  IN_PROGRESS = "In Progress",
+  NOT_STARTED = "Not started",
 }
 
 export enum QuickStartTaskStatus {
-  INIT = 'Initial',
-  REVIEW = 'Review',
-  SUCCESS = 'Success',
-  FAILED = 'Failed',
+  INIT = "Initial",
+  REVIEW = "Review",
+  SUCCESS = "Success",
+  FAILED = "Failed",
 }

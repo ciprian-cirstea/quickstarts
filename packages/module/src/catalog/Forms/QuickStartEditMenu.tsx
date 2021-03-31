@@ -6,24 +6,38 @@ import {
   MenuList,
 } from "@patternfly/react-core";
 import GripHorizontalIcon from "@patternfly/react-icons/dist/js/icons/grip-horizontal-icon";
+import ExclamationCircleIcon from "@patternfly/react-icons/dist/js/icons/exclamation-circle-icon";
 import TrashIcon from "@patternfly/react-icons/dist/js/icons/trash-icon";
 import { Divider } from "@patternfly/react-core";
-
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import "./QuickStartEditmenu.scss";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import DraggableComponent from "./DraggableComponent";
 
 type QuickStartEditPageProps = {
   activeMenuItem?: any;
+  setActiveMenuItem: Function;
   handleMenuClick: any;
   quickStart?: any;
   updateQuickStart: Function;
+  submitted: boolean;
+  errors: object;
+  taskErrors;
+  setTaskErrors: Function;
 };
 
 export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
   activeMenuItem,
+  setActiveMenuItem,
   handleMenuClick,
   quickStart,
   updateQuickStart,
+  submitted,
+  errors,
+  taskErrors,
+  setTaskErrors,
 }) => {
+  //   console.log("quickStart edit menu", quickStart);
+
   const deleteTask = (clicked: number) => {
     try {
       const newTasks = quickStart.spec.tasks.filter(
@@ -31,7 +45,7 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
       );
       const newQuick = { ...quickStart };
       newQuick.spec.tasks = newTasks;
-      console.log(newQuick);
+
       updateQuickStart(newQuick);
 
       if (activeMenuItem < 100) {
@@ -61,133 +75,114 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
     }
   };
 
+  const dangerIcon = (itemNr: number): boolean => {
+    if (!submitted) return false;
+    let isDanger = false;
+
+    if (itemNr < 98) {
+      const taskErrorKeys = [];
+      for (let k in taskErrors[itemNr]) {
+        taskErrorKeys.push(k);
+      }
+
+      const err = [
+        "description",
+        "failed",
+        "failedTaskHelp",
+        "instructions",
+        "success",
+      ];
+
+      isDanger = err.some((r) => taskErrorKeys.includes(r));
+    } else {
+      const errorKeys = [];
+      for (let k in errors) {
+        errorKeys.push(k);
+      }
+
+      if (itemNr === 101) {
+        const err = [
+          "displayName",
+          "icon",
+          "version",
+          "durationMinutes",
+          "description",
+        ];
+        isDanger = err.some((r) => errorKeys.includes(r));
+      }
+
+      if (itemNr === 99) {
+        const err = ["introduction"];
+        isDanger = err.some((r) => errorKeys.includes(r));
+      }
+      if (itemNr === 98) {
+        const err = ["conclusion"];
+        isDanger = err.some((r) => errorKeys.includes(r));
+      }
+    }
+
+    return isDanger;
+  };
+
+  const menuItems = [
+    {
+      nr: 101,
+      label: "Tile Editor",
+    },
+    {
+      nr: 99,
+      label: "Introduction",
+    },
+    {
+      nr: 98,
+      label: "Conclusion",
+    },
+  ];
+
   return (
     <Menu activeItemId={activeMenuItem} onSelect={handleMenuClick}>
       <MenuList>
         <MenuItem isSelected={activeMenuItem === 100} itemId={100}>
           Read Me First
         </MenuItem>
-        <MenuItem isSelected={activeMenuItem === 101} itemId={101}>
-          Tile Editor
-        </MenuItem>
-        <MenuItem isSelected={activeMenuItem === 99} itemId={99}>
-          Introduction
-        </MenuItem>
-        <MenuItem isSelected={activeMenuItem === 98} itemId={98}>
-          Conclusion
-        </MenuItem>
+
+        {menuItems.map((menuItem: object) => (
+          <MenuItem
+            key={menuItem["nr"]}
+            icon={
+              dangerIcon(menuItem["nr"]) ? (
+                <ExclamationCircleIcon aria-hidden className="danger-color" />
+              ) : null
+            }
+            isSelected={activeMenuItem === menuItem["nr"]}
+            itemId={menuItem["nr"]}
+          >
+            {menuItem["label"]}
+          </MenuItem>
+        ))}
+
         <Divider />
 
         <MenuItem isDisabled={true}>
           Tasks [{quickStart?.spec.tasks.length}]
         </MenuItem>
       </MenuList>
-      <Divider />
 
-      <MenuList>
-        {quickStart
-          ? quickStart?.spec.tasks.map((task, index: number) => {
-              console.log("task menu", task);
-              return (
-                <MenuItem
-                  isSelected={activeMenuItem === index}
-                  actions={
-                    <React.Fragment>
-                      <MenuItemAction
-                        icon={<TrashIcon aria-hidden />}
-                        actionId="code"
-                        onClick={() => deleteTask(index)}
-                        aria-label="Code"
-                      />
-                      <MenuItemAction
-                        className="task-grip-icon"
-                        icon={<GripHorizontalIcon aria-hidden />}
-                        actionId="code"
-                        onClick={() => console.log("clicked on code icon")}
-                        aria-label="Code"
-                      />
-                    </React.Fragment>
-                  }
-                  key={index}
-                  itemId={index}
-                >
-                  {`${task.title.substring(0, 35)}...`}
-                </MenuItem>
-              );
-            })
-          : null}
-      </MenuList>
-
-      <Divider />
+      <DraggableComponent
+        items={quickStart?.spec.tasks}
+        activeMenuItem={activeMenuItem}
+        setActiveMenuItem={setActiveMenuItem}
+        dangerIcon={dangerIcon}
+        deleteTask={deleteTask}
+        quickStart={quickStart}
+        updateQuickStart={updateQuickStart}
+        taskErrors={taskErrors}
+        setTaskErrors={setTaskErrors}
+      />
 
       <MenuItem isSelected={activeMenuItem === 102} itemId={102}>
         Add Task+
       </MenuItem>
-
-      {/* <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
-            >
-              {quickStart
-                ? quickStart.spec.tasks.map((task, index: number) => {
-                    return (
-                      <Draggable key={index} draggableId={index} index={index}>
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
-                        >
-                          <MenuItem
-                            isSelected={activeMenuItem === index}
-                            actions={
-                              <React.Fragment>
-                                <MenuItemAction
-                                  icon={<TrashIcon aria-hidden />}
-                                  actionId="code"
-                                  onClick={() =>
-                                    console.log("clicked on code icon")
-                                  }
-                                  aria-label="Code"
-                                />
-                                <MenuItemAction
-                                  className="task-grip-icon"
-                                  icon={<GripHorizontalIcon aria-hidden />}
-                                  actionId="code"
-                                  onClick={() =>
-                                    console.log("clicked on code icon")
-                                  }
-                                  aria-label="Code"
-                                />
-                              </React.Fragment>
-                            }
-                            key={index}
-                            itemId={index}
-                          >
-                            {`${task.title.substring(0, 35)}...`}
-                          </MenuItem>
-                        </div>
-                      </Draggable>
-                    );
-                    {
-                      provided.placeholder;
-                    }
-                  })
-                : null}
-
-
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext> */}
     </Menu>
   );
 };
