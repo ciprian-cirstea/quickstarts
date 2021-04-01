@@ -164,7 +164,7 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
         <Divider />
 
         <MenuItem isDisabled={true}>
-          Tasks [{quickStart?.spec.tasks.length}]
+          Tasks [{quickStart?.spec?.tasks?.length}]
         </MenuItem>
       </MenuList>
 

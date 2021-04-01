@@ -27,7 +27,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   );
 
   const [quickYaml, setQuickYaml] = React.useState(undefined);
-  const [quickStart, setQuickStart] = React.useState(undefined);
+  const [quickStart, setQuickStart] = React.useState<QuickStart>(
+    {} as QuickStart
+  );
   const [pageType, setPageType] = React.useState("Edit");
   const [errors, setErrors] = React.useState({});
   const [taskErrors, setTaskErrors] = React.useState({});
@@ -42,48 +44,42 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       setPageType("Add");
 
       const id = Date.now();
-      //   createStorageQuickStarts(true, random, null);
-      const qs = {
+      const qs: QuickStart = {
         apiVersion: "console.openshift.io/v1",
         kind: "ConsoleQuickStart",
-        metadata: { name: id },
+        metadata: { name: id.toString() },
         spec: {
           conclusion: "",
           description: "",
           displayName: "",
-          durationMinutes: "",
+          durationMinutes: 0,
           icon: "",
           introduction: "",
           nextQuickStart: [],
           prerequisites: [],
           tasks: [],
-          version: "",
+          version: 0,
         },
       };
 
       setQuickStart(qs);
+    } else {
+      const quickEdit = allQuickStarts.find((data) => {
+        return data.metadata.name.toString() === params.quickstartsId;
+      });
+
+      //check if quickEdit exists
+
+      var newQuickEdit = JSON.parse(
+        JSON.stringify(quickEdit ? quickEdit : ({} as QuickStart))
+      );
+
+      if (newQuickEdit) {
+        setQuickStart(newQuickEdit);
+        setQuickYaml(YAML.stringify(newQuickEdit));
+      }
     }
   }, [location.pathname]);
-
-  React.useEffect(() => {
-    console.log(allQuickStarts);
-
-    const quickEdit = allQuickStarts.find((data) => {
-      return data.metadata.name.toString() === params.quickstartsId;
-    });
-
-    //check if quickEdit exists
-
-    console.log("[[[[[[[[ quickEdit ]]]]]]]]", quickEdit);
-
-    // const newQuickEdit = { ...quickEdit };
-    var newQuickEdit = JSON.parse(JSON.stringify(quickEdit));
-
-    if (newQuickEdit && pageType === "Edit") {
-      setQuickStart(newQuickEdit);
-      setQuickYaml(YAML.stringify(newQuickEdit));
-    }
-  }, []);
 
   const createStorageQuickStarts = (
     add: boolean,
@@ -107,8 +103,32 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     localStorage.setItem("newQuickStarts", JSON.stringify(lSQuickstarts));
   };
 
+  const isError = (value) => {
+    const type = typeof value;
+
+    if (type === "string" && value === "") {
+      return true;
+    }
+
+    if (type === "object" && Object.keys(value).length === 0) {
+      return true;
+    }
+
+    if (type === undefined) {
+      return true;
+    }
+
+    if (type === "number" && value === 0) {
+      return true;
+    }
+
+    return false;
+  };
+
   const saveQuickStart = () => {
     setSubmitted(true);
+
+    let errors = false;
     const qSspecs = quickStart.spec;
     const qSTasks = quickStart.spec.tasks;
 
@@ -135,8 +155,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     ];
 
     for (let k in qSspecs) {
-      const spec = qSspecs[k].toString();
-      if (required.includes(k) && spec.length === 0 && spec === "") {
+      const spec = qSspecs[k];
+      if (required.includes(k) && isError(spec)) {
+        errors = true;
         setErrors((prevErrors) => ({ ...prevErrors, [k]: true }));
       }
     }
@@ -153,18 +174,14 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
           for (let key in taskObject) {
             const taskVal = taskObject[key];
-            if (
-              requiredTasks.includes(key) &&
-              (taskVal.length === 0 || taskVal === "")
-            ) {
+            if (requiredTasks.includes(key) && isError(taskVal)) {
+              errors = true;
               newTaskErrors[index][key] = true;
             }
           }
         } else {
-          if (
-            requiredTasks.includes(k) &&
-            (task[k].length === 0 || task[k] === "")
-          ) {
+          if (requiredTasks.includes(k) && isError(task[k])) {
+            errors = true;
             newTaskErrors[index][k] = true;
           }
         }
@@ -173,7 +190,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
     setTaskErrors(newTaskErrors);
 
-    if (Object.keys(errors).length === 0) {
+    if (!errors) {
       const quickStartId = quickStart.metadata.name;
       createStorageQuickStarts(false, quickStartId, quickStart);
       onShowAllLinkClick();
@@ -234,18 +251,21 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           </Button>
         </Text>
       </div>
-
-      <QuickStartEditComponent
-        quickStart={quickStart}
-        setQuickStart={setQuickStart}
-        quickStartId={params.quickstartsId}
-        setQuickYaml={setQuickYaml}
-        errors={errors}
-        setErrors={setErrors}
-        taskErrors={taskErrors}
-        setTaskErrors={setTaskErrors}
-        submitted={submitted}
-      />
+      <React.Fragment>
+        {Object.keys(quickStart).length > 0 ? (
+          <QuickStartEditComponent
+            quickStart={quickStart}
+            setQuickStart={setQuickStart}
+            quickStartId={params.quickstartsId}
+            setQuickYaml={setQuickYaml}
+            errors={errors}
+            setErrors={setErrors}
+            taskErrors={taskErrors}
+            setTaskErrors={setTaskErrors}
+            submitted={submitted}
+          />
+        ) : null}
+      </React.Fragment>
     </React.Fragment>
   );
 };

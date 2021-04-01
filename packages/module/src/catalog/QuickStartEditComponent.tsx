@@ -70,7 +70,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
 
     for (let k in qSspecs) {
       if (qSspecs?.hasOwnProperty(k)) {
-        const spec = qSspecs[k].toString();
+        const spec = qSspecs[k]?.toString();
         if (spec !== "" && spec.length > 0) {
           delete err[k];
         } else {
