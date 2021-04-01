@@ -72,36 +72,13 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       return data.metadata.name.toString() === params.quickstartsId;
     });
 
-    // const newQuickEdit = { ...quickEdit };
-    var newQuickEdit = JSON.parse(JSON.stringify(quickEdit));
+    const newQuickEdit = JSON.parse(JSON.stringify(quickEdit));
 
     if (newQuickEdit && pageType === "Edit") {
       setQuickStart(newQuickEdit);
       setQuickYaml(YAML.stringify(newQuickEdit));
     }
   }, []);
-
-  //   const createStorageQuickStarts = (
-  //     add: boolean,
-  //     id: string,
-  //     quickStart: QuickStart
-  //   ) => {
-  //     let quickStartId = id;
-
-  //     let quickStartObject = quickStart;
-
-  //     let lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
-
-  //     if (lSQuickstarts === null) {
-  //       localStorage.setItem("newQuickStarts", JSON.stringify({}));
-  //     }
-
-  //     lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
-
-  //     lSQuickstarts[quickStartId] = quickStartObject;
-
-  //     localStorage.setItem("newQuickStarts", JSON.stringify(lSQuickstarts));
-  //   };
 
   const saveQuickStart = () => {
     setSubmitted(true);
@@ -171,7 +148,6 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
     if (Object.keys(errors).length === 0) {
       const quickStartId = quickStart.metadata.name;
-      //   createStorageQuickStarts(false, quickStartId, quickStart);
       postData(
         `https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents/${quickStartId}`,
         quickStart
