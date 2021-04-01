@@ -1,5 +1,4 @@
 import * as React from "react";
-// import { useTranslation } from "react-i18next";
 import { Button, Text } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/js/icons/download-icon";
 import YAML from "json-to-pretty-yaml";
@@ -33,10 +32,10 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   const [errors, setErrors] = React.useState({});
   const [taskErrors, setTaskErrors] = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
-  const { global } = React.useContext<QuickStartContextValues>(
+  const { footer } = React.useContext<QuickStartContextValues>(
     QuickStartContext
   );
-  const onCloseLinkClick = global?.onCloseLinkClick;
+  const onShowAllLinkClick = footer?.onShowAllLinkClick;
 
   React.useEffect(() => {
     if (location.pathname === "/quickstarts/add") {
@@ -67,13 +66,22 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   }, [location.pathname]);
 
   React.useEffect(() => {
+    console.log(allQuickStarts);
+
     const quickEdit = allQuickStarts.find((data) => {
       return data.metadata.name.toString() === params.quickstartsId;
     });
 
-    if (quickEdit && pageType === "Edit") {
-      setQuickStart(quickEdit);
-      setQuickYaml(YAML.stringify(quickEdit));
+    //check if quickEdit exists
+
+    console.log("[[[[[[[[ quickEdit ]]]]]]]]", quickEdit);
+
+    // const newQuickEdit = { ...quickEdit };
+    var newQuickEdit = JSON.parse(JSON.stringify(quickEdit));
+
+    if (newQuickEdit && pageType === "Edit") {
+      setQuickStart(newQuickEdit);
+      setQuickYaml(YAML.stringify(newQuickEdit));
     }
   }, []);
 
@@ -87,6 +95,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     let quickStartObject = quickStart;
 
     let lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
+
     if (lSQuickstarts === null) {
       localStorage.setItem("newQuickStarts", JSON.stringify({}));
     }
@@ -167,6 +176,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     if (Object.keys(errors).length === 0) {
       const quickStartId = quickStart.metadata.name;
       createStorageQuickStarts(false, quickStartId, quickStart);
+      onShowAllLinkClick();
     } else {
       console.log("Fix errors!");
     }
@@ -196,9 +206,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
           {pageType} Quick Start
-          {onCloseLinkClick && (
+          {onShowAllLinkClick && (
             <Button
-              onClick={onCloseLinkClick}
+              onClick={onShowAllLinkClick}
               variant="secondary"
               className="float-right close-button" //TODO use float right class from patternfly
             >
@@ -208,7 +218,6 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           <Button
             onClick={() => {
               saveQuickStart();
-              //   onCloseLinkClick();
             }}
             className="float-right add-new-button"
             variant="primary"

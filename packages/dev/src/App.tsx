@@ -77,9 +77,6 @@ const App: React.FunctionComponent = ({ children }) => {
         setIsEditPage(true);
         setIsNavOpen(false);
       },
-      onCloseLinkClick: () => {
-        history.push("/quickstarts");
-      },
     },
   });
 
