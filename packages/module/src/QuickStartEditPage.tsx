@@ -72,10 +72,6 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       return data.metadata.name.toString() === params.quickstartsId;
     });
 
-    //check if quickEdit exists
-
-    console.log("[[[[[[[[ quickEdit ]]]]]]]]", quickEdit);
-
     // const newQuickEdit = { ...quickEdit };
     var newQuickEdit = JSON.parse(JSON.stringify(quickEdit));
 
@@ -85,27 +81,27 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     }
   }, []);
 
-  const createStorageQuickStarts = (
-    add: boolean,
-    id: string,
-    quickStart: QuickStart
-  ) => {
-    let quickStartId = id;
+  //   const createStorageQuickStarts = (
+  //     add: boolean,
+  //     id: string,
+  //     quickStart: QuickStart
+  //   ) => {
+  //     let quickStartId = id;
 
-    let quickStartObject = quickStart;
+  //     let quickStartObject = quickStart;
 
-    let lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
+  //     let lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
 
-    if (lSQuickstarts === null) {
-      localStorage.setItem("newQuickStarts", JSON.stringify({}));
-    }
+  //     if (lSQuickstarts === null) {
+  //       localStorage.setItem("newQuickStarts", JSON.stringify({}));
+  //     }
 
-    lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
+  //     lSQuickstarts = JSON.parse(localStorage.getItem("newQuickStarts"));
 
-    lSQuickstarts[quickStartId] = quickStartObject;
+  //     lSQuickstarts[quickStartId] = quickStartObject;
 
-    localStorage.setItem("newQuickStarts", JSON.stringify(lSQuickstarts));
-  };
+  //     localStorage.setItem("newQuickStarts", JSON.stringify(lSQuickstarts));
+  //   };
 
   const saveQuickStart = () => {
     setSubmitted(true);
@@ -175,12 +171,41 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
     if (Object.keys(errors).length === 0) {
       const quickStartId = quickStart.metadata.name;
-      createStorageQuickStarts(false, quickStartId, quickStart);
-      onShowAllLinkClick();
+      //   createStorageQuickStarts(false, quickStartId, quickStart);
+      postData(
+        `https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents/${quickStartId}`,
+        quickStart
+      ).then((response) => {
+        console.log("responseeeeee--------------", response);
+        if (
+          response.message.length &&
+          response.message === "Document write success"
+        ) {
+          onShowAllLinkClick();
+        }
+      });
     } else {
       console.log("Fix errors!");
     }
   };
+
+  async function postData(url: string = "", data: QuickStart) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      //   mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      //   credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      //   redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
 
   const downloadYAML = () => {
     const fileName = `${quickStart.metadata.name}.yaml`;
