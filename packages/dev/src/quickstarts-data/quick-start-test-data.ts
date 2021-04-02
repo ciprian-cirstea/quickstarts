@@ -85,24 +85,4 @@ var quickstartsTestData: QuickStart[] = [
   })
 ]
 
-const quickstartsWithLocalStorage = (quickstarts: QuickStart[]) => {
-  let quickstartsLocal = JSON.parse(window.localStorage.getItem('newQuickStarts')) || {}
-
-  // update existing quickstarts from localStorage
-  quickstarts.map((q, i) => {
-    if(Object.keys(quickstartsLocal).includes(q.metadata.name)) {
-      quickstarts[i] = quickstartsLocal[q.metadata.name]
-    }
-  })
-
-  // get new quickstarts from localStorage
-  Object.keys(quickstartsLocal).map(qLocal => {
-    if(!quickstarts.map(q => String(q.metadata.name)).includes(qLocal)) {
-      quickstarts.push({...quickstartsLocal[qLocal], format: 'yaml'})
-    }
-  })
-
-  return quickstarts
-}
-
-export const allQuickStarts = quickstartsWithLocalStorage(quickstartsTestData)
+export const allQuickStarts = quickstartsTestData

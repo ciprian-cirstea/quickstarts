@@ -16,12 +16,36 @@ import { Link, useHistory, withRouter } from "react-router-dom";
 import Demos from "./Demos";
 import "./App.css";
 import {
+  QuickStart,
   QuickStartDrawer,
   QuickStartContext,
   useValuesForQuickStartContext,
   useLocalStorage,
 } from "@cloudmosaic/quickstarts";
 import { allQuickStarts } from "./quickstarts-data/quick-start-test-data";
+
+// update quickstarts list from localstorage
+const quickstartsWithLocalStorage = (quickstarts: QuickStart[]) => {
+  let quickstartsTemp = JSON.parse(JSON.stringify(quickstarts))
+  let quickstartsLocal = JSON.parse(window.localStorage.getItem('newQuickStarts')) || {}
+
+  // update existing quickstarts from localStorage
+  quickstarts.map((q, i) => {
+    if(Object.keys(quickstartsLocal).includes(q.metadata.name)) {
+      quickstartsTemp[i] = quickstartsLocal[q.metadata.name]
+    }
+  })
+
+  // get new quickstarts from localStorage
+  Object.keys(quickstartsLocal).map(qLocal => {
+    if(!quickstarts.map(q => String(q.metadata.name)).includes(qLocal)) {
+      quickstartsTemp.push({...quickstartsLocal[qLocal], format: 'yaml'})
+    }
+  })
+  
+  return quickstartsTemp
+}
+
 const App: React.FunctionComponent = ({ children }) => {
   const history = useHistory();
   const [initialized, setInitialized] = React.useState(true);
@@ -55,7 +79,7 @@ const App: React.FunctionComponent = ({ children }) => {
   const { pathname: currentPath } = window.location;
   const quickStartPath = "/quickstarts";
   const valuesForQuickstartContext = useValuesForQuickStartContext({
-    allQuickStarts,
+    allQuickStarts: quickstartsWithLocalStorage(allQuickStarts),
     activeQuickStartID,
     setActiveQuickStartID,
     allQuickStartStates,
