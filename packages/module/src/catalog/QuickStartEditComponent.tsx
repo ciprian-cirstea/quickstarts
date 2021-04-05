@@ -233,6 +233,16 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
     }
   };
 
+  const checkTaskErrors = () => {
+    for (let k in taskErrors) {
+      const el = taskErrors[k];
+      if (Object.keys(el).length > 0) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return (
     <div className="tabs-container">
       <React.Fragment>
@@ -252,10 +262,11 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             />
           </GridItem>
           <GridItem span={6}>
-            {Object.keys(errors).length || Object.keys(taskErrors).length ? (
+            {(Object.keys(errors).length > 0 || checkTaskErrors()) &&
+            submitted ? (
               <Alert
                 variant="danger"
-                title="Please fix form errors before continuing."
+                title="Please fix form errors before continuing"
               />
             ) : null}
             <Form>{formGenerator()}</Form>

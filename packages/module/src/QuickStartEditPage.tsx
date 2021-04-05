@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Text } from "@patternfly/react-core";
+import { Button, Text, Spinner } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/js/icons/download-icon";
 import YAML from "json-to-pretty-yaml";
 
@@ -9,6 +9,8 @@ import {
 } from "./utils/quick-start-context";
 import QuickStartEditComponent from "./catalog/QuickStartEditComponent";
 import { QuickStart } from "./utils/quick-start-types";
+
+import "./QuickStartEditPage.scss";
 
 type QuickStartEditPageProps = {
   match?: any;
@@ -32,6 +34,8 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   const [errors, setErrors] = React.useState({});
   const [taskErrors, setTaskErrors] = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [saveLabel, setSaveLabel] = React.useState("Save");
   const { footer } = React.useContext<QuickStartContextValues>(
     QuickStartContext
   );
@@ -71,10 +75,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       `${documentHubApi}/catalogs/${catalogId}/documents/${params.quickstartsId}`
     )
       .then((response) => {
-        console.log(`Response --- ${response}`);
-        console.log(response);
         if (response && response.document) {
           setQuickEditHook(response.document);
+          setLoading(false);
         } else {
           getFromAllQuickstarts();
         }
@@ -121,7 +124,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
   const saveQuickStart = () => {
     setSubmitted(true);
-
+    setSaveLabel("Saving ...");
     let errors = false;
     const qSspecs = quickStart.spec;
     const qSTasks = quickStart.spec.tasks;
@@ -198,8 +201,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
         }
       });
     } else {
-      console.log("Fix errors!");
-      //TODO show alert message
+      setSaveLabel("Save");
     }
   };
 
@@ -227,7 +229,6 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       },
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     });
-    console.log("document hub response", response);
     if (response.status === 404) {
       return null;
     } else {
@@ -269,13 +270,11 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
             </Button>
           )}
           <Button
-            onClick={() => {
-              saveQuickStart();
-            }}
+            onClick={() => saveQuickStart()}
             className="float-right add-new-button"
             variant="primary"
           >
-            Save
+            {saveLabel}
           </Button>
           <Button
             className="float-right add-new-button"
@@ -287,18 +286,25 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           </Button>
         </Text>
       </div>
-
-      <QuickStartEditComponent
-        quickStart={quickStart}
-        setQuickStart={setQuickStart}
-        quickStartId={params.quickstartsId}
-        setQuickYaml={setQuickYaml}
-        errors={errors}
-        setErrors={setErrors}
-        taskErrors={taskErrors}
-        setTaskErrors={setTaskErrors}
-        submitted={submitted}
-      />
+      {loading ? (
+        <div className="spinner-container">
+          <div className="spinner-box">
+            <Spinner />
+          </div>
+        </div>
+      ) : (
+        <QuickStartEditComponent
+          quickStart={quickStart}
+          setQuickStart={setQuickStart}
+          quickStartId={params.quickstartsId}
+          setQuickYaml={setQuickYaml}
+          errors={errors}
+          setErrors={setErrors}
+          taskErrors={taskErrors}
+          setTaskErrors={setTaskErrors}
+          submitted={submitted}
+        />
+      )}
     </React.Fragment>
   );
 };
