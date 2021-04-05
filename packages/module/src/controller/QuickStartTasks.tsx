@@ -1,9 +1,12 @@
-import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import QuickStartMarkdownView from '../QuickStartMarkdownView';
-import { QuickStartTask, QuickStartTaskStatus } from '../utils/quick-start-types';
-import TaskHeader from './QuickStartTaskHeader';
-import QuickStartTaskReview from './QuickStartTaskReview';
+import * as React from "react";
+import { useTranslation } from "react-i18next";
+import QuickStartMarkdownView from "../QuickStartMarkdownView";
+import {
+  QuickStartTask,
+  QuickStartTaskStatus,
+} from "../utils/quick-start-types";
+import TaskHeader from "./QuickStartTaskHeader";
+import QuickStartTaskReview from "./QuickStartTaskReview";
 
 type QuickStartTaskProps = {
   tasks: QuickStartTask[];
@@ -22,7 +25,7 @@ const QuickStartTasks: React.FC<QuickStartTaskProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <>
+    <React.Fragment>
       {tasks
         .filter((_, index) => index <= taskNumber)
         .map((task, index) => {
@@ -30,35 +33,44 @@ const QuickStartTasks: React.FC<QuickStartTaskProps> = ({
           const isActiveTask = index === taskNumber;
           const taskStatus = allTaskStatuses[index];
           const summaryInstructions =
-            taskStatus === QuickStartTaskStatus.SUCCESS ? summary?.success : summary?.failed;
-          const taskInstructions = isActiveTask ? description : summaryInstructions;
+            taskStatus === QuickStartTaskStatus.SUCCESS
+              ? summary?.success
+              : summary?.failed;
+          const taskInstructions = isActiveTask
+            ? description
+            : summaryInstructions;
 
           return (
-            <React.Fragment key={title}>
+            <React.Fragment key={index}>
               <TaskHeader
                 taskIndex={index + 1}
                 title={title}
                 size="md"
-                subtitle={t('quickstart~{{index, number}} of {{tasks, number}}', {
-                  index: index + 1,
-                  tasks: tasks.length,
-                })}
+                subtitle={t(
+                  "quickstart~{{index, number}} of {{tasks, number}}",
+                  {
+                    index: index + 1,
+                    tasks: tasks.length,
+                  }
+                )}
                 taskStatus={taskStatus}
                 isActiveTask={isActiveTask}
                 onTaskSelect={onTaskSelect}
               />
               <QuickStartMarkdownView content={taskInstructions} />
-              {isActiveTask && taskStatus !== QuickStartTaskStatus.INIT && review && (
-                <QuickStartTaskReview
-                  review={review}
-                  taskStatus={taskStatus}
-                  onTaskReview={onTaskReview}
-                />
-              )}
+              {isActiveTask &&
+                taskStatus !== QuickStartTaskStatus.INIT &&
+                review && (
+                  <QuickStartTaskReview
+                    review={review}
+                    taskStatus={taskStatus}
+                    onTaskReview={onTaskReview}
+                  />
+                )}
             </React.Fragment>
           );
         })}
-    </>
+    </React.Fragment>
   );
 };
 

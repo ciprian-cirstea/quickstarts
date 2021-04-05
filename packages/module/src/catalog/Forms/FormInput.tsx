@@ -54,7 +54,7 @@ const FormInput: React.FC<FormInputProps> = ({
           id={id}
           onChange={handleChange}
           validated={
-            submitted && errors.hasOwnProperty(value) ? "error" : "default"
+            submitted && errors?.hasOwnProperty(value) ? "error" : "default"
           }
         />
       ) : (
@@ -66,7 +66,7 @@ const FormInput: React.FC<FormInputProps> = ({
           id={id}
           onChange={handleChange}
           validated={
-            submitted && errors.hasOwnProperty(value) ? "error" : "default"
+            submitted && errors?.hasOwnProperty(value) ? "error" : "default"
           }
         />
       )}

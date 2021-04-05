@@ -36,8 +36,6 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
   taskErrors,
   setTaskErrors,
 }) => {
-  //   console.log("quickStart edit menu", quickStart);
-
   const deleteTask = (clicked: number) => {
     try {
       const newTasks = quickStart.spec.tasks.filter(
@@ -146,7 +144,7 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
           Read Me First
         </MenuItem>
 
-        {menuItems.map((menuItem: object) => (
+        {menuItems.map((menuItem: object, index: number) => (
           <MenuItem
             key={menuItem["nr"]}
             icon={

@@ -91,6 +91,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             if (
               value != "" &&
               value.length > 0 &&
+              taskErr[index] &&
               taskErr[index]?.hasOwnProperty(key)
             ) {
               delete taskErr[index][key];
@@ -99,7 +100,9 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
         } else if (submitted) {
           if (
             taskValue != "" ||
-            (taskValue.length > 0 && taskErr[index]?.hasOwnProperty(k))
+            (taskValue.length > 0 &&
+              taskErr[index] &&
+              taskErr[index]?.hasOwnProperty(k))
           ) {
             delete taskErr[index][k];
           } else {
@@ -154,7 +157,8 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             updateQuickStart={updateQuickStart}
             handleMenuClick={handleMenuClick}
             submitted={submitted}
-            errors={taskErrors}
+            taskErrors={taskErrors}
+            setTaskErrors={setTaskErrors}
           />
         );
       default:
@@ -167,7 +171,8 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             index={activeMenuItem}
             handleMenuClick={handleMenuClick}
             submitted={submitted}
-            errors={taskErrors}
+            taskErrors={taskErrors}
+            setTaskErrors={setTaskErrors}
           />
         );
     }

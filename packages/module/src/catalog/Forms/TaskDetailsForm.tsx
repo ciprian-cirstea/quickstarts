@@ -13,7 +13,8 @@ type TaskDetailsFormProps = {
   index?: number;
   handleMenuClick: Function;
   submitted: boolean;
-  errors: object;
+  taskErrors: object;
+  setTaskErrors: Function;
 };
 
 const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
@@ -23,12 +24,14 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
   index,
   handleMenuClick,
   submitted,
-  errors,
+  taskErrors,
+  setTaskErrors,
 }) => {
   const [qs, setQs] = React.useState(quickStart);
   const [taskIndex, setTaskIndex] = React.useState(index ? index : 0);
 
   React.useEffect(() => {
+    //If no task is passed create a new empty task
     if (!task) {
       const newQuick = { ...qs };
 
@@ -59,6 +62,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
     }
 
     qs.spec.tasks = newTsk;
+
     updateQuickStart(qs, taskIndex);
   };
 
@@ -90,7 +94,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         type="text"
         updateValue={quickUpdate}
         submitted={submitted}
-        errors={errors[taskIndex]}
+        errors={taskErrors[taskIndex]}
       />
 
       <div className="deactivate-checkbox">{checkboxWithDescription()}</div>
@@ -105,7 +109,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         type="text"
         updateValue={quickUpdate}
         submitted={submitted}
-        errors={errors[taskIndex]}
+        errors={taskErrors[taskIndex]}
       />
 
       <div className="pf-u-font-size-lg">Review</div>
@@ -120,7 +124,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
             type="text"
             updateValue={quickUpdate}
             submitted={submitted}
-            errors={errors[taskIndex]}
+            errors={taskErrors[taskIndex]}
           />
         </SplitItem>
 
@@ -135,7 +139,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
             type="text"
             updateValue={quickUpdate}
             submitted={submitted}
-            errors={errors[taskIndex]}
+            errors={taskErrors[taskIndex]}
           />
         </SplitItem>
       </Split>
@@ -152,7 +156,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
             type="text"
             updateValue={quickUpdate}
             submitted={submitted}
-            errors={errors[taskIndex]}
+            errors={taskErrors[taskIndex]}
           />
         </SplitItem>
         <SplitItem>
@@ -166,7 +170,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
             type="text"
             updateValue={quickUpdate}
             submitted={submitted}
-            errors={errors[taskIndex]}
+            errors={taskErrors[taskIndex]}
           />
         </SplitItem>
       </Split>

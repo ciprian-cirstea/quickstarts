@@ -33,7 +33,7 @@ const DraggableComponent: React.FC<FormInputProps> = ({
   setTaskErrors,
 }) => {
   const grid = 1;
-
+  console.log("timestamp here draggable", Date.now());
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
@@ -133,10 +133,14 @@ const DraggableComponent: React.FC<FormInputProps> = ({
                 {items.map((task: QuickStartTask, index) => (
                   <Draggable
                     key={
-                      task["title"] ? task["title"].toString() : "newTaskTitle"
+                      task["title"] + index
+                        ? `${task["title"]}${index}`
+                        : index.toString()
                     }
                     draggableId={
-                      task["title"] ? task["title"].toString() : "newTaskTitle"
+                      task["title"]
+                        ? `${task["title"]}${index}`
+                        : index.toString()
                     }
                     index={index}
                   >
