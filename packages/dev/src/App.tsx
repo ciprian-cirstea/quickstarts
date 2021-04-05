@@ -24,22 +24,36 @@ import {
 } from "@cloudmosaic/quickstarts";
 import { allQuickStarts } from "./quickstarts-data/quick-start-test-data";
 
-// update quickstarts list from localstorage
-const quickstartsWithLocalStorage = (quickstarts: QuickStart[]) => {
+// get quickstarts from documentHub
+const getQuickstartsFromDocumentHub = async () => {
+  let documentHubUrl = "https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents";
+
+  const result = await fetch(documentHubUrl)
+  const documents = await result.json()
+    
+  return documents.map((q: any) => q.document)
+}
+
+// update quickstarts list from documentHub
+const quickstartsWithDocumentHub = async (quickstarts: QuickStart[]) => {
   let quickstartsTemp = JSON.parse(JSON.stringify(quickstarts))
-  let quickstartsLocal = JSON.parse(window.localStorage.getItem('newQuickStarts')) || {}
+  let newlyAdded = new Array()
+  let quickstartsDocumentHub = await getQuickstartsFromDocumentHub() || {}
 
-  // update existing quickstarts from localStorage
-  quickstarts.map((q, i) => {
-    if(Object.keys(quickstartsLocal).includes(q.metadata.name)) {
-      quickstartsTemp[i] = quickstartsLocal[q.metadata.name]
+  quickstartsDocumentHub.map((qd:any, i:any) => {
+    let existing = false;
+
+    for (var j = 0; j < quickstarts.length; j++) {
+      if (String(quickstarts[j].metadata.name) == String(qd.metadata.name)) {
+        quickstartsTemp[j] = qd;
+        existing = true;
+      }
     }
-  })
 
-  // get new quickstarts from localStorage
-  Object.keys(quickstartsLocal).map(qLocal => {
-    if(!quickstarts.map(q => String(q.metadata.name)).includes(qLocal)) {
-      quickstartsTemp.push({...quickstartsLocal[qLocal], format: 'yaml'})
+    if(!existing){
+      newlyAdded.push({...qd, format: 'yaml'});
+    } else {
+      existing = false;
     }
   })
   
@@ -58,7 +72,7 @@ const App: React.FunctionComponent = ({ children }) => {
     {}
   );
 
-  // const [allQuickStarts, setAllQuickStarts] = useState(allQuickStarts || [])
+  const [updatedQuickstarts, setUpdatedQuickstarts] = useState(allQuickStarts || [])
 
   const isOnEditPage = () => {
     return (
@@ -69,17 +83,31 @@ const App: React.FunctionComponent = ({ children }) => {
   const [isEditPage, setIsEditPage] = useState(isOnEditPage());
   const [isNavOpen, setIsNavOpen] = useState(false);
 
+  const [loaded, setLoaded] = useState(false)
+
   React.useEffect(() => console.log(activeQuickStartID), [activeQuickStartID]);
   React.useEffect(() => {
     // callback on state change
   }, [allQuickStartStates]);
   React.useEffect(() => {
+    setLoaded(false)
+
+    // Create an scoped async function in the hook
+    async function anyNameFunction() {
+      setUpdatedQuickstarts(await quickstartsWithDocumentHub(allQuickStarts))
+      setLoaded(true)
+    }
+
+    // Execute the created function directly
+    anyNameFunction();
+
     setIsEditPage(isOnEditPage());
   }, [location.pathname]);
   const { pathname: currentPath } = window.location;
   const quickStartPath = "/quickstarts";
   const valuesForQuickstartContext = useValuesForQuickStartContext({
-    allQuickStarts: quickstartsWithLocalStorage(allQuickStarts),
+    // allQuickStarts: quickstartsWithLocalStorage(allQuickStarts),
+    allQuickStarts: updatedQuickstarts,
     activeQuickStartID,
     setActiveQuickStartID,
     allQuickStartStates,
@@ -141,17 +169,20 @@ const App: React.FunctionComponent = ({ children }) => {
   const AppSidebar = <PageSidebar isNavOpen={isNavOpen} nav={AppNav} />;
   return (
     <React.Suspense fallback={<div>Loading</div>}>
-      <QuickStartContext.Provider value={valuesForQuickstartContext}>
-        <QuickStartDrawer>
-          <Page
-            header={AppHeader}
-            sidebar={AppSidebar}
-            isManagedSidebar={!isEditPage}
-          >
-            {children}
-          </Page>
-        </QuickStartDrawer>
-      </QuickStartContext.Provider>
+    {
+      loaded ? 
+        <QuickStartContext.Provider value={valuesForQuickstartContext}>
+          <QuickStartDrawer>
+            <Page
+              header={AppHeader}
+              sidebar={AppSidebar}
+              isManagedSidebar={!isEditPage}
+            >
+              {children}
+            </Page>
+          </QuickStartDrawer>
+        </QuickStartContext.Provider> : null
+    }
     </React.Suspense>
   );
 };

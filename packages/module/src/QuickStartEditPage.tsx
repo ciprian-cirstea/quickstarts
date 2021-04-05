@@ -197,7 +197,6 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           onShowAllLinkClick();
         }
       });
-      onShowAllLinkClick();
     } else {
       console.log("Fix errors!");
       //TODO show alert message
