@@ -22,10 +22,6 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     match: { params },
   } = props;
 
-  const { allQuickStarts } = React.useContext<QuickStartContextValues>(
-    QuickStartContext
-  );
-
   const [quickYaml, setQuickYaml] = React.useState(undefined);
   const [quickStart, setQuickStart] = React.useState(undefined);
   const [pageType, setPageType] = React.useState("Edit");
@@ -36,13 +32,14 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     QuickStartContext
   );
   const onShowAllLinkClick = footer?.onShowAllLinkClick;
+  const documentHubApi = "https://developer.ibm.com/edge/documenthub/api";
+  const catalogId = "emqnkgHx";
 
   React.useEffect(() => {
     if (location.pathname === "/quickstarts/add") {
       setPageType("Add");
 
       const id = Date.now();
-      //   createStorageQuickStarts(true, random, null);
       const qs = {
         apiVersion: "console.openshift.io/v1",
         kind: "ConsoleQuickStart",
@@ -66,22 +63,48 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   }, [location.pathname]);
 
   React.useEffect(() => {
-    console.log(allQuickStarts);
-
-    const quickEdit = allQuickStarts.find((data) => {
-      return data.metadata.name.toString() === params.quickstartsId;
-    });
-
-    const newQuickEdit = JSON.parse(JSON.stringify(quickEdit));
-
-    if (newQuickEdit && pageType === "Edit") {
-      setQuickStart(newQuickEdit);
-      setQuickYaml(YAML.stringify(newQuickEdit));
-    }
+    getData(
+      `${documentHubApi}/catalogs/${catalogId}/documents/${params.quickstartsId}`
+    )
+      .then((response) => {
+        console.log(response);
+        if (response.document) {
+          const newQuickEdit = JSON.parse(JSON.stringify(response.document));
+          if (newQuickEdit && pageType === "Edit") {
+            setQuickStart(newQuickEdit);
+            setQuickYaml(YAML.stringify(newQuickEdit));
+          }
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
+
+  const isError = (value) => {
+    const type = typeof value;
+
+    if (type === "string" && value === "") {
+      return true;
+    }
+
+    if (type === "object" && Object.keys(value).length === 0) {
+      return true;
+    }
+
+    if (type === undefined) {
+      return true;
+    }
+
+    if (type === "number" && value === 0) {
+      return true;
+    }
+
+    return false;
+  };
 
   const saveQuickStart = () => {
     setSubmitted(true);
+
+    let errors = false;
     const qSspecs = quickStart.spec;
     const qSTasks = quickStart.spec.tasks;
 
@@ -108,8 +131,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     ];
 
     for (let k in qSspecs) {
-      const spec = qSspecs[k].toString();
-      if (required.includes(k) && spec.length === 0 && spec === "") {
+      const spec = qSspecs[k];
+      if (required.includes(k) && isError(spec)) {
+        errors = true;
         setErrors((prevErrors) => ({ ...prevErrors, [k]: true }));
       }
     }
@@ -126,18 +150,14 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
           for (let key in taskObject) {
             const taskVal = taskObject[key];
-            if (
-              requiredTasks.includes(key) &&
-              (taskVal.length === 0 || taskVal === "")
-            ) {
+            if (requiredTasks.includes(key) && isError(taskVal)) {
+              errors = true;
               newTaskErrors[index][key] = true;
             }
           }
         } else {
-          if (
-            requiredTasks.includes(k) &&
-            (task[k].length === 0 || task[k] === "")
-          ) {
+          if (requiredTasks.includes(k) && isError(task[k])) {
+            errors = true;
             newTaskErrors[index][k] = true;
           }
         }
@@ -146,13 +166,12 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
     setTaskErrors(newTaskErrors);
 
-    if (Object.keys(errors).length === 0) {
+    if (!errors) {
       const quickStartId = quickStart.metadata.name;
       postData(
         `https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents/${quickStartId}`,
         quickStart
       ).then((response) => {
-        console.log("responseeeeee--------------", response);
         if (
           response.message.length &&
           response.message === "Document write success"
@@ -160,8 +179,10 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           onShowAllLinkClick();
         }
       });
+      onShowAllLinkClick();
     } else {
       console.log("Fix errors!");
+      //TODO show alert message
     }
   };
 
@@ -179,6 +200,23 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       //   redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  async function getData(url: string = "") {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      //   mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      //   credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      //   redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     });
     return response.json(); // parses JSON response into native JavaScript objects
   }
