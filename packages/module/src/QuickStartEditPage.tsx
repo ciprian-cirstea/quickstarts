@@ -72,7 +72,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   }, [location.pathname]);
 
   React.useEffect(() => {
-    if (location.pathname === "/quickstarts/edit") {
+    if (location.pathname.includes("/quickstarts/edit")) {
       getData(
         `${documentHubApi}/catalogs/${catalogId}/documents/${params.quickstartsId}`
       )
