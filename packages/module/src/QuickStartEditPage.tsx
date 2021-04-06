@@ -91,7 +91,9 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
         .catch((err) => console.log("Error - " + err));
     }
 
-    return () => { isMounted = false }; // use effect cleanup to set flag false, if unmounted
+    return () => {
+      isMounted = false;
+    }; // use effect cleanup to set flag false, if unmounted
   }, []);
 
   const setQuickEditHook = (quickEdit) => {
@@ -107,7 +109,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       return data.metadata.name.toString() === params.quickstartsId;
     });
     setQuickEditHook(quickEdit);
-    // setLoading(false);
+    setLoading(false);
   };
 
   const isError = (value) => {
