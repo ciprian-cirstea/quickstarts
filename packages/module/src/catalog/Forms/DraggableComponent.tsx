@@ -33,7 +33,7 @@ const DraggableComponent: React.FC<FormInputProps> = ({
   setTaskErrors,
 }) => {
   const grid = 1;
-  console.log("timestamp here draggable", Date.now());
+
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
