@@ -90,16 +90,20 @@ const App: React.FunctionComponent = ({ children }) => {
     // callback on state change
   }, [allQuickStartStates]);
   React.useEffect(() => {
-    setLoaded(false)
-
     // Create an scoped async function in the hook
-    async function anyNameFunction() {
+    async function getQuickstarts() {
       setUpdatedQuickstarts(await quickstartsWithDocumentHub(allQuickStarts))
       setLoaded(true)
     }
 
-    // Execute the created function directly
-    anyNameFunction();
+    if(location.pathname === '/quickstarts') {
+      setLoaded(false)
+  
+      // Execute the created function directly
+      getQuickstarts();
+    } else {
+      setLoaded(true)
+    }
 
     setIsEditPage(isOnEditPage());
   }, [location.pathname]);
