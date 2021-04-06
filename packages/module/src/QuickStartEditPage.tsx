@@ -71,10 +71,12 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   }, [location.pathname]);
 
   React.useEffect(() => {
+    console.log("params.quickstartsId", params.quickstartsId);
     getData(
       `${documentHubApi}/catalogs/${catalogId}/documents/${params.quickstartsId}`
     )
       .then((response) => {
+        console.log("response ------------ ", response);
         if (response && response.document) {
           setQuickEditHook(response.document);
           setLoading(false);
@@ -94,10 +96,12 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   };
 
   const getFromAllQuickstarts = () => {
+    console.log("getFromAllQuickstarts");
     const quickEdit = allQuickStarts.find((data) => {
       return data.metadata.name.toString() === params.quickstartsId;
     });
     setQuickEditHook(quickEdit);
+    setLoading(false);
   };
 
   const isError = (value) => {
@@ -230,7 +234,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     });
     if (response.status === 404) {
-      return null;
+      return false;
     } else {
       return response.json(); // parses JSON response into native JavaScript objects
     }
