@@ -67,24 +67,26 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
       };
 
       setQuickStart(qs);
+      setLoading(false);
     }
   }, [location.pathname]);
 
   React.useEffect(() => {
-    console.log("params.quickstartsId", params.quickstartsId);
-    getData(
-      `${documentHubApi}/catalogs/${catalogId}/documents/${params.quickstartsId}`
-    )
-      .then((response) => {
-        console.log("response ------------ ", response);
-        if (response && response.document) {
-          setQuickEditHook(response.document);
-          setLoading(false);
-        } else {
-          getFromAllQuickstarts();
-        }
-      })
-      .catch((err) => console.log("Error - " + err));
+    console.log("pageType", pageType);
+    if (location.pathname === "/quickstarts/edit") {
+      getData(
+        `${documentHubApi}/catalogs/${catalogId}/documents/${params.quickstartsId}`
+      )
+        .then((response) => {
+          if (response && response.document) {
+            setQuickEditHook(response.document);
+            setLoading(false);
+          } else {
+            getFromAllQuickstarts();
+          }
+        })
+        .catch((err) => console.log("Error - " + err));
+    }
   }, []);
 
   const setQuickEditHook = (quickEdit) => {
@@ -96,12 +98,11 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   };
 
   const getFromAllQuickstarts = () => {
-    console.log("getFromAllQuickstarts");
     const quickEdit = allQuickStarts.find((data) => {
       return data.metadata.name.toString() === params.quickstartsId;
     });
     setQuickEditHook(quickEdit);
-    setLoading(false);
+    // setLoading(false);
   };
 
   const isError = (value) => {
