@@ -72,20 +72,26 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   }, [location.pathname]);
 
   React.useEffect(() => {
+    let isMounted = true;
+
     if (location.pathname.includes("/quickstarts/edit")) {
       getData(
         `${documentHubApi}/catalogs/${catalogId}/documents/${params.quickstartsId}`
       )
         .then((response) => {
-          if (response && response.document) {
-            setQuickEditHook(response.document);
-            setLoading(false);
-          } else {
-            getFromAllQuickstarts();
+          if (isMounted) {
+            if (response && response.document) {
+              setQuickEditHook(response.document);
+              setLoading(false);
+            } else {
+              getFromAllQuickstarts();
+            }
           }
         })
         .catch((err) => console.log("Error - " + err));
     }
+
+    return () => { isMounted = false }; // use effect cleanup to set flag false, if unmounted
   }, []);
 
   const setQuickEditHook = (quickEdit) => {
