@@ -37,6 +37,17 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
     updateQuickStart(newQuick);
   };
 
+  // const formBuilder = [
+  //   {
+  //     key: "title",
+  //     initialValue: quickStartFormData.spec["displayName"],
+  //     label: "Quick Start Title",
+  //     id: "title",
+  //     value: "title",
+
+  //   },
+  // ];
+
   return (
     <React.Fragment>
       {quickStartFormData ? (
@@ -44,18 +55,30 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
           <FormInput
             key="title"
             initialValue={quickStartFormData.spec["displayName"]}
-            label="Quick Start Title"
-            id="display-name"
-            value="displayName"
+            label="Title"
+            id="title"
+            value="title"
             textarea={false}
             type="text"
             updateValue={quickUpdate}
             errors={errors}
             submitted={submitted}
-            // type={'paternfly'}
           />
 
           <FormInput
+            key="duration"
+            initialValue={quickStartFormData.spec["durationMinutes"]}
+            label="Duration"
+            id="duration"
+            value="duration"
+            textarea={false}
+            type="number"
+            updateValue={quickUpdate}
+            errors={errors}
+            submitted={submitted}
+          />
+
+          {/* <FormInput
             key="icon"
             initialValue={quickStartFormData.spec["icon"]}
             label="Quick Start Icon"
@@ -66,9 +89,9 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             updateValue={quickUpdate}
             errors={errors}
             submitted={submitted}
-          />
+          /> */}
 
-          <Split hasGutter>
+          {/* <Split hasGutter>
             <SplitItem>
               <FormInput
                 key="version"
@@ -98,7 +121,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
                 submitted={submitted}
               />
             </SplitItem>
-          </Split>
+          </Split> */}
 
           <DescriptionComponent
             key="description"
@@ -113,13 +136,13 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             submitted={submitted}
           />
 
-          <PrerequisitesComponent
+          {/* <PrerequisitesComponent
             prerequisites={quickstart.spec.prerequisites}
             updateValue={quickUpdate}
             value="prerequisites"
             quickStart={quickstart}
             submitted={submitted}
-          />
+          /> */}
         </React.Fragment>
       ) : (
         ""
