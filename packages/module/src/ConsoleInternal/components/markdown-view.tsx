@@ -9,6 +9,34 @@ const tableTags = ["table", "thead", "tbody", "tr", "th", "td"];
 const youTubeVideoAttr = ["title", "frameborder", "allow", "allowfullscreen"]
 
 const markdownConvert = (markdown, extensions?: string[]) => {
+  const regex = /```\s+([^```]+)\s+```/g;
+  const newMarkdown = markdown.replaceAll(regex, (match) => {
+    const youtubeTag = `
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/VIDEO_ID_HERE"
+  title="YouTube video player"
+  frameborder="0" allow=""
+  allowfullscreen>
+</iframe>`
+
+    const videoTag = `<video controls>
+    <source src="VIDEO_ID_HERE" type="video/mp4">
+    Your browser does not support HTML video.
+</video>`
+
+    const result = match.indexOf('youtube') !== -1 ?
+                      youtubeTag : (
+                        match.indexOf('source-mp4') !== -1 ?
+                            videoTag : ''
+                      )
+
+    const videoId = match.replace(/```|youtube|source-mp4/g, '').trim()
+    
+    return result.replace('VIDEO_ID_HERE', videoId)
+  })
+
   const unsafeHtml = new Converter({
     tables: true,
     openLinksInNewWindow: true,
@@ -16,7 +44,7 @@ const markdownConvert = (markdown, extensions?: string[]) => {
     emoji: true,
     extensions,
     parseImgDimensions: true
-  }).makeHtml(markdown);
+  }).makeHtml(newMarkdown);
 
   // add hook to transform anchor tags
   DOMPurify.addHook("beforeSanitizeElements", function (node) {

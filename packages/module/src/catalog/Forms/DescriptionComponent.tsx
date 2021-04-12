@@ -4,6 +4,11 @@ import FormInput from "./FormInput";
 import { Button } from "@patternfly/react-core";
 import PlusCircleIcon from "@patternfly/react-icons/dist/js/icons/plus-circle-icon";
 
+import 'codemirror/lib/codemirror.css';
+import '@toast-ui/editor/dist/toastui-editor.css';
+import { Editor } from '@toast-ui/react-editor';
+import videoPlugin from '@leeonfield/editor-plugin-video';
+
 type DescriptionComponentProps = {
   initialValue?: any;
   label: string;
@@ -27,86 +32,62 @@ const DescriptionComponent: React.FC<DescriptionComponentProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState(initialValue);
 
-  const handleAddImage = () => {
-    let newInput =
-      inputValue.substr(0, myRef.current.selectionStart) +
-      `
-![IMAGE_ALT_TEXT_HERE](IMAGE_URL_HERE)` +
-      inputValue.substr(myRef.current.selectionEnd);
-
-    setInputValue(newInput);
-    updateValue(value, newInput);
-  };
-
-  const handleAddVideo = () => {
-    let newInput =
-      inputValue.substr(0, myRef.current.selectionStart) +
-      `
-<video controls>
-    <source src="VIDEO_URL_HERE" type="video/mp4">
-    Your browser does not support HTML video.
-</video>` +
-      inputValue.substr(myRef.current.selectionEnd);
-
-    setInputValue(newInput);
-    updateValue(value, newInput);
-  };
-
-  const handleAddYoutubeVideo = () => {
-    let newInput =
-      inputValue.substr(0, myRef.current.selectionStart) +
-      `
-<iframe
-    width="560"
-    height="315"
-    src="YOUTUBE_VIDEO_URL_HERE"
-    title="YouTube video player"
-    frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
-    allowfullscreen>
-</iframe>` +
-      inputValue.substr(myRef.current.selectionEnd);
-
-    setInputValue(newInput);
-    updateValue(value, newInput);
-  };
-
   const handleUpdateValue = (key, val) => {
     updateValue(key, val);
     setInputValue(val);
   };
 
-  const myRef = useRef(null);
+  const handleAddVideo = () => {
+    let newInput =
+      editorRef.current.getInstance().getMarkdown() +
+      `
+\`\`\` source-mp4
+VIDEO_URL_HERE
+\`\`\``
+
+      handleUpdateValue(value, newInput);
+  };
+
+  const handleAddYoutubeVideo = () => {
+    let newInput =
+      editorRef.current.getInstance().getMarkdown() +
+      `
+\`\`\` youtube
+VIDEO_ID_HERE
+\`\`\``
+
+    handleUpdateValue(value, newInput);
+  };
+
+  ///////////////// toast ui editor
+  const editorRef = useRef(null);
+  let editorInstance;
 
   React.useEffect(() => {
-    myRef.current.selectionStart = initialValue?.length;
-  }, [myRef.current]);
+    editorInstance = editorRef.current.getInstance()
+
+    editorInstance.eventManager.listen('change', (e) => {
+      // handleUpdateValue(value, editorRef.current.getInstance().getMarkdown());
+      updateValue(value, editorRef.current.getInstance().getMarkdown());
+    });
+  }, [])
+
+  React.useEffect(() => {
+    editorRef.current.getInstance().setMarkdown(inputValue);
+  }, [inputValue])
 
   return (
     <React.Fragment>
-      <FormInput
-        key={`description`}
+      <Editor
+        previewStyle="vertical"
+        height="400px"
+        initialEditType="wysiwyg"
         initialValue={inputValue}
-        label={label}
-        id={id}
-        value={value}
-        textarea
-        type="text"
-        updateValue={handleUpdateValue}
-        errors={errors}
-        submitted={submitted}
-        rows={15}
-        inputRef={myRef}
+        ref={editorRef}
+        plugins={[videoPlugin]}
       />
+
       <Split hasGutter>
-        <SplitItem>
-          <Button
-            variant="link"
-            icon={<PlusCircleIcon />}
-            onClick={handleAddImage}
-          >
-            Add image
-          </Button>
-        </SplitItem>
         <SplitItem>
           <Button
             variant="link"

@@ -40,9 +40,11 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
+    "@leeonfield/editor-plugin-video": "^0.2.1",
     "@patternfly/react-catalog-view-extension": "^4.8.126",
     "@patternfly/react-core": "^4.84.4",
     "@patternfly/react-table": "4.19.45",
+    "@toast-ui/react-editor": "^2.5.1",
     "asciidoctor": "^2.2.1",
     "bootstrap-sass": "^3.3.7",
     "dayjs": "^1.9.6",
