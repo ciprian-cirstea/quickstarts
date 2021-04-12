@@ -50,7 +50,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
     allQuickStartStates,
   } = React.useContext<QuickStartContextValues>(QuickStartContext);
 
-  const [activeMenuItem, setActiveMenuItem] = useState(100);
+  const [activeMenuItem, setActiveMenuItem] = useState(101);
   const [taskNumber, setTaskNumber] = useState(null);
 
   const handleMenuClick = (event, itemId: number) => {
@@ -121,7 +121,13 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
   const formGenerator = () => {
     switch (activeMenuItem) {
       case 100:
-        return <div className="pf-u-font-size-2xl">IBM Quick Starts Help</div>;
+        // return <div className="pf-u-font-size-2xl">IBM Quick Starts Help</div>;
+        <QuickStartDetailsForm
+          quickstart={quickStart}
+          updateQuickStart={updateQuickStart}
+          errors={errors}
+          submitted={submitted}
+        />;
       case 101:
         return (
           <QuickStartDetailsForm

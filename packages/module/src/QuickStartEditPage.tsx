@@ -270,7 +270,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     <React.Fragment>
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
-          {pageType} Quick Start
+          {pageType} Document
           {onShowAllLinkClick && (
             <Button
               onClick={onShowAllLinkClick}
@@ -287,14 +287,14 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           >
             {saveLabel}
           </Button>
-          <Button
+          {/* <Button
             className="float-right add-new-button"
             variant="link"
             onClick={downloadYAML}
             icon={<DownloadIcon />}
           >
             Download YAML
-          </Button>
+          </Button> */}
         </Text>
       </div>
       {loading ? (

@@ -97,7 +97,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         errors={taskErrors[taskIndex]}
       />
 
-      <div className="deactivate-checkbox">{checkboxWithDescription()}</div>
+      {/* <div className="deactivate-checkbox">{checkboxWithDescription()}</div> */}
 
       <DescriptionComponent
         key="description"
@@ -112,8 +112,8 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
         errors={taskErrors[taskIndex]}
       />
 
-      <div className="pf-u-font-size-lg">Review</div>
-      <Split hasGutter>
+      {/* <div className="pf-u-font-size-lg">Review</div> */}
+      {/* <Split hasGutter>
         <SplitItem>
           <FormInput
             initialValue={task?.review["instructions"]}
@@ -142,10 +142,10 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
             errors={taskErrors[taskIndex]}
           />
         </SplitItem>
-      </Split>
+      </Split> */}
 
-      <div className="pf-u-font-size-lg">Summary</div>
-      <Split hasGutter>
+      {/* <div className="pf-u-font-size-lg">Summary</div> */}
+      {/* <Split hasGutter>
         <SplitItem>
           <FormInput
             initialValue={task?.summary["success"]}
@@ -173,7 +173,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
             errors={taskErrors[taskIndex]}
           />
         </SplitItem>
-      </Split>
+      </Split> */}
     </React.Fragment>
   );
 };

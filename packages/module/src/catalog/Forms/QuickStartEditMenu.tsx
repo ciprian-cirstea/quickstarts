@@ -125,24 +125,24 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
   const menuItems = [
     {
       nr: 101,
-      label: "Tile Editor",
+      label: "Document Editor",
     },
-    {
-      nr: 99,
-      label: "Introduction",
-    },
-    {
-      nr: 98,
-      label: "Conclusion",
-    },
+    // {
+    //   nr: 99,
+    //   label: "Introduction",
+    // },
+    // {
+    //   nr: 98,
+    //   label: "Conclusion",
+    // },
   ];
 
   return (
     <Menu activeItemId={activeMenuItem} onSelect={handleMenuClick}>
       <MenuList>
-        <MenuItem isSelected={activeMenuItem === 100} itemId={100}>
+        {/* <MenuItem isSelected={activeMenuItem === 100} itemId={100}>
           Read Me First
-        </MenuItem>
+        </MenuItem> */}
 
         {menuItems.map((menuItem: object, index: number) => (
           <MenuItem
