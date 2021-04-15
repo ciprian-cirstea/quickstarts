@@ -36,15 +36,14 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
       const newQuick = { ...qs };
 
       const newTasksArray = [...newQuick.spec.tasks];
-
+      //new task object
       newTasksArray.splice(0, 0, {
         title: "",
-        summary: { failed: "", success: "" },
         description: "",
-        active: true,
-        review: { instructions: "", failedTaskHelp: "" },
       });
 
+      newTasksArray.reverse();
+      console.log("newTasksArray", newTasksArray);
       newQuick.spec.tasks = newTasksArray;
       setQs(newQuick);
       handleMenuClick(null, 0);
@@ -53,34 +52,33 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
 
   const quickUpdate = (value: string, e: any) => {
     const newTsk = [...qs.spec.tasks];
-    if (value === "instructions" || value === "failedTaskHelp") {
-      newTsk[taskIndex].review[value] = e;
-    } else if (value === "success" || value === "failed") {
-      newTsk[taskIndex].summary[value] = e;
-    } else {
-      newTsk[taskIndex][value] = e;
-    }
+    // if (value === "instructions" || value === "failedTaskHelp") {
+    //   newTsk[taskIndex].review[value] = e;
+    // } else if (value === "success" || value === "failed") {
+    //   newTsk[taskIndex].summary[value] = e;
+    // } else {
+    newTsk[taskIndex][value] = e;
+    // }
 
     qs.spec.tasks = newTsk;
-
     updateQuickStart(qs, taskIndex);
   };
 
-  const deactivateTask = () => {
-    const status = !task.active;
-    quickUpdate("active", status);
-  };
+  //   const deactivateTask = () => {
+  //     const status = !task.active;
+  //     quickUpdate("active", status);
+  //   };
 
-  const checkboxWithDescription = () => (
-    <Checkbox
-      label="Active"
-      isChecked={task?.active}
-      onChange={deactivateTask}
-      aria-label="controlled checkbox example"
-      id="deactivate-task"
-      name="deactivate-task"
-    />
-  );
+  //   const checkboxWithDescription = () => (
+  //     <Checkbox
+  //       label="Active"
+  //       isChecked={task?.active}
+  //       onChange={deactivateTask}
+  //       aria-label="controlled checkbox example"
+  //       id="deactivate-task"
+  //       name="deactivate-task"
+  //     />
+  //   );
 
   return (
     <React.Fragment>

@@ -32,8 +32,10 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
   }, []);
 
   const quickUpdate = (value, e) => {
+    console.log("hello update", value, "---", e);
     const newQuick = { ...quickstart };
     newQuick.spec[value] = e;
+    console.log("newQuick", newQuick);
     updateQuickStart(newQuick);
   };
 
@@ -56,8 +58,8 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             key="title"
             initialValue={quickStartFormData.spec["displayName"]}
             label="Title"
-            id="title"
-            value="title"
+            id="display-name"
+            value="displayName"
             textarea={false}
             type="text"
             updateValue={quickUpdate}
@@ -70,7 +72,7 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
             initialValue={quickStartFormData.spec["durationMinutes"]}
             label="Duration"
             id="duration"
-            value="duration"
+            value="durationMinutes"
             textarea={false}
             type="number"
             updateValue={quickUpdate}

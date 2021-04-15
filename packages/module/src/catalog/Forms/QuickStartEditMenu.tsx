@@ -89,6 +89,7 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
         "failedTaskHelp",
         "instructions",
         "success",
+        "title",
       ];
 
       isDanger = err.some((r) => taskErrorKeys.includes(r));

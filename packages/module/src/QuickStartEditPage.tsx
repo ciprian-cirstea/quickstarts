@@ -28,7 +28,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     QuickStartContext
   );
 
-  const [quickYaml, setQuickYaml] = React.useState(undefined);
+  //   const [quickYaml, setQuickYaml] = React.useState(undefined);
   const [quickStart, setQuickStart] = React.useState(undefined);
   const [pageType, setPageType] = React.useState("Edit");
   const [errors, setErrors] = React.useState({});
@@ -42,6 +42,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   const onShowAllLinkClick = footer?.onShowAllLinkClick;
   const documentHubApi = "https://developer.ibm.com/edge/documenthub/api";
   const catalogId = "emqnkgHx";
+  const quickStartUrlId = window.location.pathname.split("/").pop();
 
   React.useEffect(() => {
     if (location.pathname === "/quickstarts/add") {
@@ -81,8 +82,37 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
         .then((response) => {
           if (isMounted) {
             if (response && response.document) {
-              setQuickEditHook(response.document);
-              setLoading(false);
+              const qs = {
+                apiVersion: "console.openshift.io/v1",
+                kind: "ConsoleQuickStart",
+                metadata: { name: response.catalog.document.documentId },
+                spec: {
+                  conclusion: "",
+                  description: response.document.description,
+                  displayName: response.document.title,
+                  durationMinutes: response.document.duration,
+                  icon: "",
+                  introduction: "",
+                  nextQuickStart: [],
+                  prerequisites: [],
+                  tasks: [],
+                  version: "",
+                },
+              };
+
+              getData(
+                `${documentHubApi}/catalogs/${catalogId}/documents/${response.catalog.document.documentId}/contents/all`
+              ).then((tasks) => {
+                for (let index = 0; index < tasks.length; index++) {
+                  const task = tasks[index];
+                  qs.spec.tasks.push({
+                    title: task.file.replace(".md", "").substring(2).trim(),
+                    description: task.content,
+                  });
+                }
+                setQuickEditHook(qs);
+                setLoading(false);
+              });
             } else {
               getFromAllQuickstarts();
             }
@@ -98,10 +128,10 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
 
   const setQuickEditHook = (quickEdit) => {
     const newQuickEdit = JSON.parse(JSON.stringify(quickEdit));
-    if (newQuickEdit && pageType === "Edit") {
-      setQuickStart(newQuickEdit);
-      setQuickYaml(YAML.stringify(newQuickEdit));
-    }
+    // if (newQuickEdit && pageType === "Edit") {
+    setQuickStart(newQuickEdit);
+    // setQuickYaml(YAML.stringify(newQuickEdit));
+    // }
   };
 
   const getFromAllQuickstarts = () => {
@@ -134,38 +164,52 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     return false;
   };
 
+  //   const isError = (value) => {
+  //     const type = typeof value;
+
+  //     if (!value && !type) {
+  //       console.log("value", value);
+  //       debugger;
+  //       return true;
+  //     }
+
+  //     if (type === "object" && Object.keys(value).length === 0) {
+  //       console.log("value", value);
+  //       debugger;
+  //       return true;
+  //     }
+
+  //     // if (!type) {
+  //     //   console.log("value", value);
+  //     //   debugger;
+  //     //   return true;
+  //     // }
+
+  //     // if (type === "number" && !value) {
+  //     //   console.log("value", value);
+  //     //   debugger;
+  //     //   return true;
+  //     // }
+
+  //     return false;
+  //   };
+
   const saveQuickStart = () => {
     setSubmitted(true);
     setSaveLabel("Saving ...");
-    let errors = false;
+    setErrors({});
+    let err = false;
     const qSspecs = quickStart.spec;
     const qSTasks = quickStart.spec.tasks;
-
-    const required = [
-      "conclusion",
-      "description",
-      "displayName",
-      "durationMinutes",
-      "icon",
-      "introduction",
-      //   "prerequisites",
-      "version",
-      "introduction",
-    ];
-
-    const requiredTasks = [
-      "title",
-      "description",
-      "instructions",
-      "failedTaskHelp",
-      "success",
-      "failed",
-    ];
+    const required = ["description", "displayName", "durationMinutes"];
+    const requiredTasks = ["title", "description"];
 
     for (let k in qSspecs) {
       const spec = qSspecs[k];
+
       if (required.includes(k) && isError(spec)) {
-        errors = true;
+        console.log("spec error", spec, k, "isError", isError(spec));
+        err = true;
         setErrors((prevErrors) => ({ ...prevErrors, [k]: true }));
       }
     }
@@ -183,32 +227,62 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           for (let key in taskObject) {
             const taskVal = taskObject[key];
             if (requiredTasks.includes(key) && isError(taskVal)) {
-              errors = true;
+              console.log("task error", taskVal, key);
+              err = true;
               newTaskErrors[index][key] = true;
             }
           }
         } else {
           if (requiredTasks.includes(k) && isError(task[k])) {
-            errors = true;
+            console.log("task error 2", task[k], k);
+            err = true;
             newTaskErrors[index][k] = true;
           }
         }
       }
     }
-
+    console.log(newTaskErrors);
     setTaskErrors(newTaskErrors);
 
-    if (!errors) {
-      const quickStartId = quickStart.metadata.name;
+    if (!err) {
+      const quickStartId = location.pathname.includes("/quickstarts/edit")
+        ? quickStartUrlId
+        : "doc-" + Date.now();
+
+      const caasApi = "https://developer.ibm.com/edge/documenthub/api";
+      const caasStarterData = {};
+      const caasStarterTasks = quickStart.spec.tasks;
+      caasStarterData["title"] = quickStart.spec.displayName;
+      caasStarterData["description"] = quickStart.spec.description;
+      caasStarterData["duration"] = quickStart.spec.durationMinutes;
+
       postData(
-        `https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents/${quickStartId}`,
-        quickStart
+        `${caasApi}/catalogs/emqnkgHx/documents/${quickStartId}`,
+        JSON.stringify(caasStarterData)
       ).then((response) => {
         if (
           response.message.length &&
           response.message === "Document write success"
         ) {
-          onShowAllLinkClick();
+          setTimeout(() => {
+            if (caasStarterTasks.length) {
+              for (let index = 0; index < caasStarterTasks.length; index++) {
+                const task = caasStarterTasks[index];
+
+                console.log("Timeout create document", task);
+                postFile(
+                  `${caasApi}/catalogs/emqnkgHx/documents/${quickStartId}/files?file=0${
+                    index + 1
+                  } ${task.title.trim()}.md`,
+                  task.description
+                ).then((response) => {
+                  console.log("response md create", response);
+                });
+              }
+            }
+          }, 3000);
+
+          // onShowAllLinkClick();
         }
       });
     } else {
@@ -216,55 +290,79 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
     }
   };
 
-  async function postData(url: string = "", data: QuickStart) {
-    // Default options are marked with *
-    const response = await fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      headers: {
-        "Content-Type": "application/json",
-      },
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-    });
-    return response.json(); // parses JSON response into native JavaScript objects
-  }
-
-  async function getData(url: string = "") {
-    // Default options are marked with *
-    const response = await fetch(url, {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      headers: {
-        "Content-Type": "application/json",
-      },
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    });
-    if (response.status === 404) {
-      return false;
-    } else {
+  async function postData(url: string = "", data: any) {
+    try {
+      const response = await fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+          "Content-Type": "application/json",
+        },
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: data, // body data type must match "Content-Type" header
+      });
       return response.json(); // parses JSON response into native JavaScript objects
+    } catch (err) {
+      console.log(err);
     }
   }
 
-  const downloadYAML = () => {
-    const fileName = `${quickStart.metadata.name}.yaml`;
-    const fileType = "text/yaml";
+  async function postFile(url: string = "", data: any) {
+    try {
+      const response = await fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+          "Content-Type": "text/plain",
+        },
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: data, // body data type must match "Content-Type" header
+      });
+      return response.json(); // parses JSON response into native JavaScript objects
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-    const blob = new Blob([quickYaml], { type: fileType });
+  async function getData(url: string = "") {
+    try {
+      // Default options are marked with *
+      const response = await fetch(url, {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+          "Content-Type": "application/json",
+        },
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      });
+      if (response.status === 404) {
+        return false;
+      } else {
+        return response.json(); // parses JSON response into native JavaScript objects
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-    const a = document.createElement("a");
-    a.download = fileName;
-    a.href = URL.createObjectURL(blob);
-    a.dataset.downloadurl = [fileType, a.download, a.href].join(":");
-    a.style.display = "none";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(function () {
-      URL.revokeObjectURL(a.href);
-    }, 1500);
-  };
+  //   const downloadYAML = () => {
+  //     const fileName = `${quickStart.metadata.name}.yaml`;
+  //     const fileType = "text/yaml";
+
+  //     const blob = new Blob([quickYaml], { type: fileType });
+
+  //     const a = document.createElement("a");
+  //     a.download = fileName;
+  //     a.href = URL.createObjectURL(blob);
+  //     a.dataset.downloadurl = [fileType, a.download, a.href].join(":");
+  //     a.style.display = "none";
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     document.body.removeChild(a);
+  //     setTimeout(function () {
+  //       URL.revokeObjectURL(a.href);
+  //     }, 1500);
+  //   };
 
   return (
     <React.Fragment>
@@ -308,7 +406,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
           quickStart={quickStart}
           setQuickStart={setQuickStart}
           quickStartId={params.quickstartsId}
-          setQuickYaml={setQuickYaml}
+          //   setQuickYaml={setQuickYaml}
           errors={errors}
           setErrors={setErrors}
           taskErrors={taskErrors}

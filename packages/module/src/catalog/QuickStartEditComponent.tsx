@@ -26,7 +26,7 @@ type QuickStartEditProps = {
   quickStartId?: string;
   quickStart?: QuickStart;
   setQuickStart: Function;
-  setQuickYaml: Function;
+  //   setQuickYaml: Function;
   errors: object;
   setErrors: Function;
   taskErrors: object;
@@ -38,7 +38,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
   quickStartId,
   quickStart,
   setQuickStart,
-  setQuickYaml,
+  //   setQuickYaml,
   errors,
   setErrors,
   taskErrors,
@@ -66,10 +66,13 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
     const qSspecs = newQuickStart.spec;
     const qSTasks = newQuickStart.spec.tasks[index];
 
+    const required = ["description", "displayName", "durationMinutes"];
+    const requiredTasks = ["title", "description"];
+
     let err = { ...errors };
 
     for (let k in qSspecs) {
-      if (qSspecs?.hasOwnProperty(k)) {
+      if (qSspecs?.hasOwnProperty(k) && required.includes(k)) {
         const spec = qSspecs[k]?.toString();
         if (spec !== "" && spec.length > 0) {
           delete err[k];
@@ -82,7 +85,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
     let taskErr = { ...taskErrors };
 
     for (let k in qSTasks) {
-      if (qSTasks?.hasOwnProperty(k)) {
+      if (qSTasks?.hasOwnProperty(k) && requiredTasks.includes(k)) {
         const taskValue = qSTasks[k];
 
         if (typeof taskValue === "object" && taskValue !== null) {
@@ -115,7 +118,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
     setErrors(err);
     setTaskErrors(taskErr);
     setQuickStart(newQuickStart);
-    setQuickYaml(YAML.stringify(newQuickStart));
+    // setQuickYaml(YAML.stringify(newQuickStart));
   };
 
   const formGenerator = () => {
@@ -268,6 +271,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             />
           </GridItem>
           <GridItem span={6}>
+            {console.log("errors =====================|||", errors)}
             {(Object.keys(errors).length > 0 || checkTaskErrors()) &&
             submitted ? (
               <Alert

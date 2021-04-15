@@ -26,21 +26,22 @@ import { allQuickStarts } from "./quickstarts-data/quick-start-test-data";
 
 // get quickstarts from documentHub
 const getQuickstartsFromDocumentHub = async () => {
-  let documentHubUrl = "https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents";
+  let documentHubUrl =
+    "https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents";
 
-  const result = await fetch(documentHubUrl)
-  const documents = await result.json()
-    
-  return documents.map((q: any) => q.document)
-}
+  const result = await fetch(documentHubUrl);
+  const documents = await result.json();
+
+  return documents.map((q: any) => q.document);
+};
 
 // update quickstarts list from documentHub
 const quickstartsWithDocumentHub = async (quickstarts: QuickStart[]) => {
-  let quickstartsTemp = JSON.parse(JSON.stringify(quickstarts))
-  let newlyAdded = new Array()
-  let quickstartsDocumentHub = await getQuickstartsFromDocumentHub() || {}
+  let quickstartsTemp = JSON.parse(JSON.stringify(quickstarts));
+  let newlyAdded = new Array();
+  let quickstartsDocumentHub = (await getQuickstartsFromDocumentHub()) || {};
 
-  quickstartsDocumentHub.map((qd:any, i:any) => {
+  quickstartsDocumentHub.map((qd: any, i: any) => {
     let existing = false;
 
     for (var j = 0; j < quickstarts.length; j++) {
@@ -50,15 +51,15 @@ const quickstartsWithDocumentHub = async (quickstarts: QuickStart[]) => {
       }
     }
 
-    if(!existing){
-      newlyAdded.push({...qd, format: 'yaml'});
+    if (!existing) {
+      newlyAdded.push({ ...qd, format: "yaml" });
     } else {
       existing = false;
     }
-  })
-  
-  return quickstartsTemp
-}
+  });
+
+  return quickstartsTemp;
+};
 
 const App: React.FunctionComponent = ({ children }) => {
   const history = useHistory();
@@ -72,7 +73,9 @@ const App: React.FunctionComponent = ({ children }) => {
     {}
   );
 
-  const [updatedQuickstarts, setUpdatedQuickstarts] = useState(allQuickStarts || [])
+  const [updatedQuickstarts, setUpdatedQuickstarts] = useState(
+    allQuickStarts || []
+  );
 
   const isOnEditPage = () => {
     return (
@@ -83,8 +86,39 @@ const App: React.FunctionComponent = ({ children }) => {
   const [isEditPage, setIsEditPage] = useState(isOnEditPage());
   const [isNavOpen, setIsNavOpen] = useState(false);
 
-  const [loaded, setLoaded] = useState(false)
-
+  const [loaded, setLoaded] = useState(false);
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get("caasCode");
+    console.log("myParam----------->", myParam);
+    if (myParam) {
+      try {
+        fetch(
+          `https://developer.ibm.com/edge/documenthub/api/libraries/tokenbycode/${myParam}`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            if (data.token) {
+              document.cookie = `caasToken=${data.token}`;
+              window.location.href = `http://localhost:3000/quickstarts`;
+            }
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      if (
+        !document.cookie
+          .split(";")
+          .some((item) => item.trim().startsWith("caasToken="))
+      ) {
+        console.log('The cookie "caasToken" exists (ES6)');
+        console.log("no cookie");
+        window.location.href = `https://developer.ibm.com/edge/documenthub/sso/w3id/login/LKKmTn3`;
+      }
+    }
+  }, []);
   React.useEffect(() => console.log(activeQuickStartID), [activeQuickStartID]);
   React.useEffect(() => {
     // callback on state change
@@ -92,17 +126,17 @@ const App: React.FunctionComponent = ({ children }) => {
   React.useEffect(() => {
     // Create an scoped async function in the hook
     async function getQuickstarts() {
-      setUpdatedQuickstarts(await quickstartsWithDocumentHub(allQuickStarts))
-      setLoaded(true)
+      setUpdatedQuickstarts(await quickstartsWithDocumentHub(allQuickStarts));
+      setLoaded(true);
     }
 
-    if(location.pathname === '/quickstarts') {
-      setLoaded(false)
-  
+    if (location.pathname === "/quickstarts") {
+      setLoaded(false);
+
       // Execute the created function directly
       getQuickstarts();
     } else {
-      setLoaded(true)
+      setLoaded(true);
     }
 
     setIsEditPage(isOnEditPage());
@@ -173,8 +207,7 @@ const App: React.FunctionComponent = ({ children }) => {
   const AppSidebar = <PageSidebar isNavOpen={isNavOpen} nav={AppNav} />;
   return (
     <React.Suspense fallback={<div>Loading</div>}>
-    {
-      loaded ? 
+      {loaded ? (
         <QuickStartContext.Provider value={valuesForQuickstartContext}>
           <QuickStartDrawer>
             <Page
@@ -185,8 +218,8 @@ const App: React.FunctionComponent = ({ children }) => {
               {children}
             </Page>
           </QuickStartDrawer>
-        </QuickStartContext.Provider> : null
-    }
+        </QuickStartContext.Provider>
+      ) : null}
     </React.Suspense>
   );
 };

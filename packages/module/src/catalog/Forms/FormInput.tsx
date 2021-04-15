@@ -34,8 +34,7 @@ const FormInput: React.FC<FormInputProps> = ({
   //   console.log("form input errors", errors);
 
   const handleChange = (e) => {
-    // console.log("eeeeeee", e);
-    setInputValue(e);
+    // setInputValue(e);
     updateValue(value, e);
   };
 

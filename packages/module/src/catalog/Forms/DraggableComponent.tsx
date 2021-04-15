@@ -184,7 +184,7 @@ const DraggableComponent: React.FC<FormInputProps> = ({
                         key={index}
                         itemId={index}
                       >
-                        {`${task.title.substring(0, 35)}...`}
+                        {`0${index + 1} ${task.title.substring(0, 35)} ...`}
                       </MenuItem>
                     )}
                   </Draggable>
