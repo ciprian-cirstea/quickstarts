@@ -5,7 +5,7 @@ import "@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-ext
 import "@cloudmosaic/quickstarts/dist/quickstarts.css";
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import App from "./App";
 import { QuickStartCatalogPage, QuickStartEditPage } from "@cloudmosaic/quickstarts";
 import { Home } from "./Home";
@@ -14,14 +14,15 @@ ReactDOM.render(
   <Router>
     <App>
     <Switch>
-      <Route exact path="/">
+      {/* <Route exact path="/">
           <Home />
-      </Route>
-      <Route exact path="/quickstarts">
+      </Route> */}
+      <Route exact path="/">
           <QuickStartCatalogPage showFilter />
       </Route>
-      <Route exact path="/quickstarts/edit/:quickstartsId" component={QuickStartEditPage}/>
-      <Route exact path="/quickstarts/add" component={QuickStartEditPage}/>
+      <Route exact path="/edit/:quickstartsId" component={QuickStartEditPage}/>
+      <Route exact path="/add" component={QuickStartEditPage}/>
+      <Redirect from="*" to="/" />
     </Switch>
     </App>
   </Router>,

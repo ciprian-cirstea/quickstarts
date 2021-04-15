@@ -45,7 +45,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   const quickStartUrlId = window.location.pathname.split("/").pop();
 
   React.useEffect(() => {
-    if (location.pathname === "/quickstarts/add") {
+    if (location.pathname === "/add") {
       setPageType("Add");
 
       const id = Date.now();
@@ -75,7 +75,7 @@ export const QuickStartEditPage: React.FC<QuickStartEditPageProps> = (
   React.useEffect(() => {
     let isMounted = true;
 
-    if (location.pathname.includes("/quickstarts/edit")) {
+    if (location.pathname.includes("/edit")) {
       getData(
         `${documentHubApi}/catalogs/${catalogId}/documents/${params.quickstartsId}`
       )

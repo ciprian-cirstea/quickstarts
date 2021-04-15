@@ -71,14 +71,14 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
 
   const quickStartIcon = (
     <React.Fragment>
-      <FallbackImg
+      {/* <FallbackImg
         className="co-catalog-item-icon__img--large"
         src={icon}
         fallback={<RocketIcon />}
-      />
+      /> */}
       {yamls.includes(id) || format === "yaml"
         ? onEditLinkClick &&
-          path === "/quickstarts" && (
+          path === "/" && (
             <Tooltip content="Edit">
               <Button
                 onClick={edit}
@@ -110,15 +110,15 @@ const QuickStartTile: React.FC<QuickStartTileProps> = ({
           prerequisites={prerequisites}
         />
       }
-      footer={
-        <Router>
-          <QuickStartTileFooter
-            quickStartId={id}
-            status={status}
-            totalTasks={tasks?.length}
-          />
-        </Router>
-      }
+      // footer={
+      //   <Router>
+      //     <QuickStartTileFooter
+      //       quickStartId={id}
+      //       status={status}
+      //       totalTasks={tasks?.length}
+      //     />
+      //   </Router>
+      // }
     />
   );
 };

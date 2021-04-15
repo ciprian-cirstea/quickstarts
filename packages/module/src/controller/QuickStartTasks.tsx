@@ -58,7 +58,8 @@ const QuickStartTasks: React.FC<QuickStartTaskProps> = ({
                 onTaskSelect={onTaskSelect}
               />
               <QuickStartMarkdownView content={taskInstructions} />
-              {isActiveTask &&
+              {
+                isActiveTask &&
                 taskStatus !== QuickStartTaskStatus.INIT &&
                 review && (
                   <QuickStartTaskReview

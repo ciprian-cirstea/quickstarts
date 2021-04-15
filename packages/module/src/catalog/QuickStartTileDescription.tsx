@@ -20,7 +20,7 @@ const QuickStartTileDescription: React.FC<QuickStartTileDescriptionProps> = ({
       <div className="oc-quick-start-tile-description">
         <QuickStartMarkdownView content={description} />
       </div>
-      <div className="co-quick-start-tile-description">
+      {/* <div className="co-quick-start-tile-description">
         {prerequisites && (
           <>
             <Text component={TextVariants.h5}>{t('quickstart~Prerequisites')}</Text>
@@ -33,7 +33,7 @@ const QuickStartTileDescription: React.FC<QuickStartTileDescriptionProps> = ({
             ))}
           </>
         )}
-      </div>
+      </div> */}
     </>
   );
 };

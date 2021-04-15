@@ -28,7 +28,8 @@ export const QuickStartCatalogPage: React.FC<QuickStartCatalogPageProps> = ({
     <>
       <div className="ocs-page-layout__header">
         <Text component="h1" className="ocs-page-layout__title">
-          {t("quickstart~Quick Starts")}
+          {/* {t("quickstart~Quick Starts")} */}
+          {t("quickstart~Documents")}
           {onAddLinkClick && (
             <Button
               onClick={onAddLinkClick}

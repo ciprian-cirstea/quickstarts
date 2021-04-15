@@ -10,6 +10,7 @@
     width: 100%;
     justify-content: space-between;
     max-width: initial;
+    flex-flow: row-reverse;
 
     .pf-c-button {
       --pf-c-button--after--BorderColor: transparent;

@@ -66,13 +66,13 @@ const QuickStartController: React.FC<QuickStartControllerProps> = ({ quickStart 
         onTaskReview={handleTaskStatusChange}
         onQuickStartChange={handleQuickStartChange}
       />
-      <QuickStartFooter
+      {/* <QuickStartFooter
         status={status}
         taskNumber={taskNumber}
         totalTasks={totalTasks}
         onNext={handleNext}
         onBack={handleBack}
-      />
+      /> */}
     </>
   );
 };

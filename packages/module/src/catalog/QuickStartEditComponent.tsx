@@ -194,7 +194,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
           <div className="co-quick-start-content">
             {quickStart.spec.conclusion}
           </div>
-          <div className="co-quick-start-footer">
+          {/* <div className="co-quick-start-footer">
             <button
               aria-disabled="false"
               className="pf-c-button pf-m-primary"
@@ -217,7 +217,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             >
               Back
             </button>
-          </div>
+          </div> */}
         </div>
       );
     } else if (activeMenuItem < 100 || activeMenuItem === 102) {

@@ -32,7 +32,7 @@ const QuickStartTileHeader: React.FC<QuickStartTileHeaderProps> = ({ status, dur
     <div className="co-quick-start-tile-header">
       <Title headingLevel="h3">{name}</Title>
       <div className="co-quick-start-tile-header__status">
-        {status !== QuickStartStatus.NOT_STARTED && (
+        {/* {status !== QuickStartStatus.NOT_STARTED && (
           <Label
             className="co-quick-start-tile-header--margin"
             variant="outline"
@@ -41,7 +41,7 @@ const QuickStartTileHeader: React.FC<QuickStartTileHeaderProps> = ({ status, dur
           >
             {statusLocaleMap[status]}
           </Label>
-        )}
+        )} */}
         <Label variant="outline" icon={<OutlinedClockIcon />}>
           {t('quickstart~{{duration, number}} minutes', { duration })}
         </Label>

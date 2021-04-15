@@ -94,7 +94,7 @@ const QuickStartCatalogFilter: React.FC<QuickStartCatalogFilterProps> = ({
             onClear={() => handleTextChange('')}
           />
         </ToolbarItem>
-        <ToolbarItem>
+        {/* <ToolbarItem>
           <Select
             variant={SelectVariant.checkbox}
             aria-label={t('quickstart~Select filter')}
@@ -106,7 +106,7 @@ const QuickStartCatalogFilter: React.FC<QuickStartCatalogFilterProps> = ({
           >
             {dropdownItems}
           </Select>
-        </ToolbarItem>
+        </ToolbarItem> */}
         <ToolbarItem
           className="co-quick-start-catalog-filter__count"
           alignment={{ default: 'alignRight' }}

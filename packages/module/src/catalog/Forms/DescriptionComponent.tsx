@@ -87,7 +87,7 @@ VIDEO_ID_HERE
         plugins={[videoPlugin]}
       />
 
-      <Split hasGutter>
+      {/* <Split hasGutter>
         <SplitItem>
           <Button
             variant="link"
@@ -106,7 +106,7 @@ VIDEO_ID_HERE
             Add YouTube video
           </Button>
         </SplitItem>
-      </Split>
+      </Split> */}
     </React.Fragment>
   );
 };

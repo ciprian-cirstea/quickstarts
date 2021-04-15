@@ -29,37 +29,36 @@ const getQuickstartsFromDocumentHub = async () => {
   let documentHubUrl =
     "https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents";
 
-  const result = await fetch(documentHubUrl);
-  const documents = await result.json();
-
-  return documents.map((q: any) => q.document);
-};
+  const result = await fetch(documentHubUrl)
+  const documents = await result.json()
+    
+  // return documents.map((q: any) => q.document)
+  return documents
+}
 
 // update quickstarts list from documentHub
 const quickstartsWithDocumentHub = async (quickstarts: QuickStart[]) => {
-  let quickstartsTemp = JSON.parse(JSON.stringify(quickstarts));
-  let newlyAdded = new Array();
-  let quickstartsDocumentHub = (await getQuickstartsFromDocumentHub()) || {};
+  let quickstartsDocumentHub = await getQuickstartsFromDocumentHub() || {}
 
-  quickstartsDocumentHub.map((qd: any, i: any) => {
-    let existing = false;
-
-    for (var j = 0; j < quickstarts.length; j++) {
-      if (String(quickstarts[j].metadata.name) == String(qd.metadata.name)) {
-        quickstartsTemp[j] = qd;
-        existing = true;
+  quickstartsDocumentHub = quickstartsDocumentHub.map((obj:any, i:any) => {
+    let doc = {
+      format: 'yaml',
+      metadata: {
+        name: obj.catalog.document.documentId
+      },
+      spec: {
+        displayName: obj.document.title,
+        durationMinutes: obj.document.duration,
+        icon: '',
+        description: obj.document.description
       }
     }
 
-    if (!existing) {
-      newlyAdded.push({ ...qd, format: "yaml" });
-    } else {
-      existing = false;
-    }
-  });
+    return doc;
+  })
 
-  return quickstartsTemp;
-};
+  return quickstartsDocumentHub
+}
 
 const App: React.FunctionComponent = ({ children }) => {
   const history = useHistory();
@@ -79,8 +78,8 @@ const App: React.FunctionComponent = ({ children }) => {
 
   const isOnEditPage = () => {
     return (
-      location.pathname.indexOf("quickstarts/edit/") !== -1 ||
-      location.pathname.indexOf("quickstarts/add") !== -1
+      location.pathname.indexOf("/edit/") !== -1 ||
+      location.pathname.indexOf("/add") !== -1
     );
   };
   const [isEditPage, setIsEditPage] = useState(isOnEditPage());
@@ -130,9 +129,9 @@ const App: React.FunctionComponent = ({ children }) => {
       setLoaded(true);
     }
 
-    if (location.pathname === "/quickstarts") {
-      setLoaded(false);
-
+    if(location.pathname === quickStartPath) {
+      setLoaded(false)
+  
       // Execute the created function directly
       getQuickstarts();
     } else {
@@ -142,7 +141,7 @@ const App: React.FunctionComponent = ({ children }) => {
     setIsEditPage(isOnEditPage());
   }, [location.pathname]);
   const { pathname: currentPath } = window.location;
-  const quickStartPath = "/quickstarts";
+  const quickStartPath = "/";
   const valuesForQuickstartContext = useValuesForQuickStartContext({
     // allQuickStarts: quickstartsWithLocalStorage(allQuickStarts),
     allQuickStarts: updatedQuickstarts,
@@ -158,12 +157,12 @@ const App: React.FunctionComponent = ({ children }) => {
     },
     global: {
       onEditLinkClick: (id: any) => {
-        history.push(`/quickstarts/edit/${id}`);
+        history.push(`/edit/${id}`);
         setIsEditPage(true);
         setIsNavOpen(false);
       },
       onAddLinkClick: () => {
-        history.push("/quickstarts/add");
+        history.push(`/add`);
         setIsEditPage(true);
         setIsNavOpen(false);
       },
@@ -183,28 +182,28 @@ const App: React.FunctionComponent = ({ children }) => {
     <PageHeader
       logo={<Brand src={imgBrand} alt="Patternfly Logo" />}
       headerTools={AppToolbar}
-      showNavToggle
-      onNavToggle={onNavToggle}
-      isNavOpen
+      // showNavToggle
+      // onNavToggle={onNavToggle}
+      // isNavOpen
     />
   );
-  const AppNav = (
-    <Nav aria-label="Nav">
-      <NavList>
-        {Demos.map((demo, index) => (
-          <NavItem itemId={index} key={demo.id}>
-            <Link id={`${demo.id}-nav-item-link`} to={`/`}>
-              {demo.name}
-            </Link>
-          </NavItem>
-        ))}
-        <NavItem>
-          <Link to="/quickstarts">Quick Starts</Link>
-        </NavItem>
-      </NavList>
-    </Nav>
-  );
-  const AppSidebar = <PageSidebar isNavOpen={isNavOpen} nav={AppNav} />;
+  // const AppNav = (
+  //   <Nav aria-label="Nav">
+  //     <NavList>
+  //       {Demos.map((demo, index) => (
+  //         <NavItem itemId={index} key={demo.id}>
+  //           <Link id={`${demo.id}-nav-item-link`} to={`/`}>
+  //             {demo.name}
+  //           </Link>
+  //         </NavItem>
+  //       ))}
+  //       <NavItem>
+  //         <Link to="/quickstarts">Quick Starts</Link>
+  //       </NavItem>
+  //     </NavList>
+  //   </Nav>
+  // );
+  // const AppSidebar = <PageSidebar isNavOpen={isNavOpen} nav={AppNav} />;
   return (
     <React.Suspense fallback={<div>Loading</div>}>
       {loaded ? (
@@ -212,8 +211,8 @@ const App: React.FunctionComponent = ({ children }) => {
           <QuickStartDrawer>
             <Page
               header={AppHeader}
-              sidebar={AppSidebar}
-              isManagedSidebar={!isEditPage}
+              // sidebar={AppSidebar}
+              // isManagedSidebar={!isEditPage}
             >
               {children}
             </Page>
