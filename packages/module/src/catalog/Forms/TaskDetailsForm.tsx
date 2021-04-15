@@ -46,7 +46,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
       console.log("newTasksArray", newTasksArray);
       newQuick.spec.tasks = newTasksArray;
       setQs(newQuick);
-      handleMenuClick(null, 0);
+      handleMenuClick(null, newTasksArray.length - 1);
     }
   }, []);
 
