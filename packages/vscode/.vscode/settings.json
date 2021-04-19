@@ -1,12 +1,25 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "files.exclude": {
-        "out": false // set this to true to hide the "out" folder with the compiled JS files
-    },
-    "search.exclude": {
-        "out": true // set this to false to include "out" folder in search results
-    },
-    // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-    "typescript.tsc.autoDetect": "off",
-    "typescript.tsdk": "node_modules/typescript/lib"
+  "files.exclude": {
+    "out": false // set this to true to hide the "out" folder with the compiled JS files
+  },
+  "search.exclude": {
+    "out": true // set this to false to include "out" folder in search results
+  },
+  "workbench.colorCustomizations": {
+    "editor.lineHighlightBackground": "#ff0000",
+    "editor.selectionBackground": "#e788ff7c", //Currently SELECTED text
+    "editor.selectionHighlightBackground": "#ff00005b", //Same content as selection
+    "editor.findMatchBackground": "#00cc44a8", //Current SEARCH MATCH
+    "editor.findMatchHighlightBackground": "#ff7b00a1", //Other SEARCH MATCHES
+    "editor.renderLineHighlight": "none",
+    "numberedBookmarks.lineBackground": "#007700"
+  },
+  //   "workbench.colorCustomizations": {
+  //     "editor.selectionBackground": "#135564",
+  //     "editor.selectionHighlightBackground": "#135564"
+  //   },
+  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+  "typescript.tsc.autoDetect": "off",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -29,36 +29,36 @@ const getQuickstartsFromDocumentHub = async () => {
   let documentHubUrl =
     "https://developer.ibm.com/edge/documenthub/api/catalogs/emqnkgHx/documents";
 
-  const result = await fetch(documentHubUrl)
-  const documents = await result.json()
-    
+  const result = await fetch(documentHubUrl);
+  const documents = await result.json();
+
   // return documents.map((q: any) => q.document)
-  return documents
-}
+  return documents;
+};
 
 // update quickstarts list from documentHub
 const quickstartsWithDocumentHub = async (quickstarts: QuickStart[]) => {
-  let quickstartsDocumentHub = await getQuickstartsFromDocumentHub() || {}
+  let quickstartsDocumentHub = (await getQuickstartsFromDocumentHub()) || {};
 
-  quickstartsDocumentHub = quickstartsDocumentHub.map((obj:any, i:any) => {
+  quickstartsDocumentHub = quickstartsDocumentHub.map((obj: any, i: any) => {
     let doc = {
-      format: 'yaml',
+      format: "yaml",
       metadata: {
-        name: obj.catalog.document.documentId
+        name: obj.catalog.document.documentId,
       },
       spec: {
         displayName: obj.document.title,
         durationMinutes: obj.document.duration,
-        icon: '',
-        description: obj.document.description
-      }
-    }
+        icon: "",
+        description: obj.document.description,
+      },
+    };
 
     return doc;
-  })
+  });
 
-  return quickstartsDocumentHub
-}
+  return quickstartsDocumentHub;
+};
 
 const App: React.FunctionComponent = ({ children }) => {
   const history = useHistory();
@@ -88,12 +88,11 @@ const App: React.FunctionComponent = ({ children }) => {
   const [loaded, setLoaded] = useState(false);
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const myParam = urlParams.get("caasCode");
-    console.log("myParam----------->", myParam);
-    if (myParam) {
+    const caasCode = urlParams.get("caasCode");
+    if (caasCode) {
       try {
         fetch(
-          `https://developer.ibm.com/edge/documenthub/api/libraries/tokenbycode/${myParam}`
+          `https://developer.ibm.com/edge/documenthub/api/libraries/tokenbycode/${caasCode}`
         )
           .then((response) => response.json())
           .then((data) => {
@@ -129,9 +128,9 @@ const App: React.FunctionComponent = ({ children }) => {
       setLoaded(true);
     }
 
-    if(location.pathname === quickStartPath) {
-      setLoaded(false)
-  
+    if (location.pathname === quickStartPath) {
+      setLoaded(false);
+
       // Execute the created function directly
       getQuickstarts();
     } else {

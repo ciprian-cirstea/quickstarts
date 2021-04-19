@@ -271,7 +271,6 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
             />
           </GridItem>
           <GridItem span={6}>
-            {console.log("errors =====================|||", errors)}
             {(Object.keys(errors).length > 0 || checkTaskErrors()) &&
             submitted ? (
               <Alert
