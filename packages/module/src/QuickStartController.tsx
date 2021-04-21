@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { QuickStart, QuickStartStatus, QuickStartTaskStatus } from './utils/quick-start-types';
 import QuickStartContent from './controller/QuickStartContent';
-import QuickStartFooter from './controller/QuickStartFooter';
+// import QuickStartFooter from './controller/QuickStartFooter';
 import { QuickStartContext, QuickStartContextValues } from './utils/quick-start-context';
 
 type QuickStartControllerProps = {

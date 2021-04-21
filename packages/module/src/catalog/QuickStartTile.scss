@@ -18,3 +18,8 @@
     }
   }
 }
+
+.pf-c-card.pf-m-hoverable:hover {
+  box-shadow: var(--pf-c-card--BoxShadow);
+  cursor: initial;
+}

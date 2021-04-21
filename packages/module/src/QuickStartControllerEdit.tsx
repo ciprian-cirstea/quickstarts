@@ -5,7 +5,7 @@ import {
   QuickStartTaskStatus,
 } from "./utils/quick-start-types";
 import QuickStartContent from "./controller/QuickStartContent";
-import QuickStartFooter from "./controller/QuickStartFooter";
+// import QuickStartFooter from "./controller/QuickStartFooter";
 import {
   QuickStartContext,
   QuickStartContextValues,
@@ -79,13 +79,13 @@ const QuickStartControllerEdit: React.FC<QuickStartControllerProps> = ({
         onTaskReview={handleTaskStatusChange}
         onQuickStartChange={handleQuickStartChange}
       />
-      <QuickStartFooter
+      {/* <QuickStartFooter
         status={status}
         taskNumber={taskNumber}
         totalTasks={totalTasks}
         onNext={handleNext}
         onBack={handleBack}
-      />
+      /> */}
     </>
   );
 };
