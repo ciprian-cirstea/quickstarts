@@ -5,14 +5,15 @@
     "scripts": {
         "prebuild": "rm -rf public",
         "build": "webpack --mode production",
-        "start": "webpack serve --hot --color --progress --config webpack.config.js",
+        "start-webpack": "webpack serve --hot --color --progress --config webpack.config.js",
+        "start": "node src/server/index.js",
         "serve": "serve public",
         "build-dev": "react-scripts build",
-        "push-to-dev": "ibmcloud cf push documenthub-form",
+        "push": "ibmcloud cf push documenthub-form",
         "login": "ibmcloud login --sso",
-        "target-test": "ibmcloud target -o edge@us.ibm.com -s dev",
-        "deploy-form": "npm run target-test && ibmcloud login -o edge@us.ibm.com -s dev -sso && npm run push-to-dev",
-        "deploy-login-test": "npm run build && npm run target-test && ibmcloud login -o edge@us.ibm.com -s dev -sso && npm run push-to-dev"
+        "target": "ibmcloud target -o edge@us.ibm.com -s dev",
+        "deploy-form": "npm run build && npm run target && npm run push",
+        "deploy-login-test": "npm run build-dev && npm run target-test && ibmcloud login -o edge@us.ibm.com -s dev -sso && npm run push-to-dev"
     },
     "dependencies": {
         "@cloudmosaic/quickstarts": "0.0.10",

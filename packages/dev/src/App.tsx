@@ -99,7 +99,7 @@ const App: React.FunctionComponent = ({ children }) => {
             console.log(data);
             if (data.token) {
               document.cookie = `caasToken=${data.token}`;
-              window.location.href = `http://localhost:3000/quickstarts`;
+              window.location.href = `https://documenthub-form.us-south.cf.appdomain.cloud/`;
             }
           });
       } catch (err) {
@@ -111,8 +111,6 @@ const App: React.FunctionComponent = ({ children }) => {
           .split(";")
           .some((item) => item.trim().startsWith("caasToken="))
       ) {
-        console.log('The cookie "caasToken" exists (ES6)');
-        console.log("no cookie");
         window.location.href = `https://developer.ibm.com/edge/documenthub/sso/w3id/login/LKKmTn3`;
       }
     }
@@ -131,8 +129,14 @@ const App: React.FunctionComponent = ({ children }) => {
     if (location.pathname === quickStartPath) {
       setLoaded(false);
 
-      // Execute the created function directly
-      getQuickstarts();
+      if (
+        document.cookie
+          .split(";")
+          .some((item) => item.trim().startsWith("caasToken="))
+      ) {
+        // Execute the created function directly
+        getQuickstarts();
+      }
     } else {
       setLoaded(true);
     }
