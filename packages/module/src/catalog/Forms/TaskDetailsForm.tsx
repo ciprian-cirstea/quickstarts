@@ -34,7 +34,8 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
     //If no task is passed create a new empty task
     if (!task) {
       const newQuick = { ...qs };
-
+      console.log(newQuick);
+      debugger;
       const newTasksArray = [...newQuick.spec.tasks];
       //new task object
       newTasksArray.splice(0, 0, {
@@ -52,13 +53,8 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
 
   const quickUpdate = (value: string, e: any) => {
     const newTsk = [...qs.spec.tasks];
-    // if (value === "instructions" || value === "failedTaskHelp") {
-    //   newTsk[taskIndex].review[value] = e;
-    // } else if (value === "success" || value === "failed") {
-    //   newTsk[taskIndex].summary[value] = e;
-    // } else {
+
     newTsk[taskIndex][value] = e;
-    // }
 
     qs.spec.tasks = newTsk;
     updateQuickStart(qs, taskIndex);
