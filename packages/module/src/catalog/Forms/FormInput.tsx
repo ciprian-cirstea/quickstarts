@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { TextInput, FormGroup, TextArea } from "@patternfly/react-core";
-import { Checkbox } from "@patternfly/react-core/dist/js/components";
+// import { Checkbox } from "@patternfly/react-core/dist/js/components";
 
 type FormInputProps = {
   initialValue?: any;
@@ -14,7 +14,7 @@ type FormInputProps = {
   submitted?: boolean;
   errors?: object;
   rows?: number;
-  inputRef?: React.RefObject<any>;
+  //   inputRef?: React.RefObject<any>;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -28,13 +28,14 @@ const FormInput: React.FC<FormInputProps> = ({
   submitted,
   errors,
   rows,
-  inputRef,
+  //   inputRef,
 }) => {
   const [inputValue, setInputValue] = useState(initialValue);
   //   console.log("form input errors", errors);
 
+  const inputRef = useRef();
+
   const handleChange = (e) => {
-    // setInputValue(e);
     updateValue(value, e);
   };
 
@@ -48,22 +49,23 @@ const FormInput: React.FC<FormInputProps> = ({
         <TextArea
           ref={inputRef}
           rows={rows || 10}
-          value={inputValue}
+          defaultValue={inputValue}
           name={id}
           id={id}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e)}
           validated={
             submitted && errors?.hasOwnProperty(value) ? "error" : "default"
           }
         />
       ) : (
         <TextInput
+          ref={inputRef}
           isRequired
           type={type}
-          value={inputValue}
+          defaultValue={inputValue}
           name={id}
           id={id}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e)}
           validated={
             submitted && errors?.hasOwnProperty(value) ? "error" : "default"
           }

@@ -32,6 +32,7 @@ type QuickStartEditProps = {
   taskErrors: object;
   setTaskErrors: Function;
   submitted: boolean;
+  setMoved: Function;
 };
 
 const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
@@ -44,6 +45,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
   taskErrors,
   setTaskErrors,
   submitted,
+  setMoved,
 }) => {
   const {
     activeQuickStartID,
@@ -268,6 +270,7 @@ const QuickStartEditComponent: React.FC<QuickStartEditProps> = ({
               taskErrors={taskErrors}
               setTaskErrors={setTaskErrors}
               submitted={submitted}
+              setMoved={setMoved}
             />
           </GridItem>
           <GridItem span={6}>

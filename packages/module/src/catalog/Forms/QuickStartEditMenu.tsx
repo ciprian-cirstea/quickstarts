@@ -23,6 +23,7 @@ type QuickStartEditPageProps = {
   errors: object;
   taskErrors;
   setTaskErrors: Function;
+  setMoved: Function;
 };
 
 export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
@@ -35,6 +36,7 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
   errors,
   taskErrors,
   setTaskErrors,
+  setMoved,
 }) => {
   const deleteTask = (clicked: number) => {
     try {
@@ -177,6 +179,7 @@ export const QuickStartEditMenu: React.FC<QuickStartEditPageProps> = ({
         updateQuickStart={updateQuickStart}
         taskErrors={taskErrors}
         setTaskErrors={setTaskErrors}
+        setMoved={setMoved}
       />
 
       <MenuItem isSelected={activeMenuItem === 102} itemId={102}>

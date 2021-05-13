@@ -34,8 +34,6 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
     //If no task is passed create a new empty task
     if (!task) {
       const newQuick = { ...qs };
-      console.log(newQuick);
-      debugger;
       const newTasksArray = [...newQuick.spec.tasks];
       //new task object
       newTasksArray.splice(0, 0, {
@@ -46,6 +44,7 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
       newTasksArray.reverse();
       console.log("newTasksArray", newTasksArray);
       newQuick.spec.tasks = newTasksArray;
+
       setQs(newQuick);
       handleMenuClick(null, newTasksArray.length - 1);
     }
@@ -53,7 +52,6 @@ const TaskDetailsForm: React.FC<TaskDetailsFormProps> = ({
 
   const quickUpdate = (value: string, e: any) => {
     const newTsk = [...qs.spec.tasks];
-
     newTsk[taskIndex][value] = e;
 
     qs.spec.tasks = newTsk;

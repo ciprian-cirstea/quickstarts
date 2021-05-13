@@ -6,7 +6,7 @@
         "prebuild": "rm -rf public",
         "build": "webpack --mode production",
         "start-webpack": "webpack serve --hot --color --progress --config webpack.config.js",
-        "start": "node src/server/index.js",
+        "start": "node index.js",
         "serve": "serve public",
         "build-dev": "react-scripts build",
         "push": "ibmcloud cf push documenthub-form",

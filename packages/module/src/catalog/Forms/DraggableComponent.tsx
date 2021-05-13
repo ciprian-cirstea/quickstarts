@@ -19,6 +19,7 @@ type FormInputProps = {
   updateQuickStart: Function;
   taskErrors: any;
   setTaskErrors: Function;
+  setMoved: Function;
 };
 
 const DraggableComponent: React.FC<FormInputProps> = ({
@@ -31,8 +32,13 @@ const DraggableComponent: React.FC<FormInputProps> = ({
   updateQuickStart,
   taskErrors,
   setTaskErrors,
+  setMoved,
 }) => {
   const grid = 1;
+
+  React.useEffect(() => {
+    setMoved(false);
+  }, []);
 
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
@@ -102,6 +108,7 @@ const DraggableComponent: React.FC<FormInputProps> = ({
     if (type === "qs") {
       updateQuickStartTasks(arr, item, to);
     }
+    setMoved(true);
   };
 
   const onDragEnd = (e) => {
@@ -184,7 +191,9 @@ const DraggableComponent: React.FC<FormInputProps> = ({
                         key={index}
                         itemId={index}
                       >
-                        {`0${index + 1} ${task.title.substring(0, 35)} ...`}
+                        {`${index < 9 ? "0" : ""}${
+                          index + 1
+                        } ${task.title.substring(0, 35)} ...`}
                       </MenuItem>
                     )}
                   </Draggable>

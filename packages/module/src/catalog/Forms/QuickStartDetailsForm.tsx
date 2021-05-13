@@ -28,10 +28,8 @@ const QuickStartDetailsForm: React.FC<ContributionDetailsFormProps> = ({
   }, []);
 
   const quickUpdate = (value, e) => {
-    console.log("hello update", value, "---", e);
     const newQuick = { ...quickstart };
     newQuick.spec[value] = e;
-    console.log("newQuick", newQuick);
     updateQuickStart(newQuick);
   };
 

@@ -9,7 +9,7 @@
     ],
     "scripts": {
         "build": "yarn workspace @cloudmosaic/quickstarts build",
-        "start": "yarn workspace @cloudmosaic/quickstarts-dev start",
+        "start": "yarn workspace @cloudmosaic/quickstarts-dev start-webpack",
         "watch": "yarn build && concurrently --kill-others \"yarn workspace @cloudmosaic/quickstarts watch\" \"yarn start\"",
         "build:dev": "yarn workspace @cloudmosaic/quickstarts-dev build"
     },
